@@ -9,6 +9,7 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -23,6 +24,7 @@ import androidx.compose.material3.OutlinedTextFieldDefaults
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
@@ -31,8 +33,11 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.core.text.isDigitsOnly
+import androidx.compose.ui.unit.sp
 import coil.compose.AsyncImage
 import com.example.darckoum.R
 import com.example.darckoum.data.repository.HouseRepository
@@ -41,16 +46,17 @@ import com.example.darckoum.ui.theme.C5
 
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
-fun AnnouncementScreen(houseRepository: HouseRepository) {
+fun AnnouncementScreen(
+    houseRepository: HouseRepository
+) {
 
     val house = houseRepository.getAllData()[2]
 
-    var titleTextFieldText by remember { mutableStateOf(house.title) }
-    var propertyTypeTextFieldText by remember { mutableStateOf(house.propertyType) }
-    var transactionTypeTextFieldText by remember { mutableStateOf(house.transactionType) }
-    var priceTextFieldText by remember { mutableStateOf(house.price) }
-    var locationTextFieldText by remember { mutableStateOf(house.location) }
-    var stateTextFieldText by remember { mutableStateOf("Batna") }
+    val titleTextFieldText by remember { mutableStateOf(house.title) }
+    val propertyTypeTextFieldText by remember { mutableStateOf(house.propertyType) }
+    val priceTextFieldText by remember { mutableIntStateOf(house.price) }
+    val locationTextFieldText by remember { mutableStateOf(house.location) }
+    val stateTextFieldText by remember { mutableStateOf("Batna") }
     var descriptionTextFieldText by remember { mutableStateOf(house.description) }
 
     Column(
@@ -105,31 +111,6 @@ fun AnnouncementScreen(houseRepository: HouseRepository) {
                     contentScale = ContentScale.Crop
                 )
             }
-            /*
-            LazyRow(
-                modifier = Modifier
-                    .fillMaxSize()
-                    .align(Alignment.Center)
-            ) {
-                item {
-                    AsyncImage(
-                        model = selectedImageUri,
-                        contentDescription = null,
-                        modifier = Modifier.fillMaxWidth(),
-                        contentScale = ContentScale.Crop
-                    )
-                }
-
-                items(selectedImageUris) { uri ->
-                    AsyncImage(
-                        model = uri,
-                        contentDescription = null,
-                        modifier = Modifier.fillMaxWidth(),
-                        contentScale = ContentScale.Crop
-                    )
-                }
-            }
-            */
         }
         Column(
             modifier = Modifier
@@ -138,77 +119,88 @@ fun AnnouncementScreen(houseRepository: HouseRepository) {
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.spacedBy(24.dp)
         ) {
-            AddScreenOutlinedTextFieldSample(
-                label = "Title",
-                modifier = Modifier.fillMaxWidth(),
-                maxLines = 1,
-                minLines = 1,
+            Text(
                 text = titleTextFieldText,
-                onValueChange = {
-                    titleTextFieldText = it
-                    // Todo onTextChanged(it)
-                }
+                color = Color(0x99FFF5F3),
+                modifier = Modifier
+                    .fillMaxWidth(1f),
+                textAlign = TextAlign.Center,
+                fontSize = 22.sp,
+                fontWeight = FontWeight.SemiBold
             )
-            AddScreenOutlinedTextFieldSample(
-                label = "Property Type",
-                modifier = Modifier.fillMaxWidth(),
-                maxLines = 1,
-                minLines = 1,
-                text = propertyTypeTextFieldText.description,
-                onValueChange = {
-                    titleTextFieldText = it
-                    // Todo onTextChanged(it)
-                }
-            )
-            AddScreenOutlinedTextFieldSample(
-                label = "TransactionType",
-                modifier = Modifier.fillMaxWidth(),
-                maxLines = 1,
-                minLines = 1,
-                text = transactionTypeTextFieldText.description,
-                onValueChange = {
-                    titleTextFieldText = it
-                    // Todo onTextChanged(it)
-                }
-            )
-            AddScreenOutlinedTextFieldSample(
-                label = "Price",
-                modifier = Modifier.fillMaxWidth(),
-                maxLines = 1,
-                minLines = 1,
-                text = priceTextFieldText.toString(),
-                onValueChange = {
-                    if (it.isDigitsOnly()) {
-                        priceTextFieldText = it.toInt()
-                    }
-                }
-            )
-            AddScreenOutlinedTextFieldSample(
-                label = "State",
-                modifier = Modifier.fillMaxWidth(),
-                maxLines = 1,
-                minLines = 1,
-                text = stateTextFieldText,
-                onValueChange = {
-                    stateTextFieldText = it
-                    // Todo onTextChanged(it)
-                }
-            )
-            AddScreenOutlinedTextFieldSample(
-                label = "Address",
-                modifier = Modifier.fillMaxWidth(),
-                maxLines = 1,
-                minLines = 1,
-                text = locationTextFieldText,
-                onValueChange = {
-                    locationTextFieldText = it
-                }
-            )
-            AddScreenOutlinedTextFieldSample(
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth(1f)
+            ) {
+                Text(
+                    text = "Type",
+                    color = Color(0x99FFF5F3),
+                    modifier = Modifier
+                        .fillMaxWidth(0.5f)
+                )
+                Text(
+                    text = propertyTypeTextFieldText.description,
+                    color = Color(0x99FFF5F3),
+                    modifier = Modifier
+                        .fillMaxWidth(1f)
+                )
+            }
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth(1f)
+            ) {
+                Text(
+                    text = "Price",
+                    color = Color(0x99FFF5F3),
+                    modifier = Modifier
+                        .fillMaxWidth(0.5f)
+                )
+                Text(
+                    text = priceTextFieldText.toString(),
+                    color = Color(0x99FFF5F3),
+                    modifier = Modifier
+                        .fillMaxWidth(1f)
+                )
+            }
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth(1f)
+            ) {
+                Text(
+                    text = "State",
+                    color = Color(0x99FFF5F3),
+                    modifier = Modifier
+                        .fillMaxWidth(0.5f)
+                )
+                Text(
+                    text = stateTextFieldText,
+                    color = Color(0x99FFF5F3),
+                    modifier = Modifier
+                        .fillMaxWidth(1f)
+                )
+            }
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth(1f)
+            ) {
+                Text(
+                    text = "Address",
+                    color = Color(0x99FFF5F3),
+                    modifier = Modifier
+                        .fillMaxWidth(0.5f)
+                )
+                Text(
+                    text = locationTextFieldText,
+                    color = Color(0x99FFF5F3),
+                    modifier = Modifier
+                        .fillMaxWidth(1f)
+                )
+            }
+            DescriptionOutlinedTextField(
                 label = "Description",
                 modifier = Modifier.fillMaxWidth(),
                 maxLines = 10,
-                minLines = 6,
+                minLines = 1,
                 text = descriptionTextFieldText,
                 onValueChange = {
                     descriptionTextFieldText = it
@@ -219,7 +211,7 @@ fun AnnouncementScreen(houseRepository: HouseRepository) {
 }
 
 @Composable
-fun AddScreenOutlinedTextFieldSample(
+fun DescriptionOutlinedTextField(
     label: String,
     modifier: Modifier,
     maxLines: Int,
@@ -233,13 +225,8 @@ fun AddScreenOutlinedTextFieldSample(
         label = { Text(label) },
         modifier = modifier,
         colors = OutlinedTextFieldDefaults.colors(
-            unfocusedContainerColor = C5,
-            focusedContainerColor = C5,
             unfocusedLabelColor = Color(0x99FFF5F3),
-            focusedLabelColor = Color(0x99FFF5F3),
-            focusedBorderColor = Color.Transparent,
-            unfocusedBorderColor = Color.Transparent,
-            focusedTextColor = Color(0x99FFF5F3),
+            unfocusedBorderColor = C5,
             unfocusedTextColor = Color(0x99FFF5F3)
         ),
         maxLines = maxLines,
@@ -247,4 +234,10 @@ fun AddScreenOutlinedTextFieldSample(
         shape = RoundedCornerShape(14.dp),
         readOnly = true
     )
+}
+
+@Preview
+@Composable
+fun AnnouncementScreenPreview() {
+    AnnouncementScreen(houseRepository = HouseRepository())
 }

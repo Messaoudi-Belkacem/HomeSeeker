@@ -13,5 +13,5 @@ data class Profile(
     val phoneNumber: String,
     val accountCreationDate: String,
     val password: String,
-    val housesAnnounced: List<House>
+    val housesAnnounced: List<Announcement>
 )

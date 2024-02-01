@@ -4,7 +4,13 @@ import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.Icon
 import androidx.compose.material.Text
@@ -16,24 +22,20 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import com.example.darckoum.R
-import com.example.darckoum.data.model.House
-import com.example.darckoum.data.model.enum_classes.PropertyType
-import com.example.darckoum.data.model.enum_classes.TransactionType
-import com.example.darckoum.data.repository.HouseRepository
+import com.example.darckoum.data.model.Announcement
 import com.example.darckoum.navigation.BottomBarScreen
 import com.example.darckoum.ui.theme.C1
 import com.example.darckoum.ui.theme.C3
 import com.example.darckoum.ui.theme.C5
 
 @Composable
-fun CustomItem(house: House, navController: NavController) {
-    val formattedPrice = formatPrice(house.price)
-    val housePicture: Int = when (house.id) {
+fun CustomItem(announcement: Announcement, navController: NavController) {
+    val formattedPrice = formatPrice(announcement.price)
+    val housePicture: Int = when (announcement.id) {
         0 -> R.drawable.house1photo
         1 -> R.drawable.house2photo
         2 -> R.drawable.house3photo
@@ -64,7 +66,7 @@ fun CustomItem(house: House, navController: NavController) {
                 contentScale = ContentScale.Fit
             )
             Text(
-                text = house.title,
+                text = announcement.title,
                 color = C3,
                 fontSize = 18.sp,
                 fontWeight = FontWeight.SemiBold
@@ -81,7 +83,7 @@ fun CustomItem(house: House, navController: NavController) {
                         tint = C3
                     )
                     Text(
-                        text = house.location,
+                        text = announcement.location,
                         color = C3,
                         fontSize = 16.sp,
                         fontWeight = FontWeight.Medium
@@ -96,27 +98,12 @@ fun CustomItem(house: House, navController: NavController) {
                         tint = C3
                     )
                     Text(
-                        text = house.propertyType.description,
+                        text = announcement.propertyType.description,
                         color = C3,
                         fontSize = 16.sp,
                         fontWeight = FontWeight.Medium
                     )
                 }
-            }
-            Row(
-                horizontalArrangement = Arrangement.spacedBy(5.dp)
-            ) {
-                Icon(
-                    painter = painterResource(id = R.drawable.ic_payment),
-                    contentDescription = null,
-                    tint = C3
-                )
-                Text(
-                    text = house.transactionType.description,
-                    color = C3,
-                    fontSize = 16.sp,
-                    fontWeight = FontWeight.Medium
-                )
             }
             Text(
                 text = "$formattedPrice DZD",
@@ -129,9 +116,9 @@ fun CustomItem(house: House, navController: NavController) {
 }
 
 @Composable
-fun CustomSearchItem(house : House, navController: NavController) {
-    val formattedPrice = formatPrice(house.price)
-    val housePicture: Int = when (house.id) {
+fun CustomSearchItem(announcement: Announcement, navController: NavController) {
+    val formattedPrice = formatPrice(announcement.price)
+    val housePicture: Int = when (announcement.id) {
         0 -> R.drawable.house1photo
         1 -> R.drawable.house2photo
         2 -> R.drawable.house3photo
@@ -169,7 +156,7 @@ fun CustomSearchItem(house : House, navController: NavController) {
                     contentScale = ContentScale.FillBounds
                 )
                 Text(
-                    text = house.title,
+                    text = announcement.title,
                     color = C3,
                     fontSize = 20.sp,
                     fontWeight = FontWeight.SemiBold
@@ -190,7 +177,7 @@ fun CustomSearchItem(house : House, navController: NavController) {
                         tint = C3
                     )
                     Text(
-                        text = house.location,
+                        text = announcement.location,
                         color = C3,
                         fontSize = 16.sp,
                         fontWeight = FontWeight.Medium
@@ -205,22 +192,7 @@ fun CustomSearchItem(house : House, navController: NavController) {
                         tint = C3
                     )
                     Text(
-                        text = house.propertyType.description,
-                        color = C3,
-                        fontSize = 16.sp,
-                        fontWeight = FontWeight.Medium
-                    )
-                }
-                Row(
-                    horizontalArrangement = Arrangement.spacedBy(5.dp)
-                ) {
-                    Icon(
-                        painter = painterResource(id = R.drawable.ic_payment),
-                        contentDescription = null,
-                        tint = C3
-                    )
-                    Text(
-                        text = house.transactionType.description,
+                        text = announcement.propertyType.description,
                         color = C3,
                         fontSize = 16.sp,
                         fontWeight = FontWeight.Medium

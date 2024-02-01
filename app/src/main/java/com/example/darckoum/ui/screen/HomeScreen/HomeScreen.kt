@@ -34,13 +34,12 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import com.example.darckoum.R
-import com.example.darckoum.items.CustomItem
 import com.example.darckoum.data.repository.HouseRepository
+import com.example.darckoum.items.CustomItem
 import com.example.darckoum.navigation.BottomBarScreen
 import com.example.darckoum.ui.theme.C2
 import com.example.darckoum.ui.theme.C3
@@ -99,8 +98,8 @@ fun HomeScreen(houseRepository: HouseRepository, navController: NavController) {
                         modifier = Modifier.padding(start = 16.dp),
                         horizontalArrangement = Arrangement.spacedBy(16.dp)
                     ) {
-                        items(items = getAllData) { house ->
-                            CustomItem(house = house, navController)
+                        items(items = getAllData) { announcement ->
+                            CustomItem(announcement = announcement, navController)
                         }
                     }
                 }
@@ -136,8 +135,8 @@ fun HomeScreen(houseRepository: HouseRepository, navController: NavController) {
                         modifier = Modifier.padding(start = 16.dp),
                         horizontalArrangement = Arrangement.spacedBy(16.dp)
                     ) {
-                        items(items = getAllNewData) { house ->
-                            CustomItem(house = house, navController)
+                        items(items = getAllNewData) { announcement ->
+                            CustomItem(announcement = announcement, navController)
                         }
                     }
                 }

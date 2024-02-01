@@ -51,14 +51,13 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.core.text.isDigitsOnly
 import androidx.navigation.NavController
 import coil.compose.AsyncImage
 import com.example.darckoum.R
-import com.example.darckoum.data.model.House
+import com.example.darckoum.data.model.Announcement
 import com.example.darckoum.data.model.enum_classes.PropertyType
 import com.example.darckoum.data.model.enum_classes.State
 import com.example.darckoum.data.model.enum_classes.TransactionType
@@ -68,7 +67,6 @@ import com.example.darckoum.ui.theme.C1
 import com.example.darckoum.ui.theme.C2
 import com.example.darckoum.ui.theme.C3
 import com.example.darckoum.ui.theme.C5
-import kotlinx.coroutines.delay
 
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
@@ -356,16 +354,17 @@ fun AddScreen(houseRepository: HouseRepository, navController: NavController) {
                             Toast.makeText(context,"You must fill all the fields !", Toast.LENGTH_SHORT).show()
                         } else { Toast.makeText(context,"You must add photos of the property from your gallery !", Toast.LENGTH_SHORT).show() }
                     } else {
-                        val newHouse = House(
-                            -1,
-                            titleTextFieldText,
-                            locationTextFieldText,
+                        val newAnnouncement = Announcement(
+                            id = -1,
+                            title = titleTextFieldText,
+                            area = 120,
+                            numberOfRooms = 4,
+                            location = locationTextFieldText,
                             propertyType = PropertyType.VILLA,
-                            transactionType = TransactionType.FOR_SALE,
                             price = priceTextFieldText.toInt(),
                             description = descriptionTextFieldText
                         )
-                        houseRepository.addHouse(newHouse)
+                        houseRepository.addHouse(newAnnouncement)
                         Toast.makeText(context,"your announcement have been added successfully", Toast.LENGTH_SHORT).show()
                         navController.navigate(BottomBarScreen.Home.route)
                     }
