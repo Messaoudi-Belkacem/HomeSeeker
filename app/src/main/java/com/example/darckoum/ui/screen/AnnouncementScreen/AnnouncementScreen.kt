@@ -1,5 +1,6 @@
 package com.example.darckoum.ui.screen.AnnouncementScreen
 
+import android.content.Intent
 import android.net.Uri
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
@@ -9,22 +10,26 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
+import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.Icon
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.OutlinedTextFieldDefaults
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
@@ -32,17 +37,20 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.core.content.ContextCompat.startActivity
 import coil.compose.AsyncImage
 import com.example.darckoum.R
 import com.example.darckoum.data.repository.HouseRepository
 import com.example.darckoum.ui.theme.C2
 import com.example.darckoum.ui.theme.C5
+
 
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
@@ -50,14 +58,8 @@ fun AnnouncementScreen(
     houseRepository: HouseRepository
 ) {
 
-    val house = houseRepository.getAllData()[2]
-
-    val titleTextFieldText by remember { mutableStateOf(house.title) }
-    val propertyTypeTextFieldText by remember { mutableStateOf(house.propertyType) }
-    val priceTextFieldText by remember { mutableIntStateOf(house.price) }
-    val locationTextFieldText by remember { mutableStateOf(house.location) }
-    val stateTextFieldText by remember { mutableStateOf("Batna") }
-    var descriptionTextFieldText by remember { mutableStateOf(house.description) }
+    val context = LocalContext.current
+    val announcementViewModel = AnnouncementViewModel(houseRepository)
 
     Column(
         modifier = Modifier
@@ -96,7 +98,6 @@ fun AnnouncementScreen(
                     .fillMaxSize(1f)
                     .align(Alignment.Center)
             )
-
             HorizontalPager(
                 state = pagerState,
                 modifier = Modifier
@@ -120,14 +121,61 @@ fun AnnouncementScreen(
             verticalArrangement = Arrangement.spacedBy(24.dp)
         ) {
             Text(
-                text = titleTextFieldText,
+                text = announcementViewModel.title.toString(),
                 color = Color(0x99FFF5F3),
                 modifier = Modifier
                     .fillMaxWidth(1f),
                 textAlign = TextAlign.Center,
-                fontSize = 22.sp,
+                fontSize = 24.sp,
                 fontWeight = FontWeight.SemiBold
             )
+            Row(
+                modifier = Modifier
+                    .background(color = C5, RoundedCornerShape(10.dp))
+                    .padding(10.dp),
+                verticalAlignment = Alignment.CenterVertically,
+                horizontalArrangement = Arrangement.spacedBy(35.dp)
+            ) {
+                Row(
+                    modifier = Modifier,
+                    verticalAlignment = Alignment.CenterVertically,
+                    horizontalArrangement = Arrangement.spacedBy(8.dp)
+                ) {
+                    Icon(
+                        painter = painterResource(id = R.drawable.room_icon),
+                        contentDescription = null,
+                        modifier = Modifier
+                            .size(32.dp),
+                        tint = Color(0x99FFF5F3)
+                    )
+                    Text(
+                        text = announcementViewModel.numberOfRooms.toString(),
+                        color = Color(0x99FFF5F3),
+                        modifier = Modifier,
+                        fontSize = 20.sp,
+                        fontWeight = FontWeight.SemiBold
+                    )
+                }
+                Row(
+                    modifier = Modifier,
+                    verticalAlignment = Alignment.CenterVertically,
+                    horizontalArrangement = Arrangement.spacedBy(4.dp)
+                ) {
+                    Icon(
+                        painter = painterResource(id = R.drawable.area_icon),
+                        contentDescription = null,
+                        modifier = Modifier.size(width = 32.dp, height = 24.dp),
+                        tint = Color(0x99FFF5F3)
+                    )
+                    Text(
+                        text = announcementViewModel.area.toString() + "m²",
+                        color = Color(0x99FFF5F3),
+                        modifier = Modifier,
+                        fontSize = 20.sp,
+                        fontWeight = FontWeight.SemiBold
+                    )
+                }
+            }
             Row(
                 modifier = Modifier
                     .fillMaxWidth(1f)
@@ -139,7 +187,7 @@ fun AnnouncementScreen(
                         .fillMaxWidth(0.5f)
                 )
                 Text(
-                    text = propertyTypeTextFieldText.description,
+                    text = announcementViewModel.propertyType.toString(),
                     color = Color(0x99FFF5F3),
                     modifier = Modifier
                         .fillMaxWidth(1f)
@@ -156,7 +204,7 @@ fun AnnouncementScreen(
                         .fillMaxWidth(0.5f)
                 )
                 Text(
-                    text = priceTextFieldText.toString(),
+                    text = announcementViewModel.price.toString(),
                     color = Color(0x99FFF5F3),
                     modifier = Modifier
                         .fillMaxWidth(1f)
@@ -173,7 +221,7 @@ fun AnnouncementScreen(
                         .fillMaxWidth(0.5f)
                 )
                 Text(
-                    text = stateTextFieldText,
+                    text = announcementViewModel.location.toString(),
                     color = Color(0x99FFF5F3),
                     modifier = Modifier
                         .fillMaxWidth(1f)
@@ -184,13 +232,13 @@ fun AnnouncementScreen(
                     .fillMaxWidth(1f)
             ) {
                 Text(
-                    text = "Address",
+                    text = "Location",
                     color = Color(0x99FFF5F3),
                     modifier = Modifier
                         .fillMaxWidth(0.5f)
                 )
                 Text(
-                    text = locationTextFieldText,
+                    text = announcementViewModel.location.toString(),
                     color = Color(0x99FFF5F3),
                     modifier = Modifier
                         .fillMaxWidth(1f)
@@ -201,11 +249,28 @@ fun AnnouncementScreen(
                 modifier = Modifier.fillMaxWidth(),
                 maxLines = 10,
                 minLines = 1,
-                text = descriptionTextFieldText,
-                onValueChange = {
-                    descriptionTextFieldText = it
-                }
+                text = announcementViewModel.description.toString(),
+                onValueChange = { }
             )
+            Button(
+                onClick = {
+                    val intent = Intent(Intent.ACTION_DIAL)
+                    intent.setData(Uri.parse("tel:0664813680"))
+                    startActivity(context, intent, null)
+                },
+                shape = RoundedCornerShape(14.dp),
+                colors = ButtonDefaults.buttonColors(containerColor = Color(0xFFE7BD73)),
+                contentPadding = PaddingValues(vertical = 20.dp),
+                modifier = Modifier
+                    .fillMaxWidth(1f)
+                    .padding(top = 64.dp, bottom = 16.dp)
+            ) {
+                Text(
+                    text = "Contact the seller",
+                    fontSize = 22.sp,
+                    fontWeight = FontWeight.SemiBold
+                )
+            }
         }
     }
 }

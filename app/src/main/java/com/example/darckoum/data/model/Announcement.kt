@@ -1,7 +1,6 @@
 package com.example.darckoum.data.model
 
 import com.example.darckoum.data.model.enum_classes.PropertyType
-import com.example.darckoum.data.model.enum_classes.TransactionType
 
 data class Announcement(
     val id: Int,
