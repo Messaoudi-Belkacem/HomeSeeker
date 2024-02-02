@@ -6,6 +6,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import com.example.darckoum.data.model.enum_classes.PropertyType
 import com.example.darckoum.data.repository.HouseRepository
+import com.example.darckoum.items.formatPrice
 
 class AnnouncementViewModel(houseRepository: HouseRepository) : ViewModel() {
 
@@ -31,5 +32,9 @@ class AnnouncementViewModel(houseRepository: HouseRepository) : ViewModel() {
 
     private val _description = mutableStateOf(announcement.description)
     val description: MutableState<String> = _description
+
+    fun getFormattedPrice(): String {
+        return formatPrice(_price.intValue)
+    }
 
 }

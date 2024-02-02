@@ -25,8 +25,6 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Icon
-import androidx.compose.material3.OutlinedTextField
-import androidx.compose.material3.OutlinedTextFieldDefaults
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -48,6 +46,7 @@ import androidx.core.content.ContextCompat.startActivity
 import coil.compose.AsyncImage
 import com.example.darckoum.R
 import com.example.darckoum.data.repository.HouseRepository
+import com.example.darckoum.ui.theme.C1
 import com.example.darckoum.ui.theme.C2
 import com.example.darckoum.ui.theme.C5
 
@@ -121,7 +120,7 @@ fun AnnouncementScreen(
             verticalArrangement = Arrangement.spacedBy(24.dp)
         ) {
             Text(
-                text = announcementViewModel.title.toString(),
+                text = announcementViewModel.title.value,
                 color = Color(0x99FFF5F3),
                 modifier = Modifier
                     .fillMaxWidth(1f),
@@ -149,7 +148,7 @@ fun AnnouncementScreen(
                         tint = Color(0x99FFF5F3)
                     )
                     Text(
-                        text = announcementViewModel.numberOfRooms.toString(),
+                        text = announcementViewModel.numberOfRooms.value.toString(),
                         color = Color(0x99FFF5F3),
                         modifier = Modifier,
                         fontSize = 20.sp,
@@ -168,7 +167,7 @@ fun AnnouncementScreen(
                         tint = Color(0x99FFF5F3)
                     )
                     Text(
-                        text = announcementViewModel.area.toString() + "m²",
+                        text = announcementViewModel.area.value.toString() + "m²",
                         color = Color(0x99FFF5F3),
                         modifier = Modifier,
                         fontSize = 20.sp,
@@ -187,7 +186,7 @@ fun AnnouncementScreen(
                         .fillMaxWidth(0.5f)
                 )
                 Text(
-                    text = announcementViewModel.propertyType.toString(),
+                    text = announcementViewModel.propertyType.value.toString(),
                     color = Color(0x99FFF5F3),
                     modifier = Modifier
                         .fillMaxWidth(1f)
@@ -204,8 +203,8 @@ fun AnnouncementScreen(
                         .fillMaxWidth(0.5f)
                 )
                 Text(
-                    text = announcementViewModel.price.toString(),
-                    color = Color(0x99FFF5F3),
+                    text = announcementViewModel.getFormattedPrice() + " DZD",
+                    color = C1,
                     modifier = Modifier
                         .fillMaxWidth(1f)
                 )
@@ -221,7 +220,7 @@ fun AnnouncementScreen(
                         .fillMaxWidth(0.5f)
                 )
                 Text(
-                    text = announcementViewModel.location.toString(),
+                    text = announcementViewModel.location.value,
                     color = Color(0x99FFF5F3),
                     modifier = Modifier
                         .fillMaxWidth(1f)
@@ -238,20 +237,29 @@ fun AnnouncementScreen(
                         .fillMaxWidth(0.5f)
                 )
                 Text(
-                    text = announcementViewModel.location.toString(),
+                    text = announcementViewModel.location.value,
                     color = Color(0x99FFF5F3),
                     modifier = Modifier
                         .fillMaxWidth(1f)
                 )
             }
-            DescriptionOutlinedTextField(
-                label = "Description",
-                modifier = Modifier.fillMaxWidth(),
-                maxLines = 10,
-                minLines = 1,
-                text = announcementViewModel.description.toString(),
-                onValueChange = { }
-            )
+            Column(
+                modifier = Modifier
+                    .fillMaxWidth(1f)
+            ) {
+                Text(
+                    text = "Description",
+                    color = Color(0x99FFF5F3),
+                    modifier = Modifier,
+                    fontSize = 16.sp,
+                    fontWeight = FontWeight.Medium
+                )
+                Text(
+                    text = announcementViewModel.description.value,
+                    color = Color(0x99FFF5F3),
+                    modifier = Modifier
+                )
+            }
             Button(
                 onClick = {
                     val intent = Intent(Intent.ACTION_DIAL)
@@ -273,32 +281,6 @@ fun AnnouncementScreen(
             }
         }
     }
-}
-
-@Composable
-fun DescriptionOutlinedTextField(
-    label: String,
-    modifier: Modifier,
-    maxLines: Int,
-    minLines: Int,
-    text: String,
-    onValueChange: (String) -> Unit
-) {
-    OutlinedTextField(
-        value = text,
-        onValueChange = onValueChange,
-        label = { Text(label) },
-        modifier = modifier,
-        colors = OutlinedTextFieldDefaults.colors(
-            unfocusedLabelColor = Color(0x99FFF5F3),
-            unfocusedBorderColor = C5,
-            unfocusedTextColor = Color(0x99FFF5F3)
-        ),
-        maxLines = maxLines,
-        minLines = minLines,
-        shape = RoundedCornerShape(14.dp),
-        readOnly = true
-    )
 }
 
 @Preview
