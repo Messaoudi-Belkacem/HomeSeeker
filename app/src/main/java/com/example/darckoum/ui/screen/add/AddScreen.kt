@@ -1,4 +1,4 @@
-package com.example.darckoum.ui.screen.AddScreen
+package com.example.darckoum.ui.screen.add
 
 import android.net.Uri
 import android.widget.Toast
@@ -360,6 +360,7 @@ fun AddScreen(houseRepository: HouseRepository, navController: NavController) {
                             area = 120,
                             numberOfRooms = 4,
                             location = locationTextFieldText,
+                            state = State.Adrar,
                             propertyType = PropertyType.VILLA,
                             price = priceTextFieldText.toInt(),
                             description = descriptionTextFieldText

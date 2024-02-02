@@ -1,10 +1,11 @@
-package com.example.darckoum.ui.screen.AnnouncementScreen
+package com.example.darckoum.ui.screen.announcement
 
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import com.example.darckoum.data.model.enum_classes.PropertyType
+import com.example.darckoum.data.model.enum_classes.State
 import com.example.darckoum.data.repository.HouseRepository
 import com.example.darckoum.items.formatPrice
 
@@ -23,6 +24,9 @@ class AnnouncementViewModel(houseRepository: HouseRepository) : ViewModel() {
 
     private val _location = mutableStateOf(announcement.location)
     val location: MutableState<String> = _location
+
+    private val _state = mutableStateOf(announcement.state)
+    val state: MutableState<State> = _state
 
     private val _propertyType = mutableStateOf(announcement.propertyType)
     val propertyType: MutableState<PropertyType> = _propertyType

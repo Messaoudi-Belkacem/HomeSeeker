@@ -1,4 +1,4 @@
-package com.example.darckoum.ui.screen.AnnouncementScreen
+package com.example.darckoum.ui.screen.announcement
 
 import android.content.Intent
 import android.net.Uri
@@ -64,7 +64,7 @@ fun AnnouncementScreen(
         modifier = Modifier
             .background(C2)
             .verticalScroll(rememberScrollState())
-            .padding(bottom = 80.dp, top = 35.dp)
+            .padding(bottom = 80.dp)
             .fillMaxSize(),
     ) {
         var selectedImageUri by remember {
@@ -117,7 +117,7 @@ fun AnnouncementScreen(
                 .fillMaxWidth()
                 .padding(top = 32.dp, start = 12.dp, end = 12.dp),
             horizontalAlignment = Alignment.CenterHorizontally,
-            verticalArrangement = Arrangement.spacedBy(24.dp)
+            verticalArrangement = Arrangement.spacedBy(20.dp)
         ) {
             Text(
                 text = announcementViewModel.title.value,
@@ -206,7 +206,8 @@ fun AnnouncementScreen(
                     text = announcementViewModel.getFormattedPrice() + " DZD",
                     color = C1,
                     modifier = Modifier
-                        .fillMaxWidth(1f)
+                        .fillMaxWidth(1f),
+                    fontSize = 16.sp
                 )
             }
             Row(
@@ -220,7 +221,7 @@ fun AnnouncementScreen(
                         .fillMaxWidth(0.5f)
                 )
                 Text(
-                    text = announcementViewModel.location.value,
+                    text = announcementViewModel.state.value.toString(),
                     color = Color(0x99FFF5F3),
                     modifier = Modifier
                         .fillMaxWidth(1f)
@@ -271,7 +272,6 @@ fun AnnouncementScreen(
                 contentPadding = PaddingValues(vertical = 20.dp),
                 modifier = Modifier
                     .fillMaxWidth(1f)
-                    .padding(top = 64.dp, bottom = 16.dp)
             ) {
                 Text(
                     text = "Contact the seller",

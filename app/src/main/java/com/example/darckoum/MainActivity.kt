@@ -15,9 +15,8 @@ import androidx.compose.ui.res.painterResource
 import androidx.core.view.WindowCompat
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
-import com.example.darckoum.data.repository.HouseRepository
 import com.example.darckoum.navigation.SetupNavGraph
-import com.example.darckoum.ui.screen.AnnouncementScreen.AnnouncementViewModel
+import com.example.darckoum.ui.screen.announcement.AnnouncementViewModel
 import com.google.accompanist.systemuicontroller.rememberSystemUiController
 
 class MainActivity : ComponentActivity() {

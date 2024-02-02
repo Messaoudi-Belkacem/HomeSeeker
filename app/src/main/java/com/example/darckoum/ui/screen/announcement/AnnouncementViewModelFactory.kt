@@ -1,4 +1,4 @@
-package com.example.darckoum.ui.screen.AnnouncementScreen
+package com.example.darckoum.ui.screen.announcement
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider

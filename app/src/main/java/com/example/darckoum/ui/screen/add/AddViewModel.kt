@@ -1,4 +1,4 @@
-package com.example.darckoum.ui.screen.AddScreen
+package com.example.darckoum.ui.screen.add
 
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableIntStateOf

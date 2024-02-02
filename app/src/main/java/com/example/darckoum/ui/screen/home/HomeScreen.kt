@@ -1,4 +1,4 @@
-package com.example.darckoum.ui.screen.HomeScreen
+package com.example.darckoum.ui.screen.home
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable

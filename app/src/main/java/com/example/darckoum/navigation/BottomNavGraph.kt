@@ -8,9 +8,9 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import com.example.darckoum.data.repository.HouseRepository
-import com.example.darckoum.ui.screen.AddScreen.AddScreen
-import com.example.darckoum.ui.screen.AnnouncementScreen.AnnouncementScreen
-import com.example.darckoum.ui.screen.HomeScreen.HomeScreen
+import com.example.darckoum.ui.screen.add.AddScreen
+import com.example.darckoum.ui.screen.announcement.AnnouncementScreen
+import com.example.darckoum.ui.screen.home.HomeScreen
 import com.example.darckoum.ui.screen.ProfileScreen
 import com.example.darckoum.ui.screen.SearchScreen
 
