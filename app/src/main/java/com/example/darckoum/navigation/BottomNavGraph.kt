@@ -11,7 +11,7 @@ import com.example.darckoum.data.repository.HouseRepository
 import com.example.darckoum.ui.screen.add.AddScreen
 import com.example.darckoum.ui.screen.announcement.AnnouncementScreen
 import com.example.darckoum.ui.screen.home.HomeScreen
-import com.example.darckoum.ui.screen.ProfileScreen
+import com.example.darckoum.ui.screen.profile.ProfileScreen
 import com.example.darckoum.ui.screen.SearchScreen
 
 @Composable

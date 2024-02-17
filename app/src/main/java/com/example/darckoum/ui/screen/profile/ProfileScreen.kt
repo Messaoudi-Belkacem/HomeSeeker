@@ -1,7 +1,6 @@
-package com.example.darckoum.ui.screen
+package com.example.darckoum.ui.screen.profile
 
 import androidx.compose.foundation.Image
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -46,7 +45,6 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.darckoum.R
-import com.example.darckoum.ui.theme.C2
 import com.example.darckoum.ui.theme.C3
 import com.example.darckoum.ui.theme.C5
 

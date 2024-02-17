@@ -1,6 +1,6 @@
 package com.example.darckoum.data.model
 
-import com.example.darckoum.ui.screen.Gender
+import com.example.darckoum.ui.screen.profile.Gender
 
 data class Profile(
     val userId: String,
