@@ -22,11 +22,14 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import com.example.darckoum.R
 import com.example.darckoum.data.model.Announcement
+import com.example.darckoum.data.repository.HouseRepository
 import com.example.darckoum.navigation.BottomBarScreen
 import com.example.darckoum.ui.theme.C1
 import com.example.darckoum.ui.theme.C3
@@ -46,36 +49,41 @@ fun CustomItem(announcement: Announcement, navController: NavController) {
     }
     Box(
         modifier = Modifier
+            .size(width = 180.dp, height = 280.dp)
             .clip(RoundedCornerShape(14.dp))
             .border(width = 2.dp, color = C5, shape = RoundedCornerShape(14.dp))
             .background(Color(0x994F4F4F))
-            .padding(16.dp)
+            .padding(8.dp)
             .clickable {
                 navController.navigate(route = BottomBarScreen.Announcement.route)
             }
     ) {
         Column(
-            verticalArrangement = Arrangement.spacedBy(6.dp)
+            verticalArrangement = Arrangement.spacedBy(6.dp),
+            horizontalAlignment = Alignment.CenterHorizontally
         ) {
             Image(
                 painter = painterResource(housePicture),
                 contentDescription = null,
                 modifier = Modifier
                     .size(width = 178.dp, height = 150.dp)
-                    .clip(RoundedCornerShape(12.dp)),
+                    .clip(RoundedCornerShape(14.dp)),
                 contentScale = ContentScale.Fit
             )
             Text(
                 text = announcement.title,
                 color = C3,
-                fontSize = 18.sp,
-                fontWeight = FontWeight.SemiBold
+                fontSize = 12.sp,
+                fontWeight = FontWeight.SemiBold,
+                textAlign = TextAlign.Center
             )
-            Row(
-                horizontalArrangement = Arrangement.spacedBy(45.dp)
+            Column(
+                verticalArrangement = Arrangement.spacedBy(4.dp),
+                horizontalAlignment = Alignment.CenterHorizontally
             ) {
                 Row(
-                    horizontalArrangement = Arrangement.spacedBy(5.dp)
+                    horizontalArrangement = Arrangement.spacedBy(4.dp),
+                    verticalAlignment = Alignment.CenterVertically
                 ) {
                     Icon(
                         painter = painterResource(id = R.drawable.ic_location),
@@ -85,12 +93,13 @@ fun CustomItem(announcement: Announcement, navController: NavController) {
                     Text(
                         text = announcement.location,
                         color = C3,
-                        fontSize = 16.sp,
+                        fontSize = 10.sp,
                         fontWeight = FontWeight.Medium
                     )
                 }
                 Row(
-                    horizontalArrangement = Arrangement.spacedBy(5.dp)
+                    horizontalArrangement = Arrangement.spacedBy(4.dp),
+                    verticalAlignment = Alignment.CenterVertically
                 ) {
                     Icon(
                         painter = painterResource(id = R.drawable.ic_type),
@@ -100,7 +109,7 @@ fun CustomItem(announcement: Announcement, navController: NavController) {
                     Text(
                         text = announcement.propertyType.description,
                         color = C3,
-                        fontSize = 16.sp,
+                        fontSize = 10.sp,
                         fontWeight = FontWeight.Medium
                     )
                 }
@@ -108,7 +117,7 @@ fun CustomItem(announcement: Announcement, navController: NavController) {
             Text(
                 text = "$formattedPrice DZD",
                 color = C1,
-                fontSize = 20.sp,
+                fontSize = 16.sp,
                 fontWeight = FontWeight.SemiBold
             )
         }
