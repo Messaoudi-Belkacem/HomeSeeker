@@ -4,6 +4,7 @@ import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
@@ -11,6 +12,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.Button
@@ -34,7 +36,6 @@ import com.example.darckoum.R
 import com.example.darckoum.navigation.Screen
 import com.example.darckoum.ui.theme.C1
 import com.example.darckoum.ui.theme.C2
-import com.example.darckoum.ui.theme.C5
 
 @Composable
 fun WelcomeScreen2(navController: NavController) {
@@ -66,12 +67,12 @@ fun WelcomeScreen2(navController: NavController) {
                     alignment = Alignment.Center,
                     modifier = Modifier.size(128.dp)
                 )
-                Spacer(modifier = Modifier.height(32.dp))
+                Spacer(modifier = Modifier.height(64.dp))
                 Text(
                     text = "Easily find real estate in the Maghreb region for rent or purchase",
-                    color = C5,
+                    color = C1,
                     fontSize = 16.sp,
-                    fontWeight = FontWeight.SemiBold,
+                    fontWeight = FontWeight.Normal,
                     textAlign = TextAlign.Center,
                     modifier = Modifier.padding(horizontal = 32.dp)
                 )
@@ -81,15 +82,15 @@ fun WelcomeScreen2(navController: NavController) {
             modifier = Modifier
                 .fillMaxWidth(1f)
                 .fillMaxHeight(1f)
-                .padding(vertical = 128.dp),
-            contentAlignment = Alignment.BottomCenter
+                .padding(top = 32.dp),
+            contentAlignment = Alignment.Center
         ) {
             Column(
                 verticalArrangement = Arrangement.SpaceAround,
                 horizontalAlignment = Alignment.CenterHorizontally,
                 modifier = Modifier
                     .padding(horizontal = 18.dp)
-                    .fillMaxWidth()
+                    .fillMaxWidth(1f)
             ) {
                 LoginScreenOutlinedTextFieldSample(
                     label = "Email",
@@ -119,7 +120,7 @@ fun WelcomeScreen2(navController: NavController) {
                     fontWeight = FontWeight.Normal,
                     color = C1,
                 )
-                Spacer(modifier = Modifier.height(64.dp))
+                Spacer(modifier = Modifier.height(32.dp))
                 Button(
                     onClick = {
                         navController.navigate(route = Screen.Main.route) {
@@ -140,6 +141,29 @@ fun WelcomeScreen2(navController: NavController) {
                         fontWeight = FontWeight.SemiBold
                     )
                 }
+                Spacer(modifier = Modifier.height(64.dp))
+                Row(
+                    verticalAlignment = Alignment.Bottom,
+                    horizontalArrangement = Arrangement.Center,
+                    modifier = Modifier.fillMaxWidth(1f)
+                ) {
+                    Text(
+                        text = "Don't have an account?",
+                        color = C1,
+                        fontSize = 16.sp,
+                        fontWeight = FontWeight.Normal,
+                        textAlign = TextAlign.Center
+                    )
+                    Spacer(modifier = Modifier.width(4.dp))
+                    Text(
+                        text = "Sign Up",
+                        color = C1,
+                        fontSize = 16.sp,
+                        fontWeight = FontWeight.SemiBold,
+                        textAlign = TextAlign.Center
+                    )
+                }
+
             }
         }
     }
@@ -172,7 +196,8 @@ fun LoginScreenOutlinedTextFieldSample(
             focusedPlaceholderColor = temp,
             unfocusedPlaceholderColor = temp,
             focusedSupportingTextColor = temp,
-            unfocusedSupportingTextColor = temp
+            unfocusedSupportingTextColor = temp,
+            cursorColor = temp
         ),
         singleLine = true,
         shape = RoundedCornerShape(14.dp),
