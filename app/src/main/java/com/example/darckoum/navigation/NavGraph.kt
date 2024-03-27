@@ -8,32 +8,42 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import com.example.darckoum.ui.screen.MainScreen
-import com.example.darckoum.ui.screen.WelcomeScreen1
-import com.example.darckoum.ui.screen.WelcomeScreen2
+import com.example.darckoum.ui.screen.WelcomeScreen
+import com.example.darckoum.ui.screen.login.LoginScreen
+import com.example.darckoum.ui.screen.login.LoginViewModel
+import com.example.darckoum.ui.screen.register.RegisterScreen
+import com.example.darckoum.ui.screen.register.RegisterViewModel
 
 @Composable
 fun SetupNavGraph(
-    navController: NavHostController
+    navController: NavHostController,
+    registerViewModel: RegisterViewModel,
+    loginViewModel: LoginViewModel
 ) {
-    val time = 1000
+    val time = 500
     NavHost(
         navController = navController,
-        startDestination = Screen.Welcome1.route,
+        startDestination = Screen.Welcome.route,
         enterTransition = { fadeIn(animationSpec = tween(time)) },
         exitTransition = { fadeOut(animationSpec = tween(time)) },
         popEnterTransition = { fadeIn(animationSpec = tween(time)) },
         popExitTransition = { fadeOut(animationSpec = tween(time)) }
     ) {
         composable(
-            route = Screen.Welcome1.route,
+            route = Screen.Welcome.route,
 
         ) {
-            WelcomeScreen1(navController = navController)
+            WelcomeScreen(navController = navController)
         }
         composable(
-            route = Screen.Welcome2.route
+            route = Screen.LogIn.route
         ) {
-            WelcomeScreen2(navController = navController)
+            LoginScreen(navController = navController, loginViewModel = loginViewModel)
+        }
+        composable(
+            route = Screen.SignUp.route
+        ) {
+            RegisterScreen(navController = navController, registerViewModel = registerViewModel)
         }
         composable(
             route = Screen.Main.route

@@ -19,9 +19,10 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import com.example.darckoum.navigation.Screen
+import com.example.darckoum.ui.theme.C1
 
 @Composable
-fun WelcomeScreen1(
+fun WelcomeScreen(
     navController: NavController
 ) {
     Column(
@@ -39,13 +40,13 @@ fun WelcomeScreen1(
             ) {
                 Text(
                     text = "Welcome to",
-                    color = Color.White,
+                    color = C1,
                     fontSize = 20.sp,
                     fontWeight = FontWeight.Medium
                     )
                 Text(
                     text = "Darckoum",
-                    color = Color.White,
+                    color = C1,
                     fontSize = 36.sp,
                     fontWeight = FontWeight.Bold
                     )
@@ -60,7 +61,7 @@ fun WelcomeScreen1(
         ) {
             Button(
                 onClick = {
-                    navController.navigate(route = Screen.Welcome2.route)
+                    navController.navigate(route = Screen.LogIn.route)
                 },
                 shape = RoundedCornerShape(14.dp),
                 colors = ButtonDefaults.buttonColors(containerColor = Color(0xFFE7BD73)),
