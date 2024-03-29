@@ -4,7 +4,6 @@ import android.content.Intent
 import android.net.Uri
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
-import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
@@ -19,9 +18,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.rememberPagerState
-import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Icon
@@ -51,7 +48,6 @@ import com.example.darckoum.ui.theme.C2
 import com.example.darckoum.ui.theme.C5
 
 
-@OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun AnnouncementScreen(
     houseRepository: HouseRepository
@@ -62,10 +58,9 @@ fun AnnouncementScreen(
 
     Column(
         modifier = Modifier
-            .background(C2)
-            .verticalScroll(rememberScrollState())
-            .padding(bottom = 80.dp)
-            .fillMaxSize(),
+            .fillMaxSize()
+            .background(C2),
+        verticalArrangement = Arrangement.SpaceBetween
     ) {
         var selectedImageUri by remember {
             mutableStateOf<Uri?>(null)
@@ -115,9 +110,9 @@ fun AnnouncementScreen(
         Column(
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(top = 32.dp, start = 12.dp, end = 12.dp),
+                .padding(12.dp),
             horizontalAlignment = Alignment.CenterHorizontally,
-            verticalArrangement = Arrangement.spacedBy(20.dp)
+            verticalArrangement = Arrangement.spacedBy(16.dp)
         ) {
             Text(
                 text = announcementViewModel.title.value,
@@ -261,29 +256,30 @@ fun AnnouncementScreen(
                     modifier = Modifier
                 )
             }
-            Button(
-                onClick = {
-                    val intent = Intent(Intent.ACTION_DIAL)
-                    intent.setData(Uri.parse("tel:0664813680"))
-                    startActivity(context, intent, null)
-                },
-                shape = RoundedCornerShape(14.dp),
-                colors = ButtonDefaults.buttonColors(containerColor = Color(0xFFE7BD73)),
-                contentPadding = PaddingValues(vertical = 20.dp),
-                modifier = Modifier
-                    .fillMaxWidth(1f)
-            ) {
-                Text(
-                    text = "Contact the seller",
-                    fontSize = 22.sp,
-                    fontWeight = FontWeight.SemiBold
-                )
-            }
+        }
+        Button(
+            onClick = {
+                val intent = Intent(Intent.ACTION_DIAL)
+                intent.setData(Uri.parse("tel:0664813680"))
+                startActivity(context, intent, null)
+            },
+            shape = RoundedCornerShape(14.dp),
+            colors = ButtonDefaults.buttonColors(containerColor = Color(0xFFE7BD73)),
+            contentPadding = PaddingValues(vertical = 20.dp),
+            modifier = Modifier
+                .fillMaxWidth(1f)
+                .padding(8.dp)
+        ) {
+            Text(
+                text = "Contact the seller",
+                fontSize = 22.sp,
+                fontWeight = FontWeight.SemiBold
+            )
         }
     }
 }
 
-@Preview
+@Preview(showSystemUi = true)
 @Composable
 fun AnnouncementScreenPreview() {
     AnnouncementScreen(houseRepository = HouseRepository())

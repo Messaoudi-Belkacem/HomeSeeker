@@ -48,6 +48,7 @@ class RegisterViewModel(private val repository: Repository, application: Applica
             }
         } catch (e: ConnectException) {
             Log.d(tag, "Failed to connect to the server. Please check your internet connection.")
+            e.printStackTrace()
         } catch (e: Exception) {
             Log.d(tag, "An unexpected error occurred.")
             e.printStackTrace()

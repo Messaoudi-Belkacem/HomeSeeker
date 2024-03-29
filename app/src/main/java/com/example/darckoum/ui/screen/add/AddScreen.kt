@@ -42,6 +42,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -61,16 +62,19 @@ import com.example.darckoum.data.model.Announcement
 import com.example.darckoum.data.model.enum_classes.PropertyType
 import com.example.darckoum.data.model.enum_classes.State
 import com.example.darckoum.data.model.enum_classes.TransactionType
+import com.example.darckoum.data.model.request.AnnouncementRequest
 import com.example.darckoum.data.repository.HouseRepository
 import com.example.darckoum.navigation.BottomBarScreen
+import com.example.darckoum.navigation.Screen
 import com.example.darckoum.ui.theme.C1
 import com.example.darckoum.ui.theme.C2
 import com.example.darckoum.ui.theme.C3
 import com.example.darckoum.ui.theme.C5
+import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
-fun AddScreen(houseRepository: HouseRepository, navController: NavController) {
+fun AddScreen(navController: NavController, addViewModel: AddViewModel) {
 
     val context = LocalContext.current
 
@@ -82,6 +86,9 @@ fun AddScreen(houseRepository: HouseRepository, navController: NavController) {
     var selectedPropertyTypeText by remember { mutableStateOf("") }
     var selectedTransactionTypeText by remember { mutableStateOf("") }
     var selectedStateText by remember { mutableStateOf("") }
+    val responseIsSuccessfulState = remember { mutableStateOf(false) }
+
+    val scope = rememberCoroutineScope()
 
     Column(
         modifier = Modifier
@@ -354,20 +361,29 @@ fun AddScreen(houseRepository: HouseRepository, navController: NavController) {
                             Toast.makeText(context,"You must fill all the fields !", Toast.LENGTH_SHORT).show()
                         } else { Toast.makeText(context,"You must add photos of the property from your gallery !", Toast.LENGTH_SHORT).show() }
                     } else {
-                        val newAnnouncement = Announcement(
-                            id = -1,
+                        val newAnnouncementRequest = AnnouncementRequest(
                             title = titleTextFieldText,
                             area = 120,
                             numberOfRooms = 4,
                             location = locationTextFieldText,
-                            state = State.Adrar,
-                            propertyType = PropertyType.VILLA,
-                            price = priceTextFieldText.toInt(),
-                            description = descriptionTextFieldText
+                            state = State.Adrar.displayName,
+                            propertyType = PropertyType.VILLA.description,
+                            price = priceTextFieldText.toDouble(),
+                            description = descriptionTextFieldText,
+                            owner = "use"
                         )
-                        houseRepository.addHouse(newAnnouncement)
-                        Toast.makeText(context,"your announcement have been added successfully", Toast.LENGTH_SHORT).show()
-                        navController.navigate(BottomBarScreen.Home.route)
+                        scope.launch {
+                            responseIsSuccessfulState.value = addViewModel.createAnnouncement(
+                                announcementRequest = newAnnouncementRequest
+                            )
+                            if (responseIsSuccessfulState.value) {
+                                Toast.makeText(context,"your announcement has been added successfully", Toast.LENGTH_SHORT).show()
+                                navController.navigate(BottomBarScreen.Home.route)
+                            } else {
+                                Toast.makeText(context,"your announcement has not been added", Toast.LENGTH_SHORT).show()
+                            }
+                        }
+
                     }
                 },
                 shape = RoundedCornerShape(14.dp),

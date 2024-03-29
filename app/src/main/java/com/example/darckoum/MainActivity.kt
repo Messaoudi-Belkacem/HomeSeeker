@@ -17,6 +17,8 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import com.example.darckoum.data.repository.Repository
 import com.example.darckoum.navigation.SetupNavGraph
+import com.example.darckoum.ui.screen.add.AddViewModel
+import com.example.darckoum.ui.screen.add.AddViewModelFactory
 import com.example.darckoum.ui.screen.login.LoginViewModel
 import com.example.darckoum.ui.screen.login.LoginViewModelFactory
 import com.example.darckoum.ui.screen.register.RegisterViewModel
@@ -27,6 +29,7 @@ class MainActivity : ComponentActivity() {
 
     private lateinit var registerViewModel: RegisterViewModel
     private lateinit var loginViewModel: LoginViewModel
+    private lateinit var addViewModel: AddViewModel
 
     lateinit var navController: NavHostController
 
@@ -36,6 +39,7 @@ class MainActivity : ComponentActivity() {
 
         val registerViewModelFactory = RegisterViewModelFactory(repository,application)
         val loginViewModelFactory = LoginViewModelFactory(repository,application)
+        val addViewModelFactory = AddViewModelFactory(repository,application)
 
         super.onCreate(savedInstanceState)
         WindowCompat.setDecorFitsSystemWindows(window, false)
@@ -43,6 +47,7 @@ class MainActivity : ComponentActivity() {
 
             registerViewModel = ViewModelProvider(this, registerViewModelFactory)[RegisterViewModel::class.java]
             loginViewModel = ViewModelProvider(this, loginViewModelFactory)[LoginViewModel::class.java]
+            addViewModel = ViewModelProvider(this, addViewModelFactory)[AddViewModel::class.java]
 
             Box(
                 modifier = Modifier
@@ -53,7 +58,12 @@ class MainActivity : ComponentActivity() {
                 )
             ) {
                 navController = rememberNavController()
-                SetupNavGraph(navController = navController, registerViewModel = registerViewModel, loginViewModel = loginViewModel)
+                SetupNavGraph(
+                    navController = navController,
+                    registerViewModel = registerViewModel,
+                    loginViewModel = loginViewModel,
+                    addViewModel = addViewModel
+                    )
 
                 val systemUiController = rememberSystemUiController()
                 DisposableEffect(systemUiController) {

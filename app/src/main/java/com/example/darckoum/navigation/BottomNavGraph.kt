@@ -8,14 +8,16 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import com.example.darckoum.data.repository.HouseRepository
+import com.example.darckoum.data.repository.Repository
 import com.example.darckoum.ui.screen.add.AddScreen
 import com.example.darckoum.ui.screen.announcement.AnnouncementScreen
 import com.example.darckoum.ui.screen.home.HomeScreen
 import com.example.darckoum.ui.screen.profile.ProfileScreen
 import com.example.darckoum.ui.screen.SearchScreen
+import com.example.darckoum.ui.screen.add.AddViewModel
 
 @Composable
-fun BottomNavGraph(navController: NavHostController) {
+fun BottomNavGraph(navController: NavHostController, addViewModel: AddViewModel) {
 
     val houseRepository = HouseRepository()
 
@@ -33,7 +35,7 @@ fun BottomNavGraph(navController: NavHostController) {
         }
 
         composable(route = BottomBarScreen.Add.route) {
-            AddScreen(houseRepository, navController)
+            AddScreen(navController, addViewModel)
         }
 
         composable(route = BottomBarScreen.Profile.route) {

@@ -27,17 +27,6 @@ class HouseRepository {
             area = 150,
             numberOfRooms = 4,
             state = State.Setif
-        ),
-        Announcement(
-            id = 2,
-            title = "Charming Family Home with Garden",
-            location = "5 Rue Laffi, Setif 19000",
-            propertyType = PropertyType.CONDO,
-            price = 8000000,
-            description = "This charming house is perfect for a family. It features a spacious garden, 3 bedrooms, and a cozy living space. Enjoy a peaceful neighborhood and convenient access to schools.",
-            area = 180,
-            numberOfRooms = 3,
-            state = State.Setif
         )
     )
 
