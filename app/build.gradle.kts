@@ -56,9 +56,20 @@ dependencies {
     implementation ("androidx.compose.material3:material3:1.2.1")
     implementation ("androidx.compose.material:material-icons-extended")
     implementation ("io.coil-kt:coil-compose:2.5.0")
+
+    //JWT
+    implementation ("com.auth0:java-jwt:4.4.0")
+
+    //Retrofit
     implementation ("com.squareup.retrofit2:retrofit:2.9.0")
     implementation ("com.squareup.retrofit2:converter-gson:2.9.0")
+
+    //DataStore
     implementation ("androidx.datastore:datastore-preferences:1.0.0")
+
+    //Paging 3
+    implementation("androidx.paging:paging-runtime-ktx:3.2.1")
+    implementation("androidx.paging:paging-compose:3.3.0-alpha05")
 
 
     implementation("androidx.core:core-ktx:1.12.0")

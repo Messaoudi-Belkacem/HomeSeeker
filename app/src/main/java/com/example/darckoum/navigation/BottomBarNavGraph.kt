@@ -7,23 +7,25 @@ import androidx.compose.runtime.Composable
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
+import androidx.navigation.compose.rememberNavController
 import com.example.darckoum.data.repository.HouseRepository
-import com.example.darckoum.data.repository.Repository
+import com.example.darckoum.ui.screen.SearchScreen
 import com.example.darckoum.ui.screen.add.AddScreen
+import com.example.darckoum.ui.screen.add.AddViewModel
 import com.example.darckoum.ui.screen.announcement.AnnouncementScreen
 import com.example.darckoum.ui.screen.home.HomeScreen
 import com.example.darckoum.ui.screen.profile.ProfileScreen
-import com.example.darckoum.ui.screen.SearchScreen
-import com.example.darckoum.ui.screen.add.AddViewModel
+import com.example.darckoum.ui.screen.profile.ProfileViewModel
 
 @Composable
-fun BottomNavGraph(navController: NavHostController, addViewModel: AddViewModel) {
+fun BottomNavGraph(bottomBarNavController: NavHostController, navController: NavHostController, addViewModel: AddViewModel, profileViewModel: ProfileViewModel) {
 
+    //TODO : remove the house repository
     val houseRepository = HouseRepository()
 
-    val time = 100
+    val time = 500
     NavHost(
-        navController = navController,
+        navController = bottomBarNavController,
         startDestination = BottomBarScreen.Home.route,
         enterTransition = { fadeIn(animationSpec = tween(time)) },
         exitTransition = { fadeOut(animationSpec = tween(time)) },
@@ -31,15 +33,15 @@ fun BottomNavGraph(navController: NavHostController, addViewModel: AddViewModel)
         popExitTransition = { fadeOut(animationSpec = tween(time)) }
     ) {
         composable(route = BottomBarScreen.Home.route) {
-            HomeScreen(houseRepository, navController)
+            HomeScreen(bottomBarNavController)
         }
 
         composable(route = BottomBarScreen.Add.route) {
-            AddScreen(navController, addViewModel)
+            AddScreen(bottomBarNavController, addViewModel)
         }
 
         composable(route = BottomBarScreen.Profile.route) {
-            ProfileScreen()
+            ProfileScreen(navController, profileViewModel)
         }
 
         composable(
@@ -51,7 +53,7 @@ fun BottomNavGraph(navController: NavHostController, addViewModel: AddViewModel)
         composable(
             route = BottomBarScreen.Search.route
         ) {
-            SearchScreen(houseRepository, navController)
+            SearchScreen(houseRepository, bottomBarNavController)
         }
     }
 }

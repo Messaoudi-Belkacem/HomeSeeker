@@ -206,11 +206,14 @@ fun LoginScreen(navController: NavController, loginViewModel: LoginViewModel) {
                             textAlign = TextAlign.Center,
                             modifier = Modifier
                                 .clickable {
-                                    navController.navigate(route = Screen.SignUp.route) {
+                                    navController.navigate(route = Screen.SignUp.route)
+                                    /**
+                                    {
                                         popUpTo(Screen.SignUp.route) {
                                             inclusive = true
                                         }
                                     }
+                                    */
                                     Log.d("Log in screen", "Sign up text clicked")
                                 }
                         )

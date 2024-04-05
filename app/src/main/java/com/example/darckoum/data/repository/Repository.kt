@@ -6,6 +6,8 @@ import com.example.darckoum.data.model.request.AnnouncementRequest
 import com.example.darckoum.data.model.request.AnnouncementResponse
 import com.example.darckoum.data.model.request.LoginRequest
 import com.example.darckoum.data.model.request.LoginResponse
+import com.example.darckoum.data.model.request.LogoutRequest
+import com.example.darckoum.data.model.request.LogoutResponse
 import com.example.darckoum.data.model.request.RegistrationRequest
 import com.example.darckoum.data.model.request.RegistrationResponse
 import retrofit2.Response
@@ -27,5 +29,9 @@ class Repository {
 
     suspend fun loginUser(loginRequest: LoginRequest): Response<LoginResponse> {
         return RetrofitInstance.authenticationService.loginUser(loginRequest)
+    }
+
+    suspend fun logoutUser(logoutRequest: LogoutRequest): Response<LogoutResponse> {
+        return RetrofitInstance.authenticationService.logoutUser(logoutRequest)
     }
 }

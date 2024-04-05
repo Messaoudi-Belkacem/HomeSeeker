@@ -57,12 +57,12 @@ fun RegisterScreen(navController: NavController, registerViewModel: RegisterView
     val responseIsSuccessfulState = remember { mutableStateOf(false) }
 
     val scope = rememberCoroutineScope()
-    val snackBarHostState = remember { SnackbarHostState() }
+    /*val snackBarHostState = remember { SnackbarHostState() }*/
 
     Scaffold(
-        snackbarHost = {
+        /*snackbarHost = {
             SnackbarHost(hostState = snackBarHostState)
-        },
+        },*/
         containerColor = Color.Transparent
     ) {it
         Column(
@@ -178,18 +178,19 @@ fun RegisterScreen(navController: NavController, registerViewModel: RegisterView
                                         passwordState.value
                                     )
                                     if (responseIsSuccessfulState.value) {
-                                        scope.launch {
+                                        /*scope.launch {
                                             snackBarHostState.showSnackbar("Registration successful! Welcome to our community.")
-                                        }
-                                        navController.navigate(route = Screen.Main.route) {
+                                        }*/
+                                        navController.navigate(route = Screen.Main.route)
+                                        /*{
                                             popUpTo(Screen.Main.route) {
                                                 inclusive = true
                                             }
-                                        }
+                                        }*/
                                     } else {
-                                        scope.launch {
+                                        /*scope.launch {
                                             snackBarHostState.showSnackbar("Oops! Something went wrong during registration.")
-                                        }
+                                        }*/
                                     }
                                 }
                             }

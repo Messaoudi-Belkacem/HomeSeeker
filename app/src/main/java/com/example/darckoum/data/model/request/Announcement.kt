@@ -1,8 +1,5 @@
 package com.example.darckoum.data.model.request
 
-import com.example.darckoum.data.model.enum_classes.PropertyType
-import com.example.darckoum.data.model.enum_classes.State
-
 data class AnnouncementRequest(
     val title: String,
     val area: Int,

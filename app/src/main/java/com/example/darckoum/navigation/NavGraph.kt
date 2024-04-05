@@ -1,8 +1,8 @@
 package com.example.darckoum.navigation
 
 import androidx.compose.animation.core.tween
-import androidx.compose.animation.fadeIn
-import androidx.compose.animation.fadeOut
+import androidx.compose.animation.slideInHorizontally
+import androidx.compose.animation.slideOutHorizontally
 import androidx.compose.runtime.Composable
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
@@ -12,6 +12,7 @@ import com.example.darckoum.ui.screen.WelcomeScreen
 import com.example.darckoum.ui.screen.add.AddViewModel
 import com.example.darckoum.ui.screen.login.LoginScreen
 import com.example.darckoum.ui.screen.login.LoginViewModel
+import com.example.darckoum.ui.screen.profile.ProfileViewModel
 import com.example.darckoum.ui.screen.register.RegisterScreen
 import com.example.darckoum.ui.screen.register.RegisterViewModel
 
@@ -20,16 +21,26 @@ fun SetupNavGraph(
     navController: NavHostController,
     registerViewModel: RegisterViewModel,
     loginViewModel: LoginViewModel,
-    addViewModel: AddViewModel
+    addViewModel: AddViewModel,
+    profileViewModel: ProfileViewModel,
+    startDestination: String
 ) {
     val time = 500
     NavHost(
         navController = navController,
-        startDestination = Screen.Welcome.route,
-        enterTransition = { fadeIn(animationSpec = tween(time)) },
-        exitTransition = { fadeOut(animationSpec = tween(time)) },
-        popEnterTransition = { fadeIn(animationSpec = tween(time)) },
-        popExitTransition = { fadeOut(animationSpec = tween(time)) }
+        startDestination = startDestination,
+        enterTransition = { slideInHorizontally(animationSpec = tween(time), initialOffsetX = {fullWidth ->  
+            -fullWidth
+        }) },
+        exitTransition = { slideOutHorizontally(animationSpec = tween(time), targetOffsetX = {fullWidth ->
+            fullWidth
+        }) },
+        popEnterTransition = { slideInHorizontally(animationSpec = tween(time), initialOffsetX = {fullWidth ->
+            -fullWidth
+        }) },
+        popExitTransition = { slideOutHorizontally(animationSpec = tween(time), targetOffsetX = {fullWidth ->
+            fullWidth
+        }) }
     ) {
         composable(
             route = Screen.Welcome.route,
@@ -50,7 +61,7 @@ fun SetupNavGraph(
         composable(
             route = Screen.Main.route
         ) {
-            MainScreen(addViewModel)
+            MainScreen(navController, addViewModel, profileViewModel)
         }
     }
 }

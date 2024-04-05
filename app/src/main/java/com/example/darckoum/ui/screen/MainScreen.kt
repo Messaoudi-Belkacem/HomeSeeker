@@ -11,8 +11,7 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.Icon
-import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.Icon
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -31,19 +30,20 @@ import androidx.navigation.compose.rememberNavController
 import com.example.darckoum.navigation.BottomBarScreen
 import com.example.darckoum.navigation.BottomNavGraph
 import com.example.darckoum.ui.screen.add.AddViewModel
+import com.example.darckoum.ui.screen.profile.ProfileViewModel
 import com.example.darckoum.ui.theme.C1
 import com.example.darckoum.ui.theme.C2
 import com.example.darckoum.ui.theme.C3
 
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun MainScreen(addViewModel: AddViewModel) {
-    val navController = rememberNavController()
+fun MainScreen(navController: NavHostController, addViewModel: AddViewModel, profileViewModel: ProfileViewModel) {
+    val bottomBarNavController = rememberNavController()
     Scaffold(
-        bottomBar = { BottomBar(navController = navController) }
+        bottomBar = { BottomBar(navController = bottomBarNavController) },
+        containerColor = C2
     ) {
-        BottomNavGraph(navController = navController, addViewModel)
+        BottomNavGraph(bottomBarNavController = bottomBarNavController, navController = navController, addViewModel, profileViewModel = profileViewModel)
     }
 }
 

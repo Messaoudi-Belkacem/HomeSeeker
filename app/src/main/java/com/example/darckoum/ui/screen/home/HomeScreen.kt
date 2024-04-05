@@ -47,10 +47,7 @@ import com.example.darckoum.ui.theme.C3
 import com.example.darckoum.ui.theme.C5
 
 @Composable
-fun HomeScreen(houseRepository: HouseRepository, navController: NavController) {
-
-    val getAllData = houseRepository.getAllData()
-    val getAllNewData = houseRepository.getAllNewData()
+fun HomeScreen(navController: NavController) {
 
     Scaffold(
         modifier = Modifier.fillMaxSize(),
@@ -99,9 +96,9 @@ fun HomeScreen(houseRepository: HouseRepository, navController: NavController) {
                         horizontalArrangement = Arrangement.spacedBy(12.dp),
                         contentPadding = PaddingValues(horizontal = 12.dp)
                     ) {
-                        items(items = getAllData) { announcement ->
+                        /*items(items = getAllData) { announcement ->
                             CustomItem(announcement = announcement, navController)
-                        }
+                        }*/
                     }
                 }
                 Column(
@@ -136,9 +133,9 @@ fun HomeScreen(houseRepository: HouseRepository, navController: NavController) {
                         modifier = Modifier.padding(start = 16.dp),
                         horizontalArrangement = Arrangement.spacedBy(16.dp)
                     ) {
-                        items(items = getAllNewData) { announcement ->
+                        /*items(items = getAllNewData) { announcement ->
                             CustomItem(announcement = announcement, navController)
-                        }
+                        }*/
                     }
                 }
             }

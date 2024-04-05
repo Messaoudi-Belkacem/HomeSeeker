@@ -1,17 +1,14 @@
 package com.example.darckoum.ui.screen.home
 
 import android.app.Application
-import android.util.Log
+import android.content.Context
 import androidx.lifecycle.AndroidViewModel
-import com.example.darckoum.data.model.request.LoginRequest
-import com.example.darckoum.data.repository.DataStoreRepository
+import androidx.lifecycle.ViewModel
 import com.example.darckoum.data.repository.Repository
-import java.net.ConnectException
 
-class HomeViewModel(private val repository: Repository, application: Application) : AndroidViewModel(application) {
+class HomeViewModel(private val repository: Repository, application: Application) : ViewModel() {
 
     private val tag: String = "HomeViewModel.kt"
-    private val context = getApplication<Application>().applicationContext
-
+    private val appContext: Context = application.applicationContext
 
 }

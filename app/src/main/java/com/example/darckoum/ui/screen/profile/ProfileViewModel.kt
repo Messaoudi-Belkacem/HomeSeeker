@@ -1,47 +1,39 @@
 package com.example.darckoum.ui.screen.profile
 
-import androidx.compose.runtime.MutableState
-import androidx.compose.runtime.mutableIntStateOf
-import androidx.compose.runtime.mutableStateOf
+import android.app.Application
+import android.content.Context
+import android.util.Log
 import androidx.lifecycle.ViewModel
-import com.example.darckoum.data.model.enum_classes.PropertyType
-import com.example.darckoum.data.model.enum_classes.State
-import com.example.darckoum.data.repository.HouseRepository
-import com.example.darckoum.items.formatPrice
+import com.example.darckoum.data.model.request.LogoutRequest
+import com.example.darckoum.data.repository.DataStoreRepository
+import com.example.darckoum.data.repository.Repository
 
-class ProfileViewModel() : ViewModel() {
+class ProfileViewModel(private val repository: Repository, application: Application) : ViewModel() {
 
-    /**
-    private val announcement = houseRepository.getAllData()[0]
+    private val tag: String = "ProfileViewModel.kt"
+    private val appContext: Context = application.applicationContext
 
-    private val _title = mutableStateOf(announcement.title)
-    val title: MutableState<String> = _title
-
-    private val _area = mutableIntStateOf(announcement.area)
-    val area: MutableState<Int> = _area
-
-    private val _numberOfRooms = mutableIntStateOf(announcement.numberOfRooms)
-    val numberOfRooms: MutableState<Int> = _numberOfRooms
-
-    private val _location = mutableStateOf(announcement.location)
-    val location: MutableState<String> = _location
-
-    private val _state = mutableStateOf(announcement.state)
-    val state: MutableState<State> = _state
-
-    private val _propertyType = mutableStateOf(announcement.propertyType)
-    val propertyType: MutableState<PropertyType> = _propertyType
-
-    private val _price = mutableIntStateOf(announcement.price)
-    val price: MutableState<Int> = _price
-
-    private val _description = mutableStateOf(announcement.description)
-    val description: MutableState<String> = _description
-
-    fun getFormattedPrice(): String {
-        return formatPrice(_price.intValue)
+    suspend fun logout(): Boolean {
+        try {
+            val token = DataStoreRepository.TokenManager.getToken(appContext)
+            Log.d(tag, "token : " + token.toString())
+            val logoutRequest = LogoutRequest(token.toString())
+            val logoutResponse = repository.logoutUser(logoutRequest)
+            return if (logoutResponse.isSuccessful) {
+                DataStoreRepository.TokenManager.clearToken(appContext)
+                Log.d(tag, "response was successful")
+                Log.d(tag, "response message : " + logoutResponse.message())
+                true
+            } else {
+                Log.d(tag, "response was not successful")
+                Log.d(tag, "response error body (string): " + (logoutResponse.errorBody()!!.string()))
+                Log.d(tag, "response error body (to string): " + (logoutResponse.errorBody().toString()))
+                Log.d(tag, "response code: " + (logoutResponse.code().toString()))
+                false
+            }
+        } catch (e: Exception) {
+            e.printStackTrace()
+        }
+        return false
     }
-
-    **/
-
 }

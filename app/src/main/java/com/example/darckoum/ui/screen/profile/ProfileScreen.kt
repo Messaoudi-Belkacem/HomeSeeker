@@ -1,5 +1,7 @@
 package com.example.darckoum.ui.screen.profile
 
+import android.widget.Toast
+import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -33,30 +35,41 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.navigation.NavController
 import com.example.darckoum.R
+import com.example.darckoum.navigation.Screen
+import com.example.darckoum.ui.screen.register.RegisterViewModel
 import com.example.darckoum.ui.theme.C3
 import com.example.darckoum.ui.theme.C5
+import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun ProfileScreen() {
+fun ProfileScreen(navController: NavController, profileViewModel: ProfileViewModel) {
 
     var areFieldsEnabled by remember { mutableStateOf(false) }
+
+    val scope = rememberCoroutineScope()
 
     Box(
         modifier = Modifier.fillMaxSize()
     ) {
+
+        val context = LocalContext.current
+
         Image(
             painter = painterResource(id = R.drawable.profile_screen_background),
             contentDescription = "Background image",
@@ -79,7 +92,9 @@ fun ProfileScreen() {
                         )
                     },
                     navigationIcon = {
-                        IconButton(onClick = { /* do something */ }) {
+                        IconButton(onClick = {
+                        // TODO : use nav controller to navigate back to the previous screen
+                        }) {
                             Icon(
                                 imageVector = Icons.AutoMirrored.Rounded.ArrowBack,
                                 contentDescription = null,
@@ -168,20 +183,49 @@ fun ProfileScreen() {
                             preText = "0664813680"
                         )
                     }
+                    AnimatedVisibility(
+                        visible = areFieldsEnabled
+                    ) {
+                        Button(
+                            onClick = {
+                                areFieldsEnabled = !areFieldsEnabled
+                            },
+                            shape = RoundedCornerShape(14.dp),
+                            colors = ButtonDefaults.buttonColors(containerColor = Color(0xFFE7BD73)),
+                            contentPadding = PaddingValues(vertical = 20.dp),
+                            modifier = Modifier
+                                .fillMaxWidth(1f)
+                                .padding(horizontal = 12.dp)
+                        ) {
+                            Text(
+                                text = "Save",
+                                fontSize = 22.sp,
+                                fontWeight = FontWeight.SemiBold
+                            )
+                        }
+                    }
                     Button(
                         onClick = {
-                            areFieldsEnabled = !areFieldsEnabled
+                            scope.launch {
+                                if (profileViewModel.logout()) {
+                                    Toast.makeText(context, "Log out was successful", Toast.LENGTH_SHORT)
+                                        .show()
+                                    navController.navigate(route = Screen.LogIn.route)
+                                } else {
+                                    Toast.makeText(context, "Log out was not successful", Toast.LENGTH_SHORT)
+                                        .show()
+                                }
+                            }
                         },
                         shape = RoundedCornerShape(14.dp),
-                        colors = ButtonDefaults.buttonColors(containerColor = Color(0xFFE7BD73)),
+                        colors = ButtonDefaults.buttonColors(containerColor = Color.Red),
                         contentPadding = PaddingValues(vertical = 20.dp),
-                        enabled = areFieldsEnabled,
                         modifier = Modifier
                             .fillMaxWidth(1f)
                             .padding(horizontal = 12.dp)
                     ) {
                         Text(
-                            text = "Save",
+                            text = "Log out",
                             fontSize = 22.sp,
                             fontWeight = FontWeight.SemiBold
                         )
@@ -190,12 +234,6 @@ fun ProfileScreen() {
             }
         )
     }
-}
-
-@Composable
-@Preview
-fun ProfileScreenPreview() {
-    ProfileScreen()
 }
 
 @Composable

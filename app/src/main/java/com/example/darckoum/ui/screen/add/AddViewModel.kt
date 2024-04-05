@@ -34,10 +34,9 @@ class AddViewModel(private val repository: Repository, application: Application)
             } else {
                 responseIsSuccessful = false
                 Log.d(tag, "response was not successful")
-                Log.d(tag, "response: " + response.message())
-                Log.d(tag, "response: " + response.body().toString())
-                Log.d(tag, "response error: " + response.errorBody().toString())
-                Log.d(tag, "response raw: " + response.raw().toString())
+                Log.d(tag, "response error body (string): " + (response.errorBody()!!.string()))
+                Log.d(tag, "response error body (to string): " + (response.errorBody().toString()))
+                Log.d(tag, "response code: " + (response.code().toString()))
             }
         } catch (e: ConnectException) {
             Log.d(tag, "Failed to connect to the server. Please check your internet connection.")
@@ -48,6 +47,4 @@ class AddViewModel(private val repository: Repository, application: Application)
         Log.d(tag, "response status: $responseIsSuccessful")
         return responseIsSuccessful
     }
-
-
 }
