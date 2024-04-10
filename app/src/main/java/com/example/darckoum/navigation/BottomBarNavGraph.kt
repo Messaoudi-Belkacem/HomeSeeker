@@ -10,18 +10,17 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.example.darckoum.data.repository.HouseRepository
 import com.example.darckoum.ui.screen.SearchScreen
+import com.example.darckoum.ui.screen.SharedViewModel
 import com.example.darckoum.ui.screen.add.AddScreen
 import com.example.darckoum.ui.screen.add.AddViewModel
 import com.example.darckoum.ui.screen.announcement.AnnouncementScreen
+import com.example.darckoum.ui.screen.announcement.AnnouncementViewModel
 import com.example.darckoum.ui.screen.home.HomeScreen
 import com.example.darckoum.ui.screen.profile.ProfileScreen
 import com.example.darckoum.ui.screen.profile.ProfileViewModel
 
 @Composable
-fun BottomNavGraph(bottomBarNavController: NavHostController, navController: NavHostController, addViewModel: AddViewModel, profileViewModel: ProfileViewModel) {
-
-    //TODO : remove the house repository
-    val houseRepository = HouseRepository()
+fun BottomNavGraph(bottomBarNavController: NavHostController, navController: NavHostController, addViewModel: AddViewModel, profileViewModel: ProfileViewModel, announcementViewModel: AnnouncementViewModel, sharedViewModel: SharedViewModel) {
 
     val time = 500
     NavHost(
@@ -37,7 +36,7 @@ fun BottomNavGraph(bottomBarNavController: NavHostController, navController: Nav
         }
 
         composable(route = BottomBarScreen.Add.route) {
-            AddScreen(bottomBarNavController, addViewModel)
+            AddScreen(bottomBarNavController, addViewModel, sharedViewModel)
         }
 
         composable(route = BottomBarScreen.Profile.route) {
@@ -47,13 +46,13 @@ fun BottomNavGraph(bottomBarNavController: NavHostController, navController: Nav
         composable(
             route = BottomBarScreen.Announcement.route
         ) {
-            AnnouncementScreen(houseRepository)
+            AnnouncementScreen(announcementViewModel = announcementViewModel, sharedViewModel = sharedViewModel)
         }
 
         composable(
             route = BottomBarScreen.Search.route
         ) {
-            SearchScreen(houseRepository, bottomBarNavController)
+            SearchScreen(bottomBarNavController)
         }
     }
 }

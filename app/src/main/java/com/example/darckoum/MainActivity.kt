@@ -14,14 +14,18 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.core.view.WindowCompat
 import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import com.example.darckoum.data.repository.DataStoreRepository
 import com.example.darckoum.data.repository.Repository
 import com.example.darckoum.navigation.Screen
 import com.example.darckoum.navigation.SetupNavGraph
+import com.example.darckoum.ui.screen.SharedViewModel
 import com.example.darckoum.ui.screen.add.AddViewModel
 import com.example.darckoum.ui.screen.add.AddViewModelFactory
+import com.example.darckoum.ui.screen.announcement.AnnouncementViewModel
+import com.example.darckoum.ui.screen.announcement.AnnouncementViewModelFactory
 import com.example.darckoum.ui.screen.login.LoginViewModel
 import com.example.darckoum.ui.screen.login.LoginViewModelFactory
 import com.example.darckoum.ui.screen.profile.ProfileViewModel
@@ -45,6 +49,8 @@ class MainActivity : ComponentActivity() {
     private lateinit var loginViewModel: LoginViewModel
     private lateinit var addViewModel: AddViewModel
     private lateinit var profileViewModel: ProfileViewModel
+    private lateinit var announcementViewModel: AnnouncementViewModel
+    private lateinit var sharedViewModel: SharedViewModel
 
     lateinit var navController: NavHostController
 
@@ -56,6 +62,7 @@ class MainActivity : ComponentActivity() {
         val loginViewModelFactory = LoginViewModelFactory(repository,application)
         val addViewModelFactory = AddViewModelFactory(repository,application)
         val profileViewModelFactory = ProfileViewModelFactory(repository, application)
+        val announcementViewModelFactory = AnnouncementViewModelFactory(repository)
 
         super.onCreate(savedInstanceState)
         WindowCompat.setDecorFitsSystemWindows(window, false)
@@ -81,6 +88,8 @@ class MainActivity : ComponentActivity() {
             loginViewModel = ViewModelProvider(this, loginViewModelFactory)[LoginViewModel::class.java]
             addViewModel = ViewModelProvider(this, addViewModelFactory)[AddViewModel::class.java]
             profileViewModel = ViewModelProvider(this, profileViewModelFactory)[ProfileViewModel::class.java]
+            announcementViewModel = ViewModelProvider(this, announcementViewModelFactory)[AnnouncementViewModel::class.java]
+            sharedViewModel = viewModel()
 
             Box(
                 modifier = Modifier
@@ -88,7 +97,7 @@ class MainActivity : ComponentActivity() {
                     .paint(
                         painter = painterResource(R.drawable.onboarding_screen_background),
                         contentScale = ContentScale.FillBounds
-                )
+                    )
             ) {
 
                 navController = rememberNavController()
@@ -98,7 +107,9 @@ class MainActivity : ComponentActivity() {
                     loginViewModel = loginViewModel,
                     addViewModel = addViewModel,
                     profileViewModel = profileViewModel,
-                    startDestination = startDestination
+                    startDestination = startDestination,
+                    announcementViewModel = announcementViewModel,
+                    sharedViewModel = sharedViewModel
                     )
 
                 val systemUiController = rememberSystemUiController()

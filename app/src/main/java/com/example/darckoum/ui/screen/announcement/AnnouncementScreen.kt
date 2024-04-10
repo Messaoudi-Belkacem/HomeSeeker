@@ -1,9 +1,8 @@
 package com.example.darckoum.ui.screen.announcement
 
 import android.content.Intent
+import android.graphics.BitmapFactory
 import android.net.Uri
-import androidx.activity.compose.rememberLauncherForActivityResult
-import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
@@ -24,25 +23,21 @@ import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.asImageBitmap
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.core.content.ContextCompat.startActivity
-import coil.compose.AsyncImage
 import com.example.darckoum.R
-import com.example.darckoum.data.repository.HouseRepository
+import com.example.darckoum.data.model.request.AnnouncementResponse
+import com.example.darckoum.ui.screen.SharedViewModel
 import com.example.darckoum.ui.theme.C1
 import com.example.darckoum.ui.theme.C2
 import com.example.darckoum.ui.theme.C5
@@ -50,11 +45,13 @@ import com.example.darckoum.ui.theme.C5
 
 @Composable
 fun AnnouncementScreen(
-    houseRepository: HouseRepository
+    announcementViewModel: AnnouncementViewModel,
+    sharedViewModel: SharedViewModel
 ) {
 
     val context = LocalContext.current
-    val announcementViewModel = AnnouncementViewModel(houseRepository)
+
+    val announcementResponse = sharedViewModel.announcementWithImages
 
     Column(
         modifier = Modifier
@@ -62,6 +59,7 @@ fun AnnouncementScreen(
             .background(C2),
         verticalArrangement = Arrangement.SpaceBetween
     ) {
+        /*
         var selectedImageUri by remember {
             mutableStateOf<Uri?>(null)
         }
@@ -76,13 +74,14 @@ fun AnnouncementScreen(
             contract = ActivityResultContracts.PickMultipleVisualMedia(),
             onResult = { uris -> selectedImageUris = uris }
         )
+        */
         Box(
             modifier = Modifier
                 .fillMaxWidth()
                 .aspectRatio(1.4f)
         ) {
 
-            val pagerState = rememberPagerState(pageCount = { selectedImageUris.size })
+            val pagerState = rememberPagerState(pageCount = { announcementResponse?.images?.size!! })
 
             Image(painter = painterResource(
                 id = R.drawable.house6photo),
@@ -97,10 +96,11 @@ fun AnnouncementScreen(
                 modifier = Modifier
                     .fillMaxSize()
                     .align(Alignment.Center),
-                userScrollEnabled = selectedImageUris.isNotEmpty()
+                userScrollEnabled = announcementResponse!!.images!!.isNotEmpty()
             ) { index ->
-                AsyncImage(
-                    model = selectedImageUris[index],
+                Image(
+                    bitmap = BitmapFactory.decodeByteArray(announcementResponse.images!![index], 0,announcementResponse.images!![index].size).asImageBitmap(),
+                    /*model = selectedImageUris[index],*/
                     contentDescription = null,
                     modifier = Modifier.fillMaxWidth(),
                     contentScale = ContentScale.Crop
@@ -115,7 +115,7 @@ fun AnnouncementScreen(
             verticalArrangement = Arrangement.spacedBy(16.dp)
         ) {
             Text(
-                text = announcementViewModel.title.value,
+                text = announcementResponse!!.title.toString(),
                 color = Color(0x99FFF5F3),
                 modifier = Modifier
                     .fillMaxWidth(1f),
@@ -143,7 +143,7 @@ fun AnnouncementScreen(
                         tint = Color(0x99FFF5F3)
                     )
                     Text(
-                        text = announcementViewModel.numberOfRooms.value.toString(),
+                        text = announcementResponse.numberOfRooms.toString(),
                         color = Color(0x99FFF5F3),
                         modifier = Modifier,
                         fontSize = 20.sp,
@@ -162,7 +162,7 @@ fun AnnouncementScreen(
                         tint = Color(0x99FFF5F3)
                     )
                     Text(
-                        text = announcementViewModel.area.value.toString() + "m²",
+                        text = announcementResponse.area.toString() + "m²",
                         color = Color(0x99FFF5F3),
                         modifier = Modifier,
                         fontSize = 20.sp,
@@ -181,7 +181,7 @@ fun AnnouncementScreen(
                         .fillMaxWidth(0.5f)
                 )
                 Text(
-                    text = announcementViewModel.propertyType.value.toString(),
+                    text = announcementResponse.propertyType.toString(),
                     color = Color(0x99FFF5F3),
                     modifier = Modifier
                         .fillMaxWidth(1f)
@@ -198,7 +198,7 @@ fun AnnouncementScreen(
                         .fillMaxWidth(0.5f)
                 )
                 Text(
-                    text = announcementViewModel.getFormattedPrice() + " DZD",
+                    text = announcementViewModel.getFormattedPrice(announcementResponse.price) + " DZD",
                     color = C1,
                     modifier = Modifier
                         .fillMaxWidth(1f),
@@ -216,7 +216,7 @@ fun AnnouncementScreen(
                         .fillMaxWidth(0.5f)
                 )
                 Text(
-                    text = announcementViewModel.state.value.toString(),
+                    text = announcementResponse.state.toString(),
                     color = Color(0x99FFF5F3),
                     modifier = Modifier
                         .fillMaxWidth(1f)
@@ -233,7 +233,7 @@ fun AnnouncementScreen(
                         .fillMaxWidth(0.5f)
                 )
                 Text(
-                    text = announcementViewModel.location.value,
+                    text = announcementResponse.location.toString(),
                     color = Color(0x99FFF5F3),
                     modifier = Modifier
                         .fillMaxWidth(1f)
@@ -251,7 +251,7 @@ fun AnnouncementScreen(
                     fontWeight = FontWeight.Medium
                 )
                 Text(
-                    text = announcementViewModel.description.value,
+                    text = announcementResponse.description.toString(),
                     color = Color(0x99FFF5F3),
                     modifier = Modifier
                 )
@@ -278,9 +278,10 @@ fun AnnouncementScreen(
         }
     }
 }
-
+/*
 @Preview(showSystemUi = true)
 @Composable
 fun AnnouncementScreenPreview() {
     AnnouncementScreen(houseRepository = HouseRepository())
 }
+*/

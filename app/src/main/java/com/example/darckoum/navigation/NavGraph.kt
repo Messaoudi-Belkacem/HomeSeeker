@@ -8,8 +8,10 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import com.example.darckoum.ui.screen.MainScreen
+import com.example.darckoum.ui.screen.SharedViewModel
 import com.example.darckoum.ui.screen.WelcomeScreen
 import com.example.darckoum.ui.screen.add.AddViewModel
+import com.example.darckoum.ui.screen.announcement.AnnouncementViewModel
 import com.example.darckoum.ui.screen.login.LoginScreen
 import com.example.darckoum.ui.screen.login.LoginViewModel
 import com.example.darckoum.ui.screen.profile.ProfileViewModel
@@ -23,7 +25,9 @@ fun SetupNavGraph(
     loginViewModel: LoginViewModel,
     addViewModel: AddViewModel,
     profileViewModel: ProfileViewModel,
-    startDestination: String
+    announcementViewModel: AnnouncementViewModel,
+    startDestination: String,
+    sharedViewModel: SharedViewModel
 ) {
     val time = 500
     NavHost(
@@ -61,7 +65,7 @@ fun SetupNavGraph(
         composable(
             route = Screen.Main.route
         ) {
-            MainScreen(navController, addViewModel, profileViewModel)
+            MainScreen(navController, addViewModel, profileViewModel, announcementViewModel, sharedViewModel)
         }
     }
 }

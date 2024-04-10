@@ -1,6 +1,7 @@
 package com.example.darckoum.ui.screen.add
 
 import android.net.Uri
+import android.util.Log
 import android.widget.Toast
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.PickVisualMediaRequest
@@ -30,6 +31,7 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.ExposedDropdownMenuBox
@@ -58,14 +60,11 @@ import androidx.core.text.isDigitsOnly
 import androidx.navigation.NavController
 import coil.compose.AsyncImage
 import com.example.darckoum.R
-import com.example.darckoum.data.model.Announcement
 import com.example.darckoum.data.model.enum_classes.PropertyType
 import com.example.darckoum.data.model.enum_classes.State
-import com.example.darckoum.data.model.enum_classes.TransactionType
-import com.example.darckoum.data.model.request.AnnouncementRequest
-import com.example.darckoum.data.repository.HouseRepository
+import com.example.darckoum.data.state.AddState
 import com.example.darckoum.navigation.BottomBarScreen
-import com.example.darckoum.navigation.Screen
+import com.example.darckoum.ui.screen.SharedViewModel
 import com.example.darckoum.ui.theme.C1
 import com.example.darckoum.ui.theme.C2
 import com.example.darckoum.ui.theme.C3
@@ -74,21 +73,26 @@ import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
-fun AddScreen(navController: NavController, addViewModel: AddViewModel) {
+fun AddScreen(navController: NavController, addViewModel: AddViewModel, sharedViewModel: SharedViewModel) {
+
+    val tag = "AddScreen.kt"
 
     val context = LocalContext.current
 
     var titleTextFieldText by remember { mutableStateOf("") }
+    var areaTextFieldText by remember { mutableStateOf("") }
+    var numberOfRoomsTextFieldText by remember { mutableStateOf("") }
     var priceTextFieldText by remember { mutableStateOf("") }
     var locationTextFieldText by remember { mutableStateOf("") }
     var descriptionTextFieldText by remember { mutableStateOf("") }
-
     var selectedPropertyTypeText by remember { mutableStateOf("") }
-    var selectedTransactionTypeText by remember { mutableStateOf("") }
     var selectedStateText by remember { mutableStateOf("") }
-    val responseIsSuccessfulState = remember { mutableStateOf(false) }
 
     val scope = rememberCoroutineScope()
+
+    val addState by addViewModel.addState
+
+    var announcementResponse by remember { mutableStateOf(null) }
 
     Column(
         modifier = Modifier
@@ -97,20 +101,46 @@ fun AddScreen(navController: NavController, addViewModel: AddViewModel) {
             .padding(bottom = 80.dp)
             .fillMaxSize(),
     ) {
-        var selectedImageUri by remember {
-            mutableStateOf<Uri?>(null)
+
+
+        when (addState) {
+            is AddState.Loading -> {
+
+                CircularProgressIndicator(modifier = Modifier.size(48.dp))
+            }
+
+            is AddState.Success -> {
+                navController.navigate(BottomBarScreen.Announcement.route)
+                sharedViewModel.addAnnouncementResponse(addViewModel.announcementResponse.value!!)
+            }
+
+            is AddState.Error -> {
+                Toast.makeText(
+                    context,
+                    (addState as AddState.Error).message,
+                    Toast.LENGTH_SHORT
+                ).show()
+            }
+
+            else -> {
+
+            }
         }
+
         var selectedImageUris by remember {
             mutableStateOf<List<Uri>>(emptyList())
         }
-        val singlePhotoPickerLauncher = rememberLauncherForActivityResult(
-            contract = ActivityResultContracts.PickVisualMedia(),
-            onResult = { uri -> selectedImageUri = uri }
-        )
+
         val multiplePhotoPickerLauncher = rememberLauncherForActivityResult(
             contract = ActivityResultContracts.PickMultipleVisualMedia(),
-            onResult = { uris -> selectedImageUris = uris }
+            onResult = { uris ->
+                selectedImageUris = uris
+                for (uri in uris) {
+                    Log.d(tag, uri.path.toString())
+                }
+            }
         )
+
         Box(
             modifier = Modifier
                 .fillMaxWidth()
@@ -142,31 +172,7 @@ fun AddScreen(navController: NavController, addViewModel: AddViewModel) {
                     contentScale = ContentScale.Crop
                 )
             }
-            /*
-            LazyRow(
-                modifier = Modifier
-                    .fillMaxSize()
-                    .align(Alignment.Center)
-            ) {
-                item {
-                    AsyncImage(
-                        model = selectedImageUri,
-                        contentDescription = null,
-                        modifier = Modifier.fillMaxWidth(),
-                        contentScale = ContentScale.Crop
-                    )
-                }
 
-                items(selectedImageUris) { uri ->
-                    AsyncImage(
-                        model = uri,
-                        contentDescription = null,
-                        modifier = Modifier.fillMaxWidth(),
-                        contentScale = ContentScale.Crop
-                    )
-                }
-            }
-            */
             Row(
                 modifier = Modifier
                     .padding(horizontal = 18.dp, vertical = 14.dp)
@@ -175,20 +181,6 @@ fun AddScreen(navController: NavController, addViewModel: AddViewModel) {
                 horizontalArrangement = Arrangement.SpaceBetween,
                 verticalAlignment = Alignment.CenterVertically
             ) {
-                /*
-                Button(
-                    onClick = {
-                    singlePhotoPickerLauncher.launch(
-                        PickVisualMediaRequest(ActivityResultContracts.PickVisualMedia.ImageOnly)
-                    )
-                },
-                    shape = RoundedCornerShape(12.dp),
-                    colors = ButtonDefaults.buttonColors(containerColor = C1),
-                    modifier = Modifier.size(50.dp)
-                ) {
-                    Icon(painter = painterResource(id = R.drawable.ic_minus), contentDescription = null, modifier = Modifier.size(24.dp))
-                }
-                */
 
                 // Remove an image from the selected images
                 Box(
@@ -259,21 +251,6 @@ fun AddScreen(navController: NavController, addViewModel: AddViewModel) {
                         tint = C3
                     )
                 }
-                /*
-                Button(
-                    onClick = {
-                    multiplePhotoPickerLauncher.launch(
-                        PickVisualMediaRequest(ActivityResultContracts.PickVisualMedia.ImageOnly)
-                    )
-                },
-                    shape = RoundedCornerShape(12.dp),
-                    colors = ButtonDefaults.buttonColors(containerColor = C1),
-                    modifier = Modifier.size(50.dp),
-
-                ) {
-                    Icon(painter = painterResource(id = R.drawable.ic_add), contentDescription = null, modifier = Modifier.fillMaxSize(1f))
-                }
-                */
             }
         }
         Column(
@@ -281,7 +258,7 @@ fun AddScreen(navController: NavController, addViewModel: AddViewModel) {
                 .fillMaxWidth()
                 .padding(top = 32.dp, start = 12.dp, end = 12.dp),
             horizontalAlignment = Alignment.CenterHorizontally,
-            verticalArrangement = Arrangement.spacedBy(24.dp)
+            verticalArrangement = Arrangement.spacedBy(10.dp)
         ) {
             AddScreenOutlinedTextFieldSample(
                 label = "Title",
@@ -293,17 +270,35 @@ fun AddScreen(navController: NavController, addViewModel: AddViewModel) {
                     titleTextFieldText = it
                 }
             )
+            AddScreenOutlinedTextFieldSample(
+                label = "Area",
+                modifier = Modifier.fillMaxWidth(),
+                maxLines = 1,
+                minLines = 1,
+                text = areaTextFieldText,
+                onValueChange = {
+                    if (it.isDigitsOnly()) {
+                        areaTextFieldText = it
+                    }
+                }
+            )
+            AddScreenOutlinedTextFieldSample(
+                label = "Number Of Rooms",
+                modifier = Modifier.fillMaxWidth(),
+                maxLines = 1,
+                minLines = 1,
+                text = numberOfRoomsTextFieldText,
+                onValueChange = {
+                    if (it.isDigitsOnly()) {
+                        numberOfRoomsTextFieldText = it
+                    }
+                }
+            )
             ExposedDropdownMenuSample(
                 options = PropertyType.values().map { it.description },
                 label = "Property type",
                 onOptionSelected = { selectedOption ->
                     selectedPropertyTypeText = selectedOption}
-            )
-            ExposedDropdownMenuSample(
-                options = TransactionType.values().map { it.description },
-                label = "Transaction type",
-                onOptionSelected = { selectedOption ->
-                    selectedTransactionTypeText = selectedOption}
             )
             AddScreenOutlinedTextFieldSample(
                 label = "Price",
@@ -345,45 +340,36 @@ fun AddScreen(navController: NavController, addViewModel: AddViewModel) {
             )
             Button(
                 onClick = {
+                    val title = titleTextFieldText
+                    val area = areaTextFieldText.toInt()
+                    val numberOfRooms = numberOfRoomsTextFieldText.toInt()
+                    val propertyType = selectedPropertyTypeText
+                    val price = priceTextFieldText
+                    val state = selectedStateText
+                    val location = locationTextFieldText
+                    val description = descriptionTextFieldText
                     if (
-                        titleTextFieldText.isBlank() ||
-                        priceTextFieldText.isBlank() ||
-                        locationTextFieldText.isBlank() ||
-                        descriptionTextFieldText.isBlank() ||
-                        selectedImageUris.isEmpty()
+                        title.isBlank() ||
+                        price.isBlank() ||
+                        location.isBlank() ||
+                        description.isBlank()
                     ) {
-                        if (
-                            titleTextFieldText.isBlank() ||
-                            priceTextFieldText.isBlank() ||
-                            locationTextFieldText.isBlank() ||
-                            descriptionTextFieldText.isBlank()
-                        ) {
-                            Toast.makeText(context,"You must fill all the fields !", Toast.LENGTH_SHORT).show()
-                        } else { Toast.makeText(context,"You must add photos of the property from your gallery !", Toast.LENGTH_SHORT).show() }
+                        Toast.makeText(context,"Please fill in all fields", Toast.LENGTH_SHORT).show()
                     } else {
-                        val newAnnouncementRequest = AnnouncementRequest(
-                            title = titleTextFieldText,
-                            area = 120,
-                            numberOfRooms = 4,
-                            location = locationTextFieldText,
-                            state = State.Adrar.displayName,
-                            propertyType = PropertyType.VILLA.description,
-                            price = priceTextFieldText.toDouble(),
-                            description = descriptionTextFieldText,
-                            owner = "use"
-                        )
                         scope.launch {
-                            responseIsSuccessfulState.value = addViewModel.createAnnouncement(
-                                announcementRequest = newAnnouncementRequest
+                            addViewModel.createAnnouncement(
+                                title = title,
+                                area = area,
+                                numberOfRooms = numberOfRooms,
+                                location = location,
+                                state = state,
+                                propertyType = propertyType,
+                                price = price.toDouble(),
+                                description = description,
+                                owner = "",
+                                selectedImageUris = selectedImageUris
                             )
-                            if (responseIsSuccessfulState.value) {
-                                Toast.makeText(context,"your announcement has been added successfully", Toast.LENGTH_SHORT).show()
-                                navController.navigate(BottomBarScreen.Home.route)
-                            } else {
-                                Toast.makeText(context,"your announcement has not been added", Toast.LENGTH_SHORT).show()
-                            }
                         }
-
                     }
                 },
                 shape = RoundedCornerShape(14.dp),

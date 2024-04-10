@@ -30,6 +30,7 @@ import androidx.navigation.compose.rememberNavController
 import com.example.darckoum.navigation.BottomBarScreen
 import com.example.darckoum.navigation.BottomNavGraph
 import com.example.darckoum.ui.screen.add.AddViewModel
+import com.example.darckoum.ui.screen.announcement.AnnouncementViewModel
 import com.example.darckoum.ui.screen.profile.ProfileViewModel
 import com.example.darckoum.ui.theme.C1
 import com.example.darckoum.ui.theme.C2
@@ -37,13 +38,13 @@ import com.example.darckoum.ui.theme.C3
 
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @Composable
-fun MainScreen(navController: NavHostController, addViewModel: AddViewModel, profileViewModel: ProfileViewModel) {
+fun MainScreen(navController: NavHostController, addViewModel: AddViewModel, profileViewModel: ProfileViewModel, announcementViewModel: AnnouncementViewModel, sharedViewModel: SharedViewModel) {
     val bottomBarNavController = rememberNavController()
     Scaffold(
         bottomBar = { BottomBar(navController = bottomBarNavController) },
         containerColor = C2
     ) {
-        BottomNavGraph(bottomBarNavController = bottomBarNavController, navController = navController, addViewModel, profileViewModel = profileViewModel)
+        BottomNavGraph(bottomBarNavController = bottomBarNavController, navController = navController, addViewModel, profileViewModel = profileViewModel, announcementViewModel = announcementViewModel, sharedViewModel = sharedViewModel)
     }
 }
 
