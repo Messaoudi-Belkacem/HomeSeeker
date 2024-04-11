@@ -13,6 +13,7 @@ import com.example.darckoum.data.model.request.AnnouncementResponse
 import com.example.darckoum.data.repository.DataStoreRepository
 import com.example.darckoum.data.repository.Repository
 import com.example.darckoum.data.state.AddState
+import com.example.darckoum.data.state.LoginState
 import kotlinx.coroutines.launch
 import java.net.ConnectException
 
@@ -36,7 +37,8 @@ class AddViewModel(private val repository: Repository, application: Application)
                            price: Double,
                            description: String,
                            owner: String,
-                           selectedImageUris: List<Uri>
+                           selectedImageUris: List<Uri>,
+                           context: Context
                            ) {
         viewModelScope.launch {
             try {
@@ -57,7 +59,8 @@ class AddViewModel(private val repository: Repository, application: Application)
                 val addResponse = repository.createAnnouncement(
                     token = token,
                     addAnnouncementRequest = newAddAnnouncementRequest,
-                    selectedImageUris = selectedImageUris
+                    selectedImageUris = selectedImageUris,
+                    context = context
                 )
                 if (addResponse.isSuccessful) {
                     _addState.value = AddState.Success
@@ -65,7 +68,6 @@ class AddViewModel(private val repository: Repository, application: Application)
 
                     Log.d(tag, "response was successful")
                     Log.d(tag, "response: " + addResponse.body().toString())
-                    Log.d(tag, "response error: " + addResponse.errorBody()!!.string())
                     Log.d(tag, "response raw: " + addResponse.raw().toString())
                 } else {
                     _addState.value = AddState.Error("Process failed. Please try again.")
@@ -85,4 +87,9 @@ class AddViewModel(private val repository: Repository, application: Application)
             }
         }
     }
+
+    fun setAddState(addState: AddState) {
+        _addState.value = addState
+    }
 }
+

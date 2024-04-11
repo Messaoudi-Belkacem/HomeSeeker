@@ -8,7 +8,6 @@ import com.example.darckoum.data.model.request.AnnouncementResponse
 
 class SharedViewModel : ViewModel() {
     var announcementWithImages by mutableStateOf<AnnouncementResponse?>(null)
-        private set
 
     fun addAnnouncementResponse(announcementResponse: AnnouncementResponse) {
         announcementWithImages = announcementResponse

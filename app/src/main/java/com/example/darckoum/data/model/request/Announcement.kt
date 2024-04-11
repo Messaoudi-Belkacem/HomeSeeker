@@ -26,5 +26,5 @@ data class AnnouncementResponse(
     var price: Double = 0.0,
     var description: String? = null,
     var owner: String? = null,
-    var images: List<ByteArray>? = null
+    var images: List<Any>? = null
 )

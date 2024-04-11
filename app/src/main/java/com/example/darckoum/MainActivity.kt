@@ -38,6 +38,8 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.runBlocking
+import kotlinx.coroutines.withContext
 
 class MainActivity : ComponentActivity() {
 
@@ -70,17 +72,18 @@ class MainActivity : ComponentActivity() {
         var token = ""
         val context = this.applicationContext
 
-        activityScope.launch {
-            token = DataStoreRepository.TokenManager.getToken(context).toString()
+        runBlocking {
+            token = withContext(Dispatchers.IO) {
+                DataStoreRepository.TokenManager.getToken(context).toString()
+            }
         }
 
         Log.d(tag, "token : $token")
 
         val tokenIsExpired = TokenUtil.isTokenExpired(token)
-        val startDestination: String
-        if (tokenIsExpired || token.isBlank()) {
-            startDestination = Screen.Welcome.route
-        } else startDestination = Screen.Main.route
+        val startDestination: String = if (tokenIsExpired || token.isBlank()) {
+            Screen.Welcome.route
+        } else Screen.Main.route
 
         setContent {
 

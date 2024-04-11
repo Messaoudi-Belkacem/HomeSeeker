@@ -71,7 +71,6 @@ import com.example.darckoum.ui.theme.C3
 import com.example.darckoum.ui.theme.C5
 import kotlinx.coroutines.launch
 
-@OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun AddScreen(navController: NavController, addViewModel: AddViewModel, sharedViewModel: SharedViewModel) {
 
@@ -120,6 +119,7 @@ fun AddScreen(navController: NavController, addViewModel: AddViewModel, sharedVi
                     (addState as AddState.Error).message,
                     Toast.LENGTH_SHORT
                 ).show()
+                addViewModel.setAddState(AddState.Initial)
             }
 
             else -> {
@@ -189,11 +189,6 @@ fun AddScreen(navController: NavController, addViewModel: AddViewModel, sharedVi
                         .clip(RoundedCornerShape(15.dp))
                         .background(C1)
                         .clickable(onClick = {
-                            /*
-                            singlePhotoPickerLauncher.launch(
-                                PickVisualMediaRequest(ActivityResultContracts.PickVisualMedia.ImageOnly)
-                            )
-                            */
                             val indexToRemove = pagerState.currentPage
                             if (indexToRemove in selectedImageUris.indices) {
                                 val modifiedList = selectedImageUris
@@ -367,7 +362,8 @@ fun AddScreen(navController: NavController, addViewModel: AddViewModel, sharedVi
                                 price = price.toDouble(),
                                 description = description,
                                 owner = "",
-                                selectedImageUris = selectedImageUris
+                                selectedImageUris = selectedImageUris,
+                                context = context
                             )
                         }
                     }
@@ -479,3 +475,5 @@ fun ExposedDropdownMenuSample(
         }
     }
 }
+
+

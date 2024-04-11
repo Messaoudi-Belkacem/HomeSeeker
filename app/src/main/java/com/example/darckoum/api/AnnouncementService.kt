@@ -26,7 +26,6 @@ interface AnnouncementService {
 
     @POST("announcements")
     @Multipart
-    @Headers("Content-Type: multipart/form-data")
     suspend fun createAnnouncement(
         @Header("Authorization") token: String,
         @Part("data") addAnnouncementRequest: AddAnnouncementRequest,

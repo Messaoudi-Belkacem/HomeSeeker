@@ -214,6 +214,7 @@ fun ProfileScreen(navController: NavController, profileViewModel: ProfileViewMod
                                 } else {
                                     Toast.makeText(context, "Log out was not successful", Toast.LENGTH_SHORT)
                                         .show()
+                                    navController.navigate(route = Screen.LogIn.route)
                                 }
                             }
                         },

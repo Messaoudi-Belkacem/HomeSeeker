@@ -1,6 +1,10 @@
 package com.example.darckoum.data.repository
 
+import android.content.Context
 import android.net.Uri
+import android.provider.MediaStore
+import android.util.Log
+import androidx.compose.ui.platform.LocalContext
 import androidx.core.net.toFile
 import com.example.darckoum.api.RetrofitInstance
 import com.example.darckoum.data.model.Announcement
@@ -20,14 +24,21 @@ import java.io.File
 
 class Repository {
 
-    suspend fun createAnnouncement(token: String, addAnnouncementRequest: AddAnnouncementRequest, selectedImageUris: List<Uri>): Response<AnnouncementResponse> {
+    private val tag = "Repository.kt"
+
+    suspend fun createAnnouncement(token: String, addAnnouncementRequest: AddAnnouncementRequest, selectedImageUris: List<Uri>, context: Context): Response<AnnouncementResponse> {
         val images = mutableListOf<MultipartBody.Part>()
         for (uri in selectedImageUris) {
-            /*val file = uri.toFile()*/
-            val file = File(uri.path)
-            val requestBody = file.asRequestBody()
-            val part = MultipartBody.Part.createFormData("images", file.name, requestBody)
-            images.add(part)
+            val selectImageRealPath = getRealPathFromURI(uri = uri, context = context)
+            if (selectImageRealPath.isNullOrBlank()) {
+                Log.d(tag, "Selected image real path is null or blank")
+            } else {
+                Log.d(tag, "selected image real path : $selectImageRealPath")
+                val file = File(selectImageRealPath)
+                val requestBody = file.asRequestBody("image/*".toMediaTypeOrNull())
+                val part = MultipartBody.Part.createFormData("images", file.name, requestBody)
+                images.add(part)
+            }
         }
         return RetrofitInstance.announcementService.createAnnouncement(token, addAnnouncementRequest, images)
     }
@@ -46,6 +57,17 @@ class Repository {
 
     suspend fun logoutUser(logoutRequest: LogoutRequest): Response<LogoutResponse> {
         return RetrofitInstance.authenticationService.logoutUser(logoutRequest)
+    }
+
+    private fun getRealPathFromURI(uri: Uri, context: Context): String? {
+        val contentResolver = context.contentResolver
+        val projection = arrayOf(MediaStore.Images.Media.DATA)
+        contentResolver.query(uri, projection, null, null, null)?.use { cursor ->
+            val columnIndex = cursor.getColumnIndexOrThrow(MediaStore.Images.Media.DATA)
+            cursor.moveToFirst()
+            return cursor.getString(columnIndex)
+        }
+        return null
     }
 
 }
