@@ -2,10 +2,12 @@ package com.example.darckoum
 
 import android.os.Bundle
 import android.util.Log
+import android.view.WindowManager
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.imePadding
 import androidx.compose.runtime.DisposableEffect
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.paint
@@ -94,6 +96,8 @@ class MainActivity : ComponentActivity() {
             announcementViewModel = ViewModelProvider(this, announcementViewModelFactory)[AnnouncementViewModel::class.java]
             sharedViewModel = viewModel()
 
+
+
             Box(
                 modifier = Modifier
                     .fillMaxSize()
@@ -101,6 +105,7 @@ class MainActivity : ComponentActivity() {
                         painter = painterResource(R.drawable.onboarding_screen_background),
                         contentScale = ContentScale.FillBounds
                     )
+                    .imePadding()
             ) {
 
                 navController = rememberNavController()

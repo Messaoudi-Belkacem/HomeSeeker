@@ -11,16 +11,19 @@ import androidx.compose.animation.core.tween
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.gestures.scrollBy
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.ime
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
@@ -56,6 +59,7 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
@@ -73,6 +77,7 @@ import com.example.darckoum.ui.theme.C1
 import com.example.darckoum.ui.theme.C2
 import com.example.darckoum.ui.theme.C3
 import com.example.darckoum.ui.theme.C5
+import com.example.darckoum.util.KeyboardAware
 import com.example.darckoum.util.rememberImeState
 import kotlinx.coroutines.launch
 
@@ -81,12 +86,13 @@ fun AddScreen(navController: NavController, addViewModel: AddViewModel, sharedVi
 
     val tag = "AddScreen.kt"
 
-    val imeState = rememberImeState()
     val scrollState = rememberScrollState()
+    val keyboardHeight = WindowInsets.ime.getBottom(LocalDensity.current)
+    val scope = rememberCoroutineScope()
 
-    LaunchedEffect(key1 = imeState.value) {
-        if (imeState.value){
-            scrollState.animateScrollTo(scrollState.maxValue, tween(500))
+    LaunchedEffect(key1 = keyboardHeight) {
+        scope.launch {
+            scrollState.scrollBy(keyboardHeight.toFloat())
         }
     }
 
@@ -94,77 +100,78 @@ fun AddScreen(navController: NavController, addViewModel: AddViewModel, sharedVi
 
     val addState by addViewModel.addState
 
-    Box(
-        modifier = Modifier
-            .background(C2)
-            .fillMaxSize(),
-    ) {
+    KeyboardAware {
+        Box(
+            modifier = Modifier
+                .background(C2)
+                .fillMaxSize(),
+        ) {
 
-        val columnModifier : Modifier
+            val columnModifier : Modifier
 
-
-        when (addState) {
-            is AddState.Loading -> {
-                columnModifier = Modifier
-                    .background(C2)
-                    .verticalScroll(scrollState)
-                    .padding(bottom = 80.dp)
-                    .fillMaxSize()
-                    .blur(20.dp)
-                AddAnnouncementUI(
-                    columnModifier = columnModifier,
-                    tag = tag,
-                    addViewModel = addViewModel,
-                    context = context
-                )
-
-                Column(
-                    modifier = Modifier
-                        .fillMaxSize(1f)
-                        .background(color = Color.Transparent),
-                    horizontalAlignment = Alignment.CenterHorizontally,
-                    verticalArrangement = Arrangement.Center
-                ) {
-                    CircularProgressIndicator(
-                        modifier = Modifier.size(64.dp),
-                        color = C1,
+            when (addState) {
+                is AddState.Loading -> {
+                    columnModifier = Modifier
+                        .background(C2)
+                        .verticalScroll(scrollState)
+                        .padding(bottom = 80.dp)
+                        .fillMaxSize()
+                        .blur(20.dp)
+                    AddAnnouncementUI(
+                        columnModifier = columnModifier,
+                        tag = tag,
+                        addViewModel = addViewModel,
+                        context = context
                     )
-                    Spacer(modifier = Modifier.height(32.dp))
-                    Text(
-                        text = "Hang tight...",
-                        fontSize = 24.sp,
-                        fontWeight = FontWeight.Medium,
-                        color = C1,
+
+                    Column(
+                        modifier = Modifier
+                            .fillMaxSize(1f)
+                            .background(color = Color.Transparent),
+                        horizontalAlignment = Alignment.CenterHorizontally,
+                        verticalArrangement = Arrangement.Center
+                    ) {
+                        CircularProgressIndicator(
+                            modifier = Modifier.size(64.dp),
+                            color = C1,
+                        )
+                        Spacer(modifier = Modifier.height(32.dp))
+                        Text(
+                            text = "Hang tight...",
+                            fontSize = 24.sp,
+                            fontWeight = FontWeight.Medium,
+                            color = C1,
+                        )
+                    }
+                }
+
+                is AddState.Success -> {
+                    navController.navigate(BottomBarScreen.Announcement.route)
+                    sharedViewModel.addAnnouncementResponse(addViewModel.announcementResponse.value!!)
+                }
+
+                is AddState.Error -> {
+                    Toast.makeText(
+                        context,
+                        (addState as AddState.Error).message,
+                        Toast.LENGTH_SHORT
+                    ).show()
+                    addViewModel.setAddState(AddState.Initial)
+                }
+
+                else -> {
+                    columnModifier = Modifier
+                        .background(C2)
+                        .verticalScroll(scrollState)
+                        .padding(bottom = 80.dp)
+                        .fillMaxSize()
+                    AddAnnouncementUI(
+                        columnModifier = columnModifier,
+                        tag = tag,
+                        addViewModel = addViewModel,
+                        context = context
                     )
                 }
-            }
-
-            is AddState.Success -> {
-                navController.navigate(BottomBarScreen.Announcement.route)
-                sharedViewModel.addAnnouncementResponse(addViewModel.announcementResponse.value!!)
-            }
-
-            is AddState.Error -> {
-                Toast.makeText(
-                    context,
-                    (addState as AddState.Error).message,
-                    Toast.LENGTH_SHORT
-                ).show()
-                addViewModel.setAddState(AddState.Initial)
-            }
-
-            else -> {
-                columnModifier = Modifier
-                    .background(C2)
-                    .verticalScroll(scrollState)
-                    .padding(bottom = 80.dp)
-                    .fillMaxSize()
-                AddAnnouncementUI(
-                    columnModifier = columnModifier,
-                    tag = tag,
-                    addViewModel = addViewModel,
-                    context = context
-                )
             }
         }
     }

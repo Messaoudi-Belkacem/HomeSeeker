@@ -5,15 +5,18 @@ import android.widget.Toast
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.gestures.scrollBy
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.ime
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
@@ -39,6 +42,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType
@@ -50,18 +54,21 @@ import com.example.darckoum.R
 import com.example.darckoum.data.state.RegistrationState
 import com.example.darckoum.navigation.Screen
 import com.example.darckoum.ui.theme.C1
+import com.example.darckoum.util.KeyboardAware
 import com.example.darckoum.util.rememberImeState
 import kotlinx.coroutines.launch
 
 @Composable
 fun RegisterScreen(navController: NavController, registerViewModel: RegisterViewModel) {
 
-    val imeState = rememberImeState()
     val scrollState = rememberScrollState()
+    val keyboardHeight = WindowInsets.ime.getBottom(LocalDensity.current)
+    val scope = rememberCoroutineScope()
+    val registrationState by registerViewModel.registrationState
 
-    LaunchedEffect(key1 = imeState.value) {
-        if (imeState.value){
-            scrollState.animateScrollTo(scrollState.maxValue, tween(500))
+    LaunchedEffect(key1 = keyboardHeight) {
+        scope.launch {
+            scrollState.scrollBy(keyboardHeight.toFloat())
         }
     }
 
@@ -70,200 +77,199 @@ fun RegisterScreen(navController: NavController, registerViewModel: RegisterView
     val lastNameState = remember { mutableStateOf("") }
     val passwordState = remember { mutableStateOf("") }
 
-    val scope = rememberCoroutineScope()
-    val registrationState by registerViewModel.registrationState
-
-    Scaffold(
-        containerColor = Color.Transparent
-    ) {
-        it
-
-        val context = LocalContext.current
-
-        Column(
-            modifier = Modifier
-                .fillMaxSize(1f)
-                .verticalScroll(scrollState)
+    KeyboardAware {
+        Scaffold(
+            containerColor = Color.Transparent
         ) {
+            it
 
-            when (registrationState) {
-                is RegistrationState.Loading -> {
-                    Column(
-                        modifier = Modifier.fillMaxSize(1f),
-                        horizontalAlignment = Alignment.CenterHorizontally,
-                        verticalArrangement = Arrangement.Center
-                    ) {
-                        CircularProgressIndicator(
-                            modifier = Modifier.size(64.dp),
-                            color = C1,
-                        )
-                        Spacer(modifier = Modifier.height(32.dp))
-                        Text(
-                            text = "Hang tight...",
-                            fontSize = 24.sp,
-                            fontWeight = FontWeight.Medium,
-                            color = C1,
-                        )
-                    }
-                }
+            val context = LocalContext.current
 
-                is RegistrationState.Success -> {
-                    navController.navigate(Screen.Main.route)
-                }
+            Column(
+                modifier = Modifier
+                    .fillMaxSize(1f)
+                    .verticalScroll(scrollState)
+            ) {
 
-                is RegistrationState.Error -> {
-                    Toast.makeText(
-                        context,
-                        (registrationState as RegistrationState.Error).message,
-                        Toast.LENGTH_SHORT
-                    ).show()
-                    registerViewModel.setRegistrationState(RegistrationState.Initial)
-                }
-
-                else -> {
-                    Box(
-                        modifier = Modifier
-                            .fillMaxWidth(1f)
-                            .padding(top = 64.dp),
-                        contentAlignment = Alignment.Center
-                    ) {
+                when (registrationState) {
+                    is RegistrationState.Loading -> {
                         Column(
-                            verticalArrangement = Arrangement.SpaceAround,
+                            modifier = Modifier.fillMaxSize(1f),
                             horizontalAlignment = Alignment.CenterHorizontally,
-                            modifier = Modifier
-                                .fillMaxWidth()
+                            verticalArrangement = Arrangement.Center
                         ) {
-                            Image(
-                                painter = painterResource(id = R.drawable.logo_with_no_background),
-                                contentDescription = null,
-                                alignment = Alignment.Center,
-                                modifier = Modifier.size(128.dp)
-                            )
-                            Spacer(modifier = Modifier.height(64.dp))
-                            Text(
-                                text = "Easily find real estate in the Maghreb region for rent or purchase",
+                            CircularProgressIndicator(
+                                modifier = Modifier.size(64.dp),
                                 color = C1,
-                                fontSize = 16.sp,
-                                fontWeight = FontWeight.Normal,
-                                textAlign = TextAlign.Center,
-                                modifier = Modifier.padding(horizontal = 16.dp)
+                            )
+                            Spacer(modifier = Modifier.height(32.dp))
+                            Text(
+                                text = "Hang tight...",
+                                fontSize = 24.sp,
+                                fontWeight = FontWeight.Medium,
+                                color = C1,
                             )
                         }
                     }
-                    Box(
-                        modifier = Modifier
-                            .fillMaxWidth(1f)
-                            .fillMaxHeight(1f)
-                            .padding(top = 32.dp),
-                        contentAlignment = Alignment.TopCenter
-                    ) {
-                        Column(
-                            verticalArrangement = Arrangement.SpaceAround,
-                            horizontalAlignment = Alignment.CenterHorizontally,
+
+                    is RegistrationState.Success -> {
+                        navController.navigate(Screen.Main.route)
+                    }
+
+                    is RegistrationState.Error -> {
+                        Toast.makeText(
+                            context,
+                            (registrationState as RegistrationState.Error).message,
+                            Toast.LENGTH_SHORT
+                        ).show()
+                        registerViewModel.setRegistrationState(RegistrationState.Initial)
+                    }
+
+                    else -> {
+                        Box(
                             modifier = Modifier
-                                .padding(horizontal = 18.dp)
                                 .fillMaxWidth(1f)
+                                .padding(top = 64.dp),
+                            contentAlignment = Alignment.Center
                         ) {
-                            LoginScreenOutlinedTextFieldSample(
-                                label = "Username",
+                            Column(
+                                verticalArrangement = Arrangement.SpaceAround,
+                                horizontalAlignment = Alignment.CenterHorizontally,
                                 modifier = Modifier
                                     .fillMaxWidth()
-                                    .height(64.dp),
-                                text = usernameState,
-                                onValueChange = { usernameState.value = it },
-                                temp = C1,
-                                keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Text)
-                            )
-                            Spacer(modifier = Modifier.height(20.dp))
-                            LoginScreenOutlinedTextFieldSample(
-                                label = "First Name",
-                                modifier = Modifier
-                                    .fillMaxWidth()
-                                    .height(64.dp),
-                                text = firstNameState,
-                                onValueChange = { firstNameState.value = it },
-                                temp = C1,
-                                keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Text)
-                            )
-                            Spacer(modifier = Modifier.height(20.dp))
-                            LoginScreenOutlinedTextFieldSample(
-                                label = "Last Name",
-                                modifier = Modifier
-                                    .fillMaxWidth()
-                                    .height(64.dp),
-                                text = lastNameState,
-                                onValueChange = { lastNameState.value = it },
-                                temp = C1,
-                                keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Text)
-                            )
-                            Spacer(modifier = Modifier.height(20.dp))
-                            LoginScreenOutlinedTextFieldSample(
-                                label = "Password",
-                                modifier = Modifier
-                                    .fillMaxWidth()
-                                    .height(64.dp),
-                                text = passwordState,
-                                onValueChange = { passwordState.value = it },
-                                temp = C1,
-                                keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password)
-                            )
-                            Spacer(modifier = Modifier.height(30.dp))
-                            Button(
-                                onClick = {
-                                    val username = usernameState.value
-                                    val firstName = firstNameState.value
-                                    val lastName = lastNameState.value
-                                    val password = passwordState.value
-                                    if (username.isBlank() || firstName.isBlank() || lastName.isBlank() || password.isBlank()) {
-                                        Toast.makeText(context, "Please fill in all fields", Toast.LENGTH_SHORT).show()
-                                    } else {
-                                        scope.launch {
-                                            registerViewModel.registerUser(username, firstName, lastName, password)
-                                        }
-                                    }
-                                },
-                                shape = RoundedCornerShape(14.dp),
-                                colors = ButtonDefaults.buttonColors(containerColor = C1),
-                                modifier = Modifier
-                                    .fillMaxWidth(1f)
-                                    .height(64.dp)
                             ) {
-                                Text(
-                                    text = "Register",
-                                    fontSize = 20.sp,
-                                    fontWeight = FontWeight.SemiBold
+                                Image(
+                                    painter = painterResource(id = R.drawable.logo_with_no_background),
+                                    contentDescription = null,
+                                    alignment = Alignment.Center,
+                                    modifier = Modifier.size(128.dp)
                                 )
-                            }
-                            Spacer(modifier = Modifier.height(24.dp))
-                            Row(
-                                verticalAlignment = Alignment.Bottom,
-                                horizontalArrangement = Arrangement.Center,
-                                modifier = Modifier.fillMaxWidth(1f)
-                            ) {
+                                Spacer(modifier = Modifier.height(64.dp))
                                 Text(
-                                    text = "Already have an account?",
+                                    text = "Easily find real estate in the Maghreb region for rent or purchase",
                                     color = C1,
                                     fontSize = 16.sp,
                                     fontWeight = FontWeight.Normal,
-                                    textAlign = TextAlign.Center
-                                )
-                                Spacer(modifier = Modifier.width(4.dp))
-                                Text(
-                                    text = "Sign in",
-                                    color = C1,
-                                    fontSize = 16.sp,
-                                    fontWeight = FontWeight.SemiBold,
                                     textAlign = TextAlign.Center,
-                                    modifier = Modifier
-                                        .clickable {
-                                            navController.navigate(route = Screen.LogIn.route) {
-                                                popUpTo(Screen.LogIn.route) {
-                                                    inclusive = true
-                                                }
-                                            }
-                                            Log.d("Log in screen", "Sign up text clicked")
-                                        }
+                                    modifier = Modifier.padding(horizontal = 16.dp)
                                 )
+                            }
+                        }
+                        Box(
+                            modifier = Modifier
+                                .fillMaxWidth(1f)
+                                .fillMaxHeight(1f)
+                                .padding(top = 32.dp),
+                            contentAlignment = Alignment.TopCenter
+                        ) {
+                            Column(
+                                verticalArrangement = Arrangement.SpaceAround,
+                                horizontalAlignment = Alignment.CenterHorizontally,
+                                modifier = Modifier
+                                    .padding(horizontal = 18.dp)
+                                    .fillMaxWidth(1f)
+                            ) {
+                                LoginScreenOutlinedTextFieldSample(
+                                    label = "Username",
+                                    modifier = Modifier
+                                        .fillMaxWidth()
+                                        .height(64.dp),
+                                    text = usernameState,
+                                    onValueChange = { usernameState.value = it },
+                                    temp = C1,
+                                    keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Text)
+                                )
+                                Spacer(modifier = Modifier.height(20.dp))
+                                LoginScreenOutlinedTextFieldSample(
+                                    label = "First Name",
+                                    modifier = Modifier
+                                        .fillMaxWidth()
+                                        .height(64.dp),
+                                    text = firstNameState,
+                                    onValueChange = { firstNameState.value = it },
+                                    temp = C1,
+                                    keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Text)
+                                )
+                                Spacer(modifier = Modifier.height(20.dp))
+                                LoginScreenOutlinedTextFieldSample(
+                                    label = "Last Name",
+                                    modifier = Modifier
+                                        .fillMaxWidth()
+                                        .height(64.dp),
+                                    text = lastNameState,
+                                    onValueChange = { lastNameState.value = it },
+                                    temp = C1,
+                                    keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Text)
+                                )
+                                Spacer(modifier = Modifier.height(20.dp))
+                                LoginScreenOutlinedTextFieldSample(
+                                    label = "Password",
+                                    modifier = Modifier
+                                        .fillMaxWidth()
+                                        .height(64.dp),
+                                    text = passwordState,
+                                    onValueChange = { passwordState.value = it },
+                                    temp = C1,
+                                    keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password)
+                                )
+                                Spacer(modifier = Modifier.height(30.dp))
+                                Button(
+                                    onClick = {
+                                        val username = usernameState.value
+                                        val firstName = firstNameState.value
+                                        val lastName = lastNameState.value
+                                        val password = passwordState.value
+                                        if (username.isBlank() || firstName.isBlank() || lastName.isBlank() || password.isBlank()) {
+                                            Toast.makeText(context, "Please fill in all fields", Toast.LENGTH_SHORT).show()
+                                        } else {
+                                            scope.launch {
+                                                registerViewModel.registerUser(username, firstName, lastName, password)
+                                            }
+                                        }
+                                    },
+                                    shape = RoundedCornerShape(14.dp),
+                                    colors = ButtonDefaults.buttonColors(containerColor = C1),
+                                    modifier = Modifier
+                                        .fillMaxWidth(1f)
+                                        .height(64.dp)
+                                ) {
+                                    Text(
+                                        text = "Register",
+                                        fontSize = 20.sp,
+                                        fontWeight = FontWeight.SemiBold
+                                    )
+                                }
+                                Spacer(modifier = Modifier.height(24.dp))
+                                Row(
+                                    verticalAlignment = Alignment.Bottom,
+                                    horizontalArrangement = Arrangement.Center,
+                                    modifier = Modifier.fillMaxWidth(1f)
+                                ) {
+                                    Text(
+                                        text = "Already have an account?",
+                                        color = C1,
+                                        fontSize = 16.sp,
+                                        fontWeight = FontWeight.Normal,
+                                        textAlign = TextAlign.Center
+                                    )
+                                    Spacer(modifier = Modifier.width(4.dp))
+                                    Text(
+                                        text = "Sign in",
+                                        color = C1,
+                                        fontSize = 16.sp,
+                                        fontWeight = FontWeight.SemiBold,
+                                        textAlign = TextAlign.Center,
+                                        modifier = Modifier
+                                            .clickable {
+                                                navController.navigate(route = Screen.LogIn.route) {
+                                                    popUpTo(Screen.LogIn.route) {
+                                                        inclusive = true
+                                                    }
+                                                }
+                                                Log.d("Log in screen", "Sign up text clicked")
+                                            }
+                                    )
+                                }
                             }
                         }
                     }

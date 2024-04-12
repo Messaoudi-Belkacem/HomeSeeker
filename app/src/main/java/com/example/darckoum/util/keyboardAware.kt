@@ -1,7 +1,10 @@
 package com.example.darckoum.util
 
 import android.view.ViewTreeObserver
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.imePadding
 import androidx.compose.runtime.*
+import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalView
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
@@ -26,4 +29,13 @@ fun rememberImeState(): State<Boolean> {
         }
     }
     return imeState
+}
+
+@Composable
+fun KeyboardAware(
+    content: @Composable () -> Unit
+) {
+    Box(modifier = Modifier.imePadding()) {
+        content()
+    }
 }
