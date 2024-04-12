@@ -2,6 +2,7 @@ package com.example.darckoum.ui.screen.login
 
 import android.util.Log
 import android.widget.Toast
+import androidx.compose.animation.core.tween
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -16,8 +17,10 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.CircularProgressIndicator
@@ -26,6 +29,7 @@ import androidx.compose.material3.OutlinedTextFieldDefaults
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -47,30 +51,38 @@ import com.example.darckoum.data.state.LoginState
 import com.example.darckoum.navigation.Screen
 import com.example.darckoum.ui.theme.C1
 import com.example.darckoum.ui.theme.C2
+import com.example.darckoum.util.rememberImeState
 import kotlinx.coroutines.launch
 
 @Composable
 fun LoginScreen(navController: NavController, loginViewModel: LoginViewModel) {
 
+    val imeState = rememberImeState()
+    val scrollState = rememberScrollState()
+
+    LaunchedEffect(key1 = imeState.value) {
+        if (imeState.value){
+            scrollState.animateScrollTo(scrollState.maxValue, tween(500))
+        }
+    }
+
     val usernameState = remember { mutableStateOf("") }
     val passwordState = remember { mutableStateOf("") }
 
     val scope = rememberCoroutineScope()
-    /*val snackBarHostState = remember { SnackbarHostState() }*/
     val loginState by loginViewModel.loginState
 
     Scaffold(
-        /*snackbarHost = {
-            SnackbarHost(hostState = snackBarHostState)
-        },*/
         containerColor = Color.Transparent
-    ) {it
+    ) {
+        it
 
         val context = LocalContext.current
 
         Column(
             modifier = Modifier
                 .fillMaxSize(1f)
+                .verticalScroll(scrollState)
         ) {
 
             when (loginState) {

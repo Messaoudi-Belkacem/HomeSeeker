@@ -1,12 +1,13 @@
 package com.example.darckoum.ui.screen.add
 
+import android.content.Context
 import android.net.Uri
 import android.util.Log
 import android.widget.Toast
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.PickVisualMediaRequest
 import androidx.activity.result.contract.ActivityResultContracts
-import androidx.compose.foundation.ExperimentalFoundationApi
+import androidx.compose.animation.core.tween
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -15,6 +16,7 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -41,6 +43,7 @@ import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.OutlinedTextFieldDefaults
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -48,6 +51,7 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.blur
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
@@ -69,6 +73,7 @@ import com.example.darckoum.ui.theme.C1
 import com.example.darckoum.ui.theme.C2
 import com.example.darckoum.ui.theme.C3
 import com.example.darckoum.ui.theme.C5
+import com.example.darckoum.util.rememberImeState
 import kotlinx.coroutines.launch
 
 @Composable
@@ -76,36 +81,62 @@ fun AddScreen(navController: NavController, addViewModel: AddViewModel, sharedVi
 
     val tag = "AddScreen.kt"
 
+    val imeState = rememberImeState()
+    val scrollState = rememberScrollState()
+
+    LaunchedEffect(key1 = imeState.value) {
+        if (imeState.value){
+            scrollState.animateScrollTo(scrollState.maxValue, tween(500))
+        }
+    }
+
     val context = LocalContext.current
-
-    var titleTextFieldText by remember { mutableStateOf("") }
-    var areaTextFieldText by remember { mutableStateOf("") }
-    var numberOfRoomsTextFieldText by remember { mutableStateOf("") }
-    var priceTextFieldText by remember { mutableStateOf("") }
-    var locationTextFieldText by remember { mutableStateOf("") }
-    var descriptionTextFieldText by remember { mutableStateOf("") }
-    var selectedPropertyTypeText by remember { mutableStateOf("") }
-    var selectedStateText by remember { mutableStateOf("") }
-
-    val scope = rememberCoroutineScope()
 
     val addState by addViewModel.addState
 
-    var announcementResponse by remember { mutableStateOf(null) }
-
-    Column(
+    Box(
         modifier = Modifier
             .background(C2)
-            .verticalScroll(rememberScrollState())
-            .padding(bottom = 80.dp)
             .fillMaxSize(),
     ) {
+
+        val columnModifier : Modifier
 
 
         when (addState) {
             is AddState.Loading -> {
+                columnModifier = Modifier
+                    .background(C2)
+                    .verticalScroll(scrollState)
+                    .padding(bottom = 80.dp)
+                    .fillMaxSize()
+                    .blur(20.dp)
+                AddAnnouncementUI(
+                    columnModifier = columnModifier,
+                    tag = tag,
+                    addViewModel = addViewModel,
+                    context = context
+                )
 
-                CircularProgressIndicator(modifier = Modifier.size(48.dp))
+                Column(
+                    modifier = Modifier
+                        .fillMaxSize(1f)
+                        .background(color = Color.Transparent),
+                    horizontalAlignment = Alignment.CenterHorizontally,
+                    verticalArrangement = Arrangement.Center
+                ) {
+                    CircularProgressIndicator(
+                        modifier = Modifier.size(64.dp),
+                        color = C1,
+                    )
+                    Spacer(modifier = Modifier.height(32.dp))
+                    Text(
+                        text = "Hang tight...",
+                        fontSize = 24.sp,
+                        fontWeight = FontWeight.Medium,
+                        color = C1,
+                    )
+                }
             }
 
             is AddState.Success -> {
@@ -123,9 +154,46 @@ fun AddScreen(navController: NavController, addViewModel: AddViewModel, sharedVi
             }
 
             else -> {
-
+                columnModifier = Modifier
+                    .background(C2)
+                    .verticalScroll(scrollState)
+                    .padding(bottom = 80.dp)
+                    .fillMaxSize()
+                AddAnnouncementUI(
+                    columnModifier = columnModifier,
+                    tag = tag,
+                    addViewModel = addViewModel,
+                    context = context
+                )
             }
         }
+    }
+}
+
+@Composable
+fun AddAnnouncementUI(
+    columnModifier : Modifier,
+    tag : String,
+    addViewModel: AddViewModel,
+    context: Context
+) {
+
+    var titleTextFieldText by remember { mutableStateOf("") }
+    var areaTextFieldText by remember { mutableStateOf("") }
+    var numberOfRoomsTextFieldText by remember { mutableStateOf("") }
+    var priceTextFieldText by remember { mutableStateOf("") }
+    var locationTextFieldText by remember { mutableStateOf("") }
+    var descriptionTextFieldText by remember { mutableStateOf("") }
+    var selectedPropertyTypeText by remember { mutableStateOf("") }
+    var selectedStateText by remember { mutableStateOf("") }
+
+    val scope = rememberCoroutineScope()
+
+    Column(
+        modifier = columnModifier,
+    ) {
+
+
 
         var selectedImageUris by remember {
             mutableStateOf<List<Uri>>(emptyList())
@@ -373,7 +441,7 @@ fun AddScreen(navController: NavController, addViewModel: AddViewModel, sharedVi
                 contentPadding = PaddingValues(vertical = 20.dp),
                 modifier = Modifier
                     .fillMaxWidth(1f)
-                    .padding(top = 64.dp, bottom = 16.dp)
+                    .padding(top = 32.dp, bottom = 16.dp)
             ) {
                 Text(
                     text = "Announce",

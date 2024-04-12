@@ -56,6 +56,7 @@ class AddViewModel(private val repository: Repository, application: Application)
                 var token = DataStoreRepository.TokenManager.getToken(appContext)
                 token = "Bearer $token"
                 Log.d(tag, "token: $token")
+                _addState.value = AddState.Loading
                 val addResponse = repository.createAnnouncement(
                     token = token,
                     addAnnouncementRequest = newAddAnnouncementRequest,
