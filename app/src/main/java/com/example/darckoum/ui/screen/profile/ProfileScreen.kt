@@ -2,15 +2,25 @@ package com.example.darckoum.ui.screen.profile
 
 import android.widget.Toast
 import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.expandVertically
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
+import androidx.compose.animation.scaleIn
+import androidx.compose.animation.scaleOut
+import androidx.compose.animation.shrinkVertically
+import androidx.compose.animation.slideInVertically
+import androidx.compose.animation.slideOutVertically
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.selection.selectable
@@ -41,17 +51,16 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.TransformOrigin
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import com.example.darckoum.R
 import com.example.darckoum.navigation.Screen
-import com.example.darckoum.ui.screen.register.RegisterViewModel
 import com.example.darckoum.ui.theme.C3
 import com.example.darckoum.ui.theme.C5
 import kotlinx.coroutines.launch
@@ -138,8 +147,7 @@ fun ProfileScreen(navController: NavController, profileViewModel: ProfileViewMod
                         modifier = Modifier
                             .fillMaxWidth()
                             .padding(top = 12.dp, start = 12.dp, end = 12.dp),
-                        horizontalAlignment = Alignment.CenterHorizontally,
-                        verticalArrangement = Arrangement.spacedBy(12.dp)
+                        horizontalAlignment = Alignment.CenterHorizontally
                     ) {
                         SimpleOutlinedTextFieldSample(
                             label = "Username",
@@ -183,53 +191,91 @@ fun ProfileScreen(navController: NavController, profileViewModel: ProfileViewMod
                             preText = "0664813680"
                         )
                     }
-                    AnimatedVisibility(
-                        visible = areFieldsEnabled
-                    ) {
-                        Button(
-                            onClick = {
-                                areFieldsEnabled = !areFieldsEnabled
-                            },
-                            shape = RoundedCornerShape(14.dp),
-                            colors = ButtonDefaults.buttonColors(containerColor = Color(0xFFE7BD73)),
-                            contentPadding = PaddingValues(vertical = 20.dp),
-                            modifier = Modifier
-                                .fillMaxWidth(1f)
-                                .padding(horizontal = 12.dp)
-                        ) {
-                            Text(
-                                text = "Save",
-                                fontSize = 22.sp,
-                                fontWeight = FontWeight.SemiBold
-                            )
-                        }
-                    }
-                    Button(
-                        onClick = {
-                            scope.launch {
-                                if (profileViewModel.logout()) {
-                                    Toast.makeText(context, "Log out was successful", Toast.LENGTH_SHORT)
-                                        .show()
-                                    navController.navigate(route = Screen.LogIn.route)
-                                } else {
-                                    Toast.makeText(context, "Log out was not successful", Toast.LENGTH_SHORT)
-                                        .show()
-                                    navController.navigate(route = Screen.LogIn.route)
-                                }
-                            }
-                        },
-                        shape = RoundedCornerShape(14.dp),
-                        colors = ButtonDefaults.buttonColors(containerColor = Color.Red),
-                        contentPadding = PaddingValues(vertical = 20.dp),
+                    Column(
                         modifier = Modifier
-                            .fillMaxWidth(1f)
-                            .padding(horizontal = 12.dp)
+                            .fillMaxWidth()
                     ) {
-                        Text(
-                            text = "Log out",
-                            fontSize = 22.sp,
-                            fontWeight = FontWeight.SemiBold
-                        )
+                        AnimatedVisibility(
+                            visible = areFieldsEnabled,
+                            enter = slideInVertically(
+                                // Start the slide from 40 (pixels) above where the content is supposed to go, to
+                                // produce a parallax effect
+                                initialOffsetY = { +40 }
+                            ) + expandVertically(
+                                expandFrom = Alignment.Top
+                            ) + scaleIn(
+                                // Animate scale from 0f to 1f using the top center as the pivot point.
+                                transformOrigin = TransformOrigin(0.5f, 0f)
+                            ) + fadeIn(initialAlpha = 0.3f),
+                            exit = slideOutVertically() + shrinkVertically() + fadeOut() + scaleOut(targetScale = 1.2f)
+                            /*,
+                            enter = expandVertically { 0 } + scaleIn(),
+                            exit = shrinkVertically { 0 } + scaleOut()*/
+                        ) {
+                            Button(
+                                onClick = {
+                                    areFieldsEnabled = !areFieldsEnabled
+                                },
+                                shape = RoundedCornerShape(14.dp),
+                                colors = ButtonDefaults.buttonColors(containerColor = Color(0xFFE7BD73)),
+                                contentPadding = PaddingValues(vertical = 20.dp),
+                                modifier = Modifier
+                                    .fillMaxWidth(1f)
+                                    .padding(horizontal = 12.dp)
+                            ) {
+                                Text(
+                                    text = "Save",
+                                    fontSize = 22.sp,
+                                    fontWeight = FontWeight.SemiBold
+                                )
+                            }
+                        }
+                        Spacer(modifier = Modifier.height(8.dp))
+                        AnimatedVisibility(
+                            visible = !areFieldsEnabled,
+                            enter = slideInVertically(
+                                // Start the slide from 40 (pixels) above where the content is supposed to go, to
+                                // produce a parallax effect
+                                initialOffsetY = { -40 }
+                            ) + expandVertically(
+                                expandFrom = Alignment.Top
+                            ) + scaleIn(
+                                // Animate scale from 0f to 1f using the top center as the pivot point.
+                                transformOrigin = TransformOrigin(0.5f, 0f)
+                            ) + fadeIn(initialAlpha = 0.3f),
+                            exit = slideOutVertically() + shrinkVertically() + fadeOut() + scaleOut(targetScale = 1.2f)
+                        /*,
+                            enter = expandVertically { 0 } + scaleIn(),
+                            exit = shrinkVertically { 0 } + scaleOut()*/
+                        ) {
+                            Button(
+                                onClick = {
+                                    scope.launch {
+                                        if (profileViewModel.logout()) {
+                                            Toast.makeText(context, "Log out was successful", Toast.LENGTH_SHORT)
+                                                .show()
+                                            navController.navigate(route = Screen.LogIn.route)
+                                        } else {
+                                            Toast.makeText(context, "Log out was not successful", Toast.LENGTH_SHORT)
+                                                .show()
+                                            navController.navigate(route = Screen.LogIn.route)
+                                        }
+                                    }
+                                },
+                                shape = RoundedCornerShape(14.dp),
+                                colors = ButtonDefaults.buttonColors(containerColor = Color.Red),
+                                contentPadding = PaddingValues(vertical = 20.dp),
+                                modifier = Modifier
+                                    .fillMaxWidth(1f)
+                                    .padding(horizontal = 12.dp)
+                            ) {
+                                Text(
+                                    text = "Log out",
+                                    fontSize = 22.sp,
+                                    fontWeight = FontWeight.SemiBold
+                                )
+                            }
+                        }
                     }
                 }
             }
