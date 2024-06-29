@@ -4,12 +4,13 @@ import android.content.Context
 import android.net.Uri
 import android.provider.MediaStore
 import android.util.Log
-import androidx.compose.ui.platform.LocalContext
-import androidx.core.net.toFile
-import com.example.darckoum.api.RetrofitInstance
+import com.example.darckoum.api.AnnouncementService
+import com.example.darckoum.api.AuthenticationService
 import com.example.darckoum.data.model.Announcement
 import com.example.darckoum.data.model.request.AddAnnouncementRequest
 import com.example.darckoum.data.model.request.AnnouncementResponse
+import com.example.darckoum.data.model.request.CheckTokenRequest
+import com.example.darckoum.data.model.request.CheckTokenResponse
 import com.example.darckoum.data.model.request.LoginRequest
 import com.example.darckoum.data.model.request.LoginResponse
 import com.example.darckoum.data.model.request.LogoutRequest
@@ -21,8 +22,12 @@ import okhttp3.MultipartBody
 import okhttp3.RequestBody.Companion.asRequestBody
 import retrofit2.Response
 import java.io.File
+import javax.inject.Inject
 
-class Repository {
+class Repository @Inject constructor(
+    private val announcementService: AnnouncementService,
+    private val authenticationService: AuthenticationService
+) {
 
     private val tag = "Repository.kt"
 
@@ -40,23 +45,27 @@ class Repository {
                 images.add(part)
             }
         }
-        return RetrofitInstance.announcementService.createAnnouncement(token, addAnnouncementRequest, images)
+        return announcementService.createAnnouncement(token, addAnnouncementRequest, images)
     }
 
     suspend fun getAnnouncement(): Response<Announcement> {
-        return RetrofitInstance.announcementService.getAnnouncement()
+        return announcementService.getAnnouncement()
     }
 
     suspend fun registerUser(registrationRequest: RegistrationRequest): Response<RegistrationResponse> {
-        return RetrofitInstance.authenticationService.registerUser(registrationRequest)
+        return authenticationService.registerUser(registrationRequest)
     }
 
     suspend fun loginUser(loginRequest: LoginRequest): Response<LoginResponse> {
-        return RetrofitInstance.authenticationService.loginUser(loginRequest)
+        return authenticationService.loginUser(loginRequest)
     }
 
     suspend fun logoutUser(logoutRequest: LogoutRequest): Response<LogoutResponse> {
-        return RetrofitInstance.authenticationService.logoutUser(logoutRequest)
+        return authenticationService.logoutUser(logoutRequest)
+    }
+
+    suspend fun checkToken(checkTokenRequest: CheckTokenRequest): Response<CheckTokenResponse> {
+        return authenticationService.checkToken(checkTokenRequest)
     }
 
     private fun getRealPathFromURI(uri: Uri, context: Context): String? {

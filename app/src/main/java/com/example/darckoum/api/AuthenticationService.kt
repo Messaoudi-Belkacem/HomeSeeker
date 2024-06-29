@@ -1,5 +1,7 @@
 package com.example.darckoum.api
 
+import com.example.darckoum.data.model.request.CheckTokenRequest
+import com.example.darckoum.data.model.request.CheckTokenResponse
 import com.example.darckoum.data.model.request.LoginRequest
 import com.example.darckoum.data.model.request.LoginResponse
 import com.example.darckoum.data.model.request.LogoutRequest
@@ -19,4 +21,7 @@ interface AuthenticationService {
 
     @POST("auth/logout")
     suspend fun logoutUser(@Body logoutRequest: LogoutRequest): Response<LogoutResponse>
+
+    @POST("auth/check")
+    suspend fun checkToken(@Body checkTokenRequest: CheckTokenRequest): Response<CheckTokenResponse>
 }

@@ -7,11 +7,9 @@ import android.widget.Toast
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.PickVisualMediaRequest
 import androidx.activity.result.contract.ActivityResultContracts
-import androidx.compose.animation.core.tween
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.gestures.scrollBy
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -71,14 +69,13 @@ import com.example.darckoum.R
 import com.example.darckoum.data.model.enum_classes.PropertyType
 import com.example.darckoum.data.model.enum_classes.State
 import com.example.darckoum.data.state.AddState
-import com.example.darckoum.navigation.BottomBarScreen
+import com.example.darckoum.navigation.screen.BottomBarScreen
 import com.example.darckoum.ui.screen.SharedViewModel
 import com.example.darckoum.ui.theme.C1
 import com.example.darckoum.ui.theme.C2
 import com.example.darckoum.ui.theme.C3
 import com.example.darckoum.ui.theme.C5
 import com.example.darckoum.util.KeyboardAware
-import com.example.darckoum.util.rememberImeState
 import kotlinx.coroutines.launch
 
 @Composable
@@ -92,7 +89,7 @@ fun AddScreen(navController: NavController, addViewModel: AddViewModel, sharedVi
 
     LaunchedEffect(key1 = keyboardHeight) {
         scope.launch {
-            scrollState.scrollBy(keyboardHeight.toFloat())
+            scrollState.animateScrollTo(keyboardHeight)
         }
     }
 

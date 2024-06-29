@@ -60,7 +60,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import com.example.darckoum.R
-import com.example.darckoum.navigation.Screen
+import com.example.darckoum.navigation.Graph
 import com.example.darckoum.ui.theme.C3
 import com.example.darckoum.ui.theme.C5
 import kotlinx.coroutines.launch
@@ -254,11 +254,10 @@ fun ProfileScreen(navController: NavController, profileViewModel: ProfileViewMod
                                         if (profileViewModel.logout()) {
                                             Toast.makeText(context, "Log out was successful", Toast.LENGTH_SHORT)
                                                 .show()
-                                            navController.navigate(route = Screen.LogIn.route)
+                                            navController.navigate(route = Graph.AUTHENTICATION)
                                         } else {
                                             Toast.makeText(context, "Log out was not successful", Toast.LENGTH_SHORT)
                                                 .show()
-                                            navController.navigate(route = Screen.LogIn.route)
                                         }
                                     }
                                 },

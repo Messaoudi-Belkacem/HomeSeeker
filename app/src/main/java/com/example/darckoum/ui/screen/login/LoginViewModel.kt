@@ -5,18 +5,23 @@ import android.content.Context
 import android.util.Log
 import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableStateOf
-import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.darckoum.data.model.request.LoginRequest
 import com.example.darckoum.data.repository.DataStoreRepository
 import com.example.darckoum.data.repository.Repository
 import com.example.darckoum.data.state.LoginState
-import com.example.darckoum.data.state.RegistrationState
+import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import java.net.ConnectException
+import javax.inject.Inject
 
-class LoginViewModel(private val repository: Repository, application: Application) : ViewModel() {
+@HiltViewModel
+class LoginViewModel @Inject constructor(
+    private val repository: Repository,
+    application: Application
+) : ViewModel() {
 
     private val tag: String = "LoginViewModel.kt"
     private val appContext: Context = application.applicationContext
@@ -33,6 +38,7 @@ class LoginViewModel(private val repository: Repository, application: Applicatio
                 }
                 _loginState.value = LoginState.Loading
                 val loginResponse = repository.loginUser(LoginRequest(username, password))
+                delay(4000)
                 if (loginResponse.isSuccessful) {
                     _loginState.value = LoginState.Success
                     val token = loginResponse.body()?.token

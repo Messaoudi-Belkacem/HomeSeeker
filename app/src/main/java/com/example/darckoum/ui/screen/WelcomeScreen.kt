@@ -18,7 +18,6 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
-import com.example.darckoum.navigation.Screen
 import com.example.darckoum.ui.theme.C1
 
 @Composable
@@ -61,7 +60,7 @@ fun WelcomeScreen(
         ) {
             Button(
                 onClick = {
-                    navController.navigate(route = Screen.LogIn.route)
+                    /*navController.navigate(route = Screen.LogIn.route)*/
                 },
                 shape = RoundedCornerShape(14.dp),
                 colors = ButtonDefaults.buttonColors(containerColor = Color(0xFFE7BD73)),

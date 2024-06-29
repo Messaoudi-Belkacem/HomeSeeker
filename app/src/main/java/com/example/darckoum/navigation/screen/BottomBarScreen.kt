@@ -1,4 +1,4 @@
-package com.example.darckoum.navigation
+package com.example.darckoum.navigation.screen
 
 import com.example.darckoum.R
 

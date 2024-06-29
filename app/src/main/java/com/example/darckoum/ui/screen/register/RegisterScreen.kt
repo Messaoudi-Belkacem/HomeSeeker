@@ -52,7 +52,7 @@ import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import com.example.darckoum.R
 import com.example.darckoum.data.state.RegistrationState
-import com.example.darckoum.navigation.Screen
+import com.example.darckoum.navigation.screen.AuthenticationScreen
 import com.example.darckoum.ui.theme.C1
 import com.example.darckoum.util.KeyboardAware
 import com.example.darckoum.util.rememberImeState
@@ -61,6 +61,7 @@ import kotlinx.coroutines.launch
 @Composable
 fun RegisterScreen(navController: NavController, registerViewModel: RegisterViewModel) {
 
+    val tag = "RegisterScreen"
     val scrollState = rememberScrollState()
     val keyboardHeight = WindowInsets.ime.getBottom(LocalDensity.current)
     val scope = rememberCoroutineScope()
@@ -68,7 +69,7 @@ fun RegisterScreen(navController: NavController, registerViewModel: RegisterView
 
     LaunchedEffect(key1 = keyboardHeight) {
         scope.launch {
-            scrollState.scrollBy(keyboardHeight.toFloat())
+            scrollState.animateScrollTo(keyboardHeight)
         }
     }
 
@@ -113,7 +114,7 @@ fun RegisterScreen(navController: NavController, registerViewModel: RegisterView
                     }
 
                     is RegistrationState.Success -> {
-                        navController.navigate(Screen.Main.route)
+                        /*navController.navigate(Screen.Main.route)*/
                     }
 
                     is RegistrationState.Error -> {
@@ -261,12 +262,8 @@ fun RegisterScreen(navController: NavController, registerViewModel: RegisterView
                                         textAlign = TextAlign.Center,
                                         modifier = Modifier
                                             .clickable {
-                                                navController.navigate(route = Screen.LogIn.route) {
-                                                    popUpTo(Screen.LogIn.route) {
-                                                        inclusive = true
-                                                    }
-                                                }
-                                                Log.d("Log in screen", "Sign up text clicked")
+                                                Log.d(tag, "Sign up text clicked")
+                                                navController.popBackStack()
                                             }
                                     )
                                 }

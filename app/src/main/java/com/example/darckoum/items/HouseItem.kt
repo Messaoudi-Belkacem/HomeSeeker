@@ -23,14 +23,12 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import com.example.darckoum.R
 import com.example.darckoum.data.model.Announcement
-import com.example.darckoum.data.repository.HouseRepository
-import com.example.darckoum.navigation.BottomBarScreen
+import com.example.darckoum.navigation.screen.BottomBarScreen
 import com.example.darckoum.ui.theme.C1
 import com.example.darckoum.ui.theme.C3
 import com.example.darckoum.ui.theme.C5

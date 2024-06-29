@@ -27,7 +27,7 @@ import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
-import com.example.darckoum.navigation.BottomBarScreen
+import com.example.darckoum.navigation.screen.BottomBarScreen
 import com.example.darckoum.navigation.BottomNavGraph
 import com.example.darckoum.ui.screen.add.AddViewModel
 import com.example.darckoum.ui.screen.announcement.AnnouncementViewModel

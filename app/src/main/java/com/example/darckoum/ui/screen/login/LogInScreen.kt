@@ -49,15 +49,21 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
+import androidx.navigation.NavHostController
 import com.example.darckoum.R
 import com.example.darckoum.data.state.LoginState
-import com.example.darckoum.navigation.Screen
+import com.example.darckoum.navigation.screen.AuthenticationScreen
+import com.example.darckoum.navigation.screen.LeafScreen
 import com.example.darckoum.ui.theme.C1
 import com.example.darckoum.util.KeyboardAware
 import kotlinx.coroutines.launch
+import androidx.hilt.navigation.compose.hiltViewModel
 
 @Composable
-fun LoginScreen(navController: NavController, loginViewModel: LoginViewModel) {
+fun LoginScreen(
+    navHostController: NavHostController,
+    loginViewModel: LoginViewModel = hiltViewModel()
+) {
 
     val scrollState = rememberScrollState()
     val keyboardHeight = WindowInsets.ime.getBottom(LocalDensity.current)
@@ -66,7 +72,7 @@ fun LoginScreen(navController: NavController, loginViewModel: LoginViewModel) {
 
     LaunchedEffect(key1 = keyboardHeight) {
         scope.launch {
-            scrollState.scrollBy(keyboardHeight.toFloat())
+            scrollState.animateScrollTo(keyboardHeight)
         }
     }
 
@@ -76,40 +82,48 @@ fun LoginScreen(navController: NavController, loginViewModel: LoginViewModel) {
     KeyboardAware {
         Scaffold(
             containerColor = Color.Transparent,
-        ) {
-            it
+
+        ) { contentPadding ->
 
             val context = LocalContext.current
 
             Column(
                 modifier = Modifier
-                    .fillMaxSize(1f)
                     .verticalScroll(scrollState)
+                    .fillMaxSize(1f)
+                    .padding(contentPadding),
+                verticalArrangement = Arrangement.Center
             ) {
 
                 when (loginState) {
                     is LoginState.Loading -> {
-                        Column(
-                            modifier = Modifier.fillMaxSize(1f),
-                            horizontalAlignment = Alignment.CenterHorizontally,
-                            verticalArrangement = Arrangement.Center
+                        Box(
+                            modifier = Modifier
+                                .fillMaxSize(1f),
+                            contentAlignment = Alignment.Center
                         ) {
-                            CircularProgressIndicator(
-                                modifier = Modifier.size(64.dp),
-                                color = C1,
-                            )
-                            Spacer(modifier = Modifier.height(32.dp))
-                            Text(
-                                text = "Hang tight...",
-                                fontSize = 24.sp,
-                                fontWeight = FontWeight.Medium,
-                                color = C1,
-                            )
+                            Column(
+                                modifier = Modifier.fillMaxSize(1f),
+                                horizontalAlignment = Alignment.CenterHorizontally,
+                                verticalArrangement = Arrangement.SpaceAround
+                            ) {
+                                CircularProgressIndicator(
+                                    modifier = Modifier.size(64.dp),
+                                    color = C1,
+                                )
+                                Spacer(modifier = Modifier.height(32.dp))
+                                Text(
+                                    text = "Hang tight...",
+                                    fontSize = 24.sp,
+                                    fontWeight = FontWeight.Medium,
+                                    color = C1,
+                                )
+                            }
                         }
                     }
 
                     is LoginState.Success -> {
-                        navController.navigate(Screen.Main.route)
+                        navHostController.navigate(LeafScreen.Main.route)
                     }
 
                     is LoginState.Error -> {
@@ -244,7 +258,7 @@ fun LoginScreen(navController: NavController, loginViewModel: LoginViewModel) {
                                         textAlign = TextAlign.Center,
                                         modifier = Modifier
                                             .clickable {
-                                                navController.navigate(route = Screen.SignUp.route)
+                                                navHostController.navigate(route = AuthenticationScreen.SignUp.route)
                                                 /**
                                                 {
                                                 popUpTo(Screen.SignUp.route) {

@@ -29,7 +29,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.ImageBitmap
 import androidx.compose.ui.graphics.asImageBitmap
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
@@ -41,13 +40,11 @@ import androidx.compose.ui.unit.sp
 import androidx.core.content.ContextCompat.startActivity
 import androidx.navigation.NavController
 import com.example.darckoum.R
-import com.example.darckoum.navigation.BottomBarScreen
+import com.example.darckoum.navigation.screen.BottomBarScreen
 import com.example.darckoum.ui.screen.SharedViewModel
 import com.example.darckoum.ui.theme.C1
 import com.example.darckoum.ui.theme.C2
 import com.example.darckoum.ui.theme.C5
-import java.io.ByteArrayInputStream
-import java.io.InputStream
 import java.util.Base64
 
 
