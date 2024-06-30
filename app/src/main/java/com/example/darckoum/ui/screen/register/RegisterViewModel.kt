@@ -12,10 +12,16 @@ import com.example.darckoum.data.repository.DataStoreRepository
 import com.example.darckoum.data.repository.Repository
 import com.example.darckoum.data.state.LoginState
 import com.example.darckoum.data.state.RegistrationState
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import java.net.ConnectException
+import javax.inject.Inject
 
-class RegisterViewModel(private val repository: Repository, application: Application) : ViewModel() {
+@HiltViewModel
+class RegisterViewModel @Inject constructor(
+    private val repository: Repository,
+    application: Application
+) : ViewModel() {
 
     private val tag: String = "RegisterViewModel.kt"
     private val appContext: Context = application.applicationContext

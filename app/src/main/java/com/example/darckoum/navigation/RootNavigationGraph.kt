@@ -12,6 +12,7 @@ import com.example.darckoum.navigation.screen.AuthenticationScreen
 import com.example.darckoum.navigation.screen.BottomBarScreen
 import com.example.darckoum.navigation.screen.LeafScreen
 import com.example.darckoum.ui.screen.login.LoginScreen
+import com.example.darckoum.ui.screen.register.RegisterScreen
 
 @Composable
 fun RootNavigationGraph(
@@ -44,7 +45,7 @@ fun RootNavigationGraph(
                 LoginScreen(navHostController = navHostController)
             }
             composable(route = AuthenticationScreen.SignUp.route) {
-
+                RegisterScreen(navHostController = navHostController)
             }
         }
         navigation(

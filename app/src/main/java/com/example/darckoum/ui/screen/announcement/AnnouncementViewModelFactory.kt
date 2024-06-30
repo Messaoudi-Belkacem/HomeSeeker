@@ -3,7 +3,6 @@ package com.example.darckoum.ui.screen.announcement
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import com.example.darckoum.data.model.request.AnnouncementResponse
-import com.example.darckoum.data.repository.HouseRepository
 import com.example.darckoum.data.repository.Repository
 
 class AnnouncementViewModelFactory(private val repository: Repository) : ViewModelProvider.Factory {

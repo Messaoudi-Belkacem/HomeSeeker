@@ -49,7 +49,9 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
+import androidx.navigation.NavHostController
 import com.example.darckoum.R
 import com.example.darckoum.data.state.RegistrationState
 import com.example.darckoum.navigation.screen.AuthenticationScreen
@@ -59,7 +61,10 @@ import com.example.darckoum.util.rememberImeState
 import kotlinx.coroutines.launch
 
 @Composable
-fun RegisterScreen(navController: NavController, registerViewModel: RegisterViewModel) {
+fun RegisterScreen(
+    navHostController: NavHostController,
+    registerViewModel: RegisterViewModel = hiltViewModel()
+) {
 
     val tag = "RegisterScreen"
     val scrollState = rememberScrollState()
@@ -263,7 +268,7 @@ fun RegisterScreen(navController: NavController, registerViewModel: RegisterView
                                         modifier = Modifier
                                             .clickable {
                                                 Log.d(tag, "Sign up text clicked")
-                                                navController.popBackStack()
+                                                navHostController.popBackStack()
                                             }
                                     )
                                 }

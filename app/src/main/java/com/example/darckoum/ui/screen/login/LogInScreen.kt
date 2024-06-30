@@ -65,6 +65,7 @@ fun LoginScreen(
     loginViewModel: LoginViewModel = hiltViewModel()
 ) {
 
+    val tag = "LoginScreen"
     val scrollState = rememberScrollState()
     val keyboardHeight = WindowInsets.ime.getBottom(LocalDensity.current)
     val scope = rememberCoroutineScope()
@@ -258,6 +259,7 @@ fun LoginScreen(
                                         textAlign = TextAlign.Center,
                                         modifier = Modifier
                                             .clickable {
+                                                Log.d(tag, "Sign up text clicked")
                                                 navHostController.navigate(route = AuthenticationScreen.SignUp.route)
                                                 /**
                                                 {
@@ -266,7 +268,6 @@ fun LoginScreen(
                                                 }
                                                 }
                                                  */
-                                                Log.d("Log in screen", "Sign up text clicked")
                                             }
                                     )
                                 }
@@ -315,9 +316,3 @@ fun LoginScreenOutlinedTextFieldSample(
         keyboardOptions = keyboardOptions
     )
 }
-
-//@Preview
-//@Composable
-//fun LoginScreenPreview() {
-//    LoginScreen(NavController(LocalContext.current))
-//}

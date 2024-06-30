@@ -8,7 +8,6 @@ import androidx.lifecycle.ViewModel
 import com.example.darckoum.data.model.enum_classes.PropertyType
 import com.example.darckoum.data.model.enum_classes.State
 import com.example.darckoum.data.model.request.AnnouncementResponse
-import com.example.darckoum.data.repository.HouseRepository
 import com.example.darckoum.data.repository.Repository
 import com.example.darckoum.items.formatPrice
 
