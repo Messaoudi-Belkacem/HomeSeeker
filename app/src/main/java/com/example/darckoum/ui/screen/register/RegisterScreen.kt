@@ -23,16 +23,12 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Button
-import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.OutlinedTextField
-import androidx.compose.material3.OutlinedTextFieldDefaults
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -87,7 +83,6 @@ fun RegisterScreen(
                     .padding(paddingValues)
                     .verticalScroll(scrollState)
             ) {
-
                 when (registrationState) {
                     is RegistrationState.Loading -> {
                         Column(
@@ -108,7 +103,8 @@ fun RegisterScreen(
                         }
                     }
                     is RegistrationState.Success -> {
-                        /*navController.navigate(Screen.Main.route)*/
+                        Log.d(tag, "Sign up was successful, returning to login page")
+                        navHostController.popBackStack()
                     }
                     is RegistrationState.Error -> {
                         Toast.makeText(
