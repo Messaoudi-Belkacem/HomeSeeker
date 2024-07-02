@@ -9,7 +9,6 @@ import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.withContext
 
 class DataStoreRepository {
-
     object TokenManager {
         private val Context.dataStore by preferencesDataStore(name = "settings")
         private val TOKEN = stringPreferencesKey("token")

@@ -16,9 +16,13 @@ object TokenUtil {
         return null
     }
 
-    fun isTokenExpired(token: String): Boolean {
-        val expirationDate = decodeTokenAndExtractExpirationDate(token)
-        return expirationDate != null && expirationDate.before(Date())
+    fun isTokenExpired(token: String?): Boolean {
+        if (token == null) {
+            return true
+        } else {
+            val expirationDate = decodeTokenAndExtractExpirationDate(token)
+            return expirationDate != null && expirationDate.before(Date())
+        }
     }
 
 }

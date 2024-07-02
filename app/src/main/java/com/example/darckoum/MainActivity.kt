@@ -32,29 +32,28 @@ import kotlinx.coroutines.withContext
 class MainActivity : ComponentActivity() {
 
     private val tag = "MainActivity"
-    lateinit var navController: NavHostController
-    /*private val sharedViewModel: SharedViewModel by viewModels()
-    private val mainViewModel: MainViewModel by viewModels()*/
+    private val sharedViewModel: SharedViewModel by viewModels()
+    private val mainViewModel: MainViewModel by viewModels()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         WindowCompat.setDecorFitsSystemWindows(window, false)
-        var token: String
+        var token: String?
         val tokenIsValid: Boolean
         val context = this.applicationContext
-        /*runBlocking {
+        runBlocking {
             token = withContext(Dispatchers.IO) {
-                DataStoreRepository.TokenManager.getToken(context).toString()
+                DataStoreRepository.TokenManager.getToken(context)
             }
             tokenIsValid = mainViewModel.checkToken(token).value
         }
-        Log.d(tag, "token : $token")
+        Log.d(tag, "token: $token")
         val tokenIsExpired = TokenUtil.isTokenExpired(token)
-        val startDestination: String = if (tokenIsExpired || token.isBlank() || tokenIsValid) {
+        val startDestination: String = if (tokenIsExpired || token.isNullOrBlank() || tokenIsValid) {
             Graph.AUTHENTICATION
         } else {
             Graph.HOME
-        }*/
+        }
         setContent {
             AppTheme {
                 Box(
@@ -67,7 +66,7 @@ class MainActivity : ComponentActivity() {
                         .imePadding()
                 ) {
                     RootNavigationGraph(
-                        startDestination = Graph.AUTHENTICATION
+                        startDestination = startDestination
                     )
                     val systemUiController = rememberSystemUiController()
                     DisposableEffect(systemUiController) {

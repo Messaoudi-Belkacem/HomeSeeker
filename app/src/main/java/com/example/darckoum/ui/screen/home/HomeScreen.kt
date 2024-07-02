@@ -86,7 +86,7 @@ fun HomeScreen(
                     horizontalAlignment = Alignment.CenterHorizontally
                 ) {
                     Text(
-                        text = "My posts",
+                        text = "Popular",
                         fontSize = 20.sp,
                         fontWeight = FontWeight.SemiBold,
                         modifier = Modifier.padding(start = 16.dp)
