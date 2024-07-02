@@ -29,9 +29,6 @@ import androidx.navigation.NavController
 import com.example.darckoum.R
 import com.example.darckoum.data.model.Announcement
 import com.example.darckoum.navigation.screen.BottomBarScreen
-import com.example.darckoum.ui.theme.C1
-import com.example.darckoum.ui.theme.C3
-import com.example.darckoum.ui.theme.C5
 
 @Composable
 fun CustomItem(announcement: Announcement, navController: NavController) {
@@ -49,7 +46,6 @@ fun CustomItem(announcement: Announcement, navController: NavController) {
         modifier = Modifier
             .size(width = 180.dp, height = 280.dp)
             .clip(RoundedCornerShape(14.dp))
-            .border(width = 2.dp, color = C5, shape = RoundedCornerShape(14.dp))
             .background(Color(0x994F4F4F))
             .padding(8.dp)
             .clickable {
@@ -70,7 +66,6 @@ fun CustomItem(announcement: Announcement, navController: NavController) {
             )
             Text(
                 text = announcement.title,
-                color = C3,
                 fontSize = 12.sp,
                 fontWeight = FontWeight.SemiBold,
                 textAlign = TextAlign.Center
@@ -86,11 +81,9 @@ fun CustomItem(announcement: Announcement, navController: NavController) {
                     Icon(
                         painter = painterResource(id = R.drawable.ic_location),
                         contentDescription = null,
-                        tint = C3
                     )
                     Text(
                         text = announcement.location,
-                        color = C3,
                         fontSize = 10.sp,
                         fontWeight = FontWeight.Medium
                     )
@@ -102,11 +95,9 @@ fun CustomItem(announcement: Announcement, navController: NavController) {
                     Icon(
                         painter = painterResource(id = R.drawable.ic_type),
                         contentDescription = null,
-                        tint = C3
                     )
                     Text(
                         text = announcement.propertyType.description,
-                        color = C3,
                         fontSize = 10.sp,
                         fontWeight = FontWeight.Medium
                     )
@@ -114,7 +105,6 @@ fun CustomItem(announcement: Announcement, navController: NavController) {
             }
             Text(
                 text = "$formattedPrice DZD",
-                color = C1,
                 fontSize = 16.sp,
                 fontWeight = FontWeight.SemiBold
             )
@@ -138,7 +128,6 @@ fun CustomSearchItem(announcement: Announcement, navController: NavController) {
         modifier = Modifier
             .fillMaxWidth(0.96f)
             .clip(RoundedCornerShape(14.dp))
-            .border(width = 2.dp, color = C5, shape = RoundedCornerShape(14.dp))
             .background(Color(0x994F4F4F))
             .padding(12.dp)
             .clickable {
@@ -164,7 +153,6 @@ fun CustomSearchItem(announcement: Announcement, navController: NavController) {
                 )
                 Text(
                     text = announcement.title,
-                    color = C3,
                     fontSize = 20.sp,
                     fontWeight = FontWeight.SemiBold
                 )
@@ -181,11 +169,9 @@ fun CustomSearchItem(announcement: Announcement, navController: NavController) {
                     Icon(
                         painter = painterResource(id = R.drawable.ic_location),
                         contentDescription = null,
-                        tint = C3
                     )
                     Text(
                         text = announcement.location,
-                        color = C3,
                         fontSize = 16.sp,
                         fontWeight = FontWeight.Medium
                     )
@@ -196,18 +182,15 @@ fun CustomSearchItem(announcement: Announcement, navController: NavController) {
                     Icon(
                         painter = painterResource(id = R.drawable.ic_type),
                         contentDescription = null,
-                        tint = C3
                     )
                     Text(
                         text = announcement.propertyType.description,
-                        color = C3,
                         fontSize = 16.sp,
                         fontWeight = FontWeight.Medium
                     )
                 }
                 Text(
                     text = "$formattedPrice DZD",
-                    color = C1,
                     fontSize = 20.sp,
                     fontWeight = FontWeight.SemiBold
                 )

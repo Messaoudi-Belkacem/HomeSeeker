@@ -7,8 +7,14 @@ import androidx.lifecycle.ViewModel
 import com.example.darckoum.data.model.request.LogoutRequest
 import com.example.darckoum.data.repository.DataStoreRepository
 import com.example.darckoum.data.repository.Repository
+import dagger.hilt.android.lifecycle.HiltViewModel
+import javax.inject.Inject
 
-class ProfileViewModel(private val repository: Repository, application: Application) : ViewModel() {
+@HiltViewModel
+class ProfileViewModel @Inject constructor(
+    private val repository: Repository,
+    application: Application
+) : ViewModel() {
 
     private val tag: String = "ProfileViewModel.kt"
     private val appContext: Context = application.applicationContext

@@ -10,8 +10,13 @@ import com.example.darckoum.data.model.enum_classes.State
 import com.example.darckoum.data.model.request.AnnouncementResponse
 import com.example.darckoum.data.repository.Repository
 import com.example.darckoum.items.formatPrice
+import dagger.hilt.android.lifecycle.HiltViewModel
+import javax.inject.Inject
 
-class AnnouncementViewModel(repository: Repository) : ViewModel() {
+@HiltViewModel
+class AnnouncementViewModel @Inject constructor(
+    repository: Repository
+) : ViewModel() {
 
     /*private val _announcementResponse = mutableStateOf<AnnouncementResponse?>(null)
 

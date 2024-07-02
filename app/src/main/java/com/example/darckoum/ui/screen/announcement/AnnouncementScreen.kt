@@ -7,7 +7,6 @@ import android.net.Uri
 import android.util.Log
 import android.widget.Toast
 import androidx.compose.foundation.Image
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -38,30 +37,23 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.core.content.ContextCompat.startActivity
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import com.example.darckoum.R
 import com.example.darckoum.navigation.screen.BottomBarScreen
 import com.example.darckoum.ui.screen.SharedViewModel
-import com.example.darckoum.ui.theme.C1
-import com.example.darckoum.ui.theme.C2
-import com.example.darckoum.ui.theme.C5
 import java.util.Base64
 
 
 @Composable
 fun AnnouncementScreen(
-    navController: NavController,
-    announcementViewModel: AnnouncementViewModel,
-    sharedViewModel: SharedViewModel,
-
+    bottomBarNavHostController: NavController,
+    announcementViewModel: AnnouncementViewModel = hiltViewModel(),
+    sharedViewModel: SharedViewModel = hiltViewModel()
 ) {
-
     val tag = "AnnouncementScreen.kt"
-
     val context = LocalContext.current
-
     val announcementResponse = sharedViewModel.announcementWithImages
-
     if (announcementResponse == null) {
         Log.d(tag, "announcementResponse is null")
         Toast.makeText(
@@ -69,13 +61,11 @@ fun AnnouncementScreen(
             "announcementResponse is null",
             Toast.LENGTH_SHORT
         ).show()
-        navController.navigate(BottomBarScreen.Home.route)
+        bottomBarNavHostController.navigate(BottomBarScreen.Home.route)
     } else {
         Column(
             modifier = Modifier
                 .fillMaxSize()
-                .background(C2),
-            verticalArrangement = Arrangement.SpaceBetween
         ) {
             Box(
                 modifier = Modifier
@@ -138,7 +128,6 @@ fun AnnouncementScreen(
                 )
                 Row(
                     modifier = Modifier
-                        .background(color = C5, RoundedCornerShape(10.dp))
                         .padding(10.dp),
                     verticalAlignment = Alignment.CenterVertically,
                     horizontalArrangement = Arrangement.spacedBy(35.dp)
@@ -212,7 +201,6 @@ fun AnnouncementScreen(
                     )
                     Text(
                         text = announcementViewModel.getFormattedPrice(announcementResponse.price) + " DZD",
-                        color = C1,
                         modifier = Modifier
                             .fillMaxWidth(1f),
                         fontSize = 16.sp

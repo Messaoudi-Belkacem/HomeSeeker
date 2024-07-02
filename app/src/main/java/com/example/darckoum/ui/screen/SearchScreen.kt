@@ -10,8 +10,8 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
-import com.example.darckoum.items.CustomSearchItem
-import com.example.darckoum.ui.theme.C2
+
+
 
 @Composable
 fun SearchScreen( navController: NavController) {
@@ -22,7 +22,6 @@ fun SearchScreen( navController: NavController) {
     Column(
         modifier = Modifier
             .fillMaxSize()
-            .background(color = C2)
             .padding(top = 40.dp),
         verticalArrangement = Arrangement.spacedBy(12.dp),
         horizontalAlignment = Alignment.CenterHorizontally

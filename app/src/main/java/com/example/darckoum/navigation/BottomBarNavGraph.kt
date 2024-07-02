@@ -35,7 +35,7 @@ fun BottomNavGraph(bottomBarNavController: NavHostController, navController: Nav
         }
 
         composable(route = BottomBarScreen.Add.route) {
-            AddScreen(bottomBarNavController, addViewModel, sharedViewModel)
+            AddScreen(bottomBarNavController, addViewModel)
         }
 
         composable(route = BottomBarScreen.Profile.route) {
@@ -45,7 +45,7 @@ fun BottomNavGraph(bottomBarNavController: NavHostController, navController: Nav
         composable(
             route = BottomBarScreen.Announcement.route
         ) {
-            AnnouncementScreen(announcementViewModel = announcementViewModel, sharedViewModel = sharedViewModel, navController = bottomBarNavController)
+            AnnouncementScreen(announcementViewModel = announcementViewModel, sharedViewModel = sharedViewModel, bottomBarNavHostController = bottomBarNavController)
         }
 
         composable(

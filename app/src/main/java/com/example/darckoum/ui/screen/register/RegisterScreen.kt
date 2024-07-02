@@ -2,10 +2,8 @@ package com.example.darckoum.ui.screen.register
 
 import android.util.Log
 import android.widget.Toast
-import androidx.compose.animation.core.tween
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.gestures.scrollBy
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -27,6 +25,7 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.OutlinedTextFieldDefaults
 import androidx.compose.material3.Scaffold
@@ -50,14 +49,11 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
-import androidx.navigation.NavController
 import androidx.navigation.NavHostController
 import com.example.darckoum.R
 import com.example.darckoum.data.state.RegistrationState
-import com.example.darckoum.navigation.screen.AuthenticationScreen
-import com.example.darckoum.ui.theme.C1
+import com.example.darckoum.ui.screen.common.OutlinedTextFieldSample
 import com.example.darckoum.util.KeyboardAware
-import com.example.darckoum.util.rememberImeState
 import kotlinx.coroutines.launch
 
 @Composable
@@ -65,19 +61,16 @@ fun RegisterScreen(
     navHostController: NavHostController,
     registerViewModel: RegisterViewModel = hiltViewModel()
 ) {
-
     val tag = "RegisterScreen"
     val scrollState = rememberScrollState()
     val keyboardHeight = WindowInsets.ime.getBottom(LocalDensity.current)
     val scope = rememberCoroutineScope()
     val registrationState by registerViewModel.registrationState
-
     LaunchedEffect(key1 = keyboardHeight) {
         scope.launch {
             scrollState.animateScrollTo(keyboardHeight)
         }
     }
-
     val usernameState = remember { mutableStateOf("") }
     val firstNameState = remember { mutableStateOf("") }
     val lastNameState = remember { mutableStateOf("") }
@@ -86,14 +79,12 @@ fun RegisterScreen(
     KeyboardAware {
         Scaffold(
             containerColor = Color.Transparent
-        ) {
-            it
-
+        ) { paddingValues ->
             val context = LocalContext.current
-
             Column(
                 modifier = Modifier
                     .fillMaxSize(1f)
+                    .padding(paddingValues)
                     .verticalScroll(scrollState)
             ) {
 
@@ -106,22 +97,19 @@ fun RegisterScreen(
                         ) {
                             CircularProgressIndicator(
                                 modifier = Modifier.size(64.dp),
-                                color = C1,
                             )
                             Spacer(modifier = Modifier.height(32.dp))
                             Text(
                                 text = "Hang tight...",
                                 fontSize = 24.sp,
                                 fontWeight = FontWeight.Medium,
-                                color = C1,
+                                color = MaterialTheme.colorScheme.onSurface
                             )
                         }
                     }
-
                     is RegistrationState.Success -> {
                         /*navController.navigate(Screen.Main.route)*/
                     }
-
                     is RegistrationState.Error -> {
                         Toast.makeText(
                             context,
@@ -130,7 +118,6 @@ fun RegisterScreen(
                         ).show()
                         registerViewModel.setRegistrationState(RegistrationState.Initial)
                     }
-
                     else -> {
                         Box(
                             modifier = Modifier
@@ -153,11 +140,11 @@ fun RegisterScreen(
                                 Spacer(modifier = Modifier.height(64.dp))
                                 Text(
                                     text = "Easily find real estate in the Maghreb region for rent or purchase",
-                                    color = C1,
                                     fontSize = 16.sp,
                                     fontWeight = FontWeight.Normal,
                                     textAlign = TextAlign.Center,
-                                    modifier = Modifier.padding(horizontal = 16.dp)
+                                    modifier = Modifier.padding(horizontal = 16.dp),
+                                    color = MaterialTheme.colorScheme.onSurface
                                 )
                             }
                         }
@@ -175,47 +162,43 @@ fun RegisterScreen(
                                     .padding(horizontal = 18.dp)
                                     .fillMaxWidth(1f)
                             ) {
-                                LoginScreenOutlinedTextFieldSample(
+                                OutlinedTextFieldSample(
                                     label = "Username",
                                     modifier = Modifier
                                         .fillMaxWidth()
                                         .height(64.dp),
                                     text = usernameState,
                                     onValueChange = { usernameState.value = it },
-                                    temp = C1,
                                     keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Text)
                                 )
                                 Spacer(modifier = Modifier.height(20.dp))
-                                LoginScreenOutlinedTextFieldSample(
+                                OutlinedTextFieldSample(
                                     label = "First Name",
                                     modifier = Modifier
                                         .fillMaxWidth()
                                         .height(64.dp),
                                     text = firstNameState,
                                     onValueChange = { firstNameState.value = it },
-                                    temp = C1,
                                     keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Text)
                                 )
                                 Spacer(modifier = Modifier.height(20.dp))
-                                LoginScreenOutlinedTextFieldSample(
+                                OutlinedTextFieldSample(
                                     label = "Last Name",
                                     modifier = Modifier
                                         .fillMaxWidth()
                                         .height(64.dp),
                                     text = lastNameState,
                                     onValueChange = { lastNameState.value = it },
-                                    temp = C1,
                                     keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Text)
                                 )
                                 Spacer(modifier = Modifier.height(20.dp))
-                                LoginScreenOutlinedTextFieldSample(
+                                OutlinedTextFieldSample(
                                     label = "Password",
                                     modifier = Modifier
                                         .fillMaxWidth()
                                         .height(64.dp),
                                     text = passwordState,
                                     onValueChange = { passwordState.value = it },
-                                    temp = C1,
                                     keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password)
                                 )
                                 Spacer(modifier = Modifier.height(30.dp))
@@ -234,7 +217,6 @@ fun RegisterScreen(
                                         }
                                     },
                                     shape = RoundedCornerShape(14.dp),
-                                    colors = ButtonDefaults.buttonColors(containerColor = C1),
                                     modifier = Modifier
                                         .fillMaxWidth(1f)
                                         .height(64.dp)
@@ -253,21 +235,21 @@ fun RegisterScreen(
                                 ) {
                                     Text(
                                         text = "Already have an account?",
-                                        color = C1,
                                         fontSize = 16.sp,
                                         fontWeight = FontWeight.Normal,
-                                        textAlign = TextAlign.Center
+                                        textAlign = TextAlign.Center,
+                                        color = MaterialTheme.colorScheme.onSurface
                                     )
                                     Spacer(modifier = Modifier.width(4.dp))
                                     Text(
                                         text = "Sign in",
-                                        color = C1,
                                         fontSize = 16.sp,
                                         fontWeight = FontWeight.SemiBold,
                                         textAlign = TextAlign.Center,
+                                        color = MaterialTheme.colorScheme.onSurface,
                                         modifier = Modifier
                                             .clickable {
-                                                Log.d(tag, "Sign up text clicked")
+                                                Log.d(tag, "Sign in text clicked")
                                                 navHostController.popBackStack()
                                             }
                                     )
@@ -279,39 +261,4 @@ fun RegisterScreen(
             }
         }
     }
-}
-
-@Composable
-fun LoginScreenOutlinedTextFieldSample(
-    label: String,
-    modifier: Modifier,
-    text: MutableState<String>,
-    onValueChange: (String) -> Unit,
-    temp: Color,
-    keyboardOptions: KeyboardOptions
-) {
-    OutlinedTextField(
-        value = text.value,
-        onValueChange = onValueChange,
-        label = { Text(label) },
-        modifier = modifier,
-        colors = OutlinedTextFieldDefaults.colors(
-            unfocusedContainerColor = Color.Transparent,
-            focusedContainerColor = Color.Transparent,
-            unfocusedLabelColor = temp,
-            focusedLabelColor = temp,
-            focusedBorderColor = temp,
-            unfocusedBorderColor = temp,
-            focusedTextColor = temp,
-            unfocusedTextColor = temp,
-            focusedPlaceholderColor = temp,
-            unfocusedPlaceholderColor = temp,
-            focusedSupportingTextColor = temp,
-            unfocusedSupportingTextColor = temp,
-            cursorColor = temp
-        ),
-        singleLine = true,
-        shape = RoundedCornerShape(14.dp),
-        keyboardOptions = keyboardOptions
-    )
 }

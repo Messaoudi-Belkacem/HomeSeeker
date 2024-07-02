@@ -10,7 +10,6 @@ import androidx.lifecycle.viewModelScope
 import com.example.darckoum.data.model.request.RegistrationRequest
 import com.example.darckoum.data.repository.DataStoreRepository
 import com.example.darckoum.data.repository.Repository
-import com.example.darckoum.data.state.LoginState
 import com.example.darckoum.data.state.RegistrationState
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch

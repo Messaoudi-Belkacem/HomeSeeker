@@ -14,10 +14,16 @@ import com.example.darckoum.data.repository.DataStoreRepository
 import com.example.darckoum.data.repository.Repository
 import com.example.darckoum.data.state.AddState
 import com.example.darckoum.data.state.LoginState
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import java.net.ConnectException
+import javax.inject.Inject
 
-class AddViewModel(private val repository: Repository, application: Application) : ViewModel() {
+@HiltViewModel
+class AddViewModel @Inject constructor(
+    private val repository: Repository,
+    application: Application
+) : ViewModel() {
 
     private val tag: String = "AddViewModel.kt"
     private val appContext: Context = application.applicationContext

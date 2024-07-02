@@ -63,6 +63,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.core.text.isDigitsOnly
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import coil.compose.AsyncImage
 import com.example.darckoum.R
@@ -71,15 +72,14 @@ import com.example.darckoum.data.model.enum_classes.State
 import com.example.darckoum.data.state.AddState
 import com.example.darckoum.navigation.screen.BottomBarScreen
 import com.example.darckoum.ui.screen.SharedViewModel
-import com.example.darckoum.ui.theme.C1
-import com.example.darckoum.ui.theme.C2
-import com.example.darckoum.ui.theme.C3
-import com.example.darckoum.ui.theme.C5
 import com.example.darckoum.util.KeyboardAware
 import kotlinx.coroutines.launch
 
 @Composable
-fun AddScreen(navController: NavController, addViewModel: AddViewModel, sharedViewModel: SharedViewModel) {
+fun AddScreen(
+    bottomBarNavHostController: NavController,
+    addViewModel: AddViewModel = hiltViewModel()
+) {
 
     val tag = "AddScreen.kt"
 
@@ -100,7 +100,6 @@ fun AddScreen(navController: NavController, addViewModel: AddViewModel, sharedVi
     KeyboardAware {
         Box(
             modifier = Modifier
-                .background(C2)
                 .fillMaxSize(),
         ) {
 
@@ -109,7 +108,6 @@ fun AddScreen(navController: NavController, addViewModel: AddViewModel, sharedVi
             when (addState) {
                 is AddState.Loading -> {
                     columnModifier = Modifier
-                        .background(C2)
                         .verticalScroll(scrollState)
                         .padding(bottom = 80.dp)
                         .fillMaxSize()
@@ -130,21 +128,19 @@ fun AddScreen(navController: NavController, addViewModel: AddViewModel, sharedVi
                     ) {
                         CircularProgressIndicator(
                             modifier = Modifier.size(64.dp),
-                            color = C1,
                         )
                         Spacer(modifier = Modifier.height(32.dp))
                         Text(
                             text = "Hang tight...",
                             fontSize = 24.sp,
                             fontWeight = FontWeight.Medium,
-                            color = C1,
                         )
                     }
                 }
 
                 is AddState.Success -> {
-                    navController.navigate(BottomBarScreen.Announcement.route)
-                    sharedViewModel.addAnnouncementResponse(addViewModel.announcementResponse.value!!)
+                    bottomBarNavHostController.navigate(BottomBarScreen.Announcement.route)
+                    /*sharedViewModel.addAnnouncementResponse(addViewModel.announcementResponse.value!!)*/
                 }
 
                 is AddState.Error -> {
@@ -158,7 +154,6 @@ fun AddScreen(navController: NavController, addViewModel: AddViewModel, sharedVi
 
                 else -> {
                     columnModifier = Modifier
-                        .background(C2)
                         .verticalScroll(scrollState)
                         .padding(bottom = 80.dp)
                         .fillMaxSize()
@@ -259,7 +254,6 @@ fun AddAnnouncementUI(
                     modifier = Modifier
                         .size(50.dp)
                         .clip(RoundedCornerShape(15.dp))
-                        .background(C1)
                         .clickable(onClick = {
                             val indexToRemove = pagerState.currentPage
                             if (indexToRemove in selectedImageUris.indices) {
@@ -276,7 +270,6 @@ fun AddAnnouncementUI(
                     androidx.compose.material.Icon(
                         painter = painterResource(id = R.drawable.ic_minus),
                         contentDescription = null,
-                        tint = C3
                     )
                 }
                 // Image Indicator
@@ -287,13 +280,11 @@ fun AddAnnouncementUI(
                     horizontalArrangement = Arrangement.Center
                 ) {
                     repeat(pagerState.pageCount) { iteration ->
-                        val color = if (pagerState.currentPage == iteration) C1 else C3
                         val width = if (pagerState.currentPage == iteration) 18.dp else 8.dp
                         Box(
                             modifier = Modifier
                                 .padding(5.dp)
                                 .clip(CircleShape)
-                                .background(color)
                                 .height(8.dp)
                                 .width(width)
                         )
@@ -304,7 +295,6 @@ fun AddAnnouncementUI(
                     modifier = Modifier
                         .size(50.dp)
                         .clip(RoundedCornerShape(15.dp))
-                        .background(C1)
                         .clickable(onClick = {
                             multiplePhotoPickerLauncher.launch(
                                 PickVisualMediaRequest(ActivityResultContracts.PickVisualMedia.ImageOnly)
@@ -315,7 +305,6 @@ fun AddAnnouncementUI(
                     androidx.compose.material.Icon(
                         painter = painterResource(id = R.drawable.ic_add),
                         contentDescription = null,
-                        tint = C3
                     )
                 }
             }
@@ -471,16 +460,6 @@ fun AddScreenOutlinedTextFieldSample(
         onValueChange = onValueChange,
         label = { Text(label) },
         modifier = modifier,
-        colors = OutlinedTextFieldDefaults.colors(
-            unfocusedContainerColor = C5,
-            focusedContainerColor = C5,
-            unfocusedLabelColor = Color(0x99FFF5F3),
-            focusedLabelColor = Color(0x99FFF5F3),
-            focusedBorderColor = Color.Transparent,
-            unfocusedBorderColor = Color.Transparent,
-            focusedTextColor = Color(0x99FFF5F3),
-            unfocusedTextColor = Color(0x99FFF5F3)
-        ),
         maxLines = maxLines,
         minLines = minLines,
         shape = RoundedCornerShape(14.dp),
@@ -503,25 +482,12 @@ fun ExposedDropdownMenuSample(
         OutlinedTextField(
             modifier = Modifier
                 .fillMaxWidth()
-                .background(C2)
                 .menuAnchor(),
             readOnly = true,
             value = selectedOptionText,
             onValueChange = {},
             label = { Text(label) },
             trailingIcon = { ExposedDropdownMenuDefaults.TrailingIcon(expanded = expanded) },
-            colors = OutlinedTextFieldDefaults.colors(
-                unfocusedContainerColor = C5,
-                focusedContainerColor = C5,
-                unfocusedLabelColor = Color(0x99FFF5F3),
-                focusedLabelColor = Color(0x99FFF5F3),
-                focusedBorderColor = Color.Transparent,
-                unfocusedBorderColor = Color.Transparent,
-                focusedTextColor = Color(0x99FFF5F3),
-                unfocusedTextColor = Color(0x99FFF5F3),
-                unfocusedTrailingIconColor = Color(0x99FFF5F3),
-                focusedTrailingIconColor = Color(0x99FFF5F3)
-            ),
             maxLines = 1,
             shape = RoundedCornerShape(14.dp),
         )
@@ -541,7 +507,6 @@ fun ExposedDropdownMenuSample(
                     colors = MenuDefaults.itemColors(
                         textColor = Color(0x99FFF5F3)
                     ),
-                    modifier = Modifier.background(C2),
                 )
             }
         }

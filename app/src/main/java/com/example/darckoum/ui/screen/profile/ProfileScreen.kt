@@ -58,27 +58,26 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import com.example.darckoum.R
 import com.example.darckoum.navigation.Graph
-import com.example.darckoum.ui.theme.C3
-import com.example.darckoum.ui.theme.C5
 import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun ProfileScreen(navController: NavController, profileViewModel: ProfileViewModel) {
+fun ProfileScreen(
+    bottomBarNavHostController: NavController,
+    profileViewModel: ProfileViewModel = hiltViewModel()
+) {
 
     var areFieldsEnabled by remember { mutableStateOf(false) }
-
     val scope = rememberCoroutineScope()
 
     Box(
         modifier = Modifier.fillMaxSize()
     ) {
-
         val context = LocalContext.current
-
         Image(
             painter = painterResource(id = R.drawable.profile_screen_background),
             contentDescription = "Background image",
@@ -97,7 +96,6 @@ fun ProfileScreen(navController: NavController, profileViewModel: ProfileViewMod
                             text = "Profile",
                             fontSize = 24.sp,
                             fontWeight = FontWeight.Bold,
-                            color = C3
                         )
                     },
                     navigationIcon = {
@@ -107,7 +105,6 @@ fun ProfileScreen(navController: NavController, profileViewModel: ProfileViewMod
                             Icon(
                                 imageVector = Icons.AutoMirrored.Rounded.ArrowBack,
                                 contentDescription = null,
-                                tint = C3
                             )
                         }
                     },
@@ -119,7 +116,6 @@ fun ProfileScreen(navController: NavController, profileViewModel: ProfileViewMod
                             Icon(
                                 imageVector = Icons.Rounded.Edit,
                                 contentDescription = null,
-                                tint = C3
                             )
                         }
                     },
@@ -254,7 +250,7 @@ fun ProfileScreen(navController: NavController, profileViewModel: ProfileViewMod
                                         if (profileViewModel.logout()) {
                                             Toast.makeText(context, "Log out was successful", Toast.LENGTH_SHORT)
                                                 .show()
-                                            navController.navigate(route = Graph.AUTHENTICATION)
+                                            bottomBarNavHostController.navigate(route = Graph.AUTHENTICATION)
                                         } else {
                                             Toast.makeText(context, "Log out was not successful", Toast.LENGTH_SHORT)
                                                 .show()
@@ -300,16 +296,6 @@ fun SimpleOutlinedTextFieldSample(
         },
         label = { Text(label) },
         modifier = modifier,
-        colors = OutlinedTextFieldDefaults.colors(
-            unfocusedContainerColor = C5,
-            focusedContainerColor = C5,
-            unfocusedLabelColor = Color(0x99FFF5F3),
-            focusedLabelColor = Color(0x99FFF5F3),
-            focusedBorderColor = Color.Transparent,
-            unfocusedBorderColor = Color.Transparent,
-            focusedTextColor = Color(0x99FFF5F3),
-            unfocusedTextColor = Color(0x99FFF5F3)
-        ),
         maxLines = 1,
         shape = RoundedCornerShape(14.dp),
         readOnly = enabled
@@ -324,7 +310,6 @@ fun GenderRow(selectedGender: Gender/*, onGenderSelected: (Gender) -> Unit*/, en
         horizontalArrangement = Arrangement.spacedBy(12.dp)
     ) {
         val genders = Gender.values()
-
         genders.forEach { gender ->
             RadioButton(
                 selected = selectedGender == gender,
@@ -333,7 +318,6 @@ fun GenderRow(selectedGender: Gender/*, onGenderSelected: (Gender) -> Unit*/, en
                     .selectable(selected = selectedGender == gender) {},
                 enabled = enabled
             )
-
             Text(
                 text = gender.description,
                 color = Color(0x99FFF5F3),

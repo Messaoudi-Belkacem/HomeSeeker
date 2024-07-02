@@ -1,6 +1,5 @@
 package com.example.darckoum.ui.screen.home
 
-import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -21,7 +20,6 @@ import androidx.compose.material.icons.filled.Done
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.SearchBar
-import androidx.compose.material3.SearchBarDefaults
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -39,23 +37,19 @@ import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import com.example.darckoum.R
 import com.example.darckoum.navigation.screen.BottomBarScreen
-import com.example.darckoum.ui.theme.C2
-import com.example.darckoum.ui.theme.C3
-import com.example.darckoum.ui.theme.C5
 
 @Composable
-fun HomeScreen(navController: NavController) {
+fun HomeScreen(bottomBarNavHostController: NavController) {
 
     Scaffold(
         modifier = Modifier.fillMaxSize(),
         topBar = {
-                SearchBarD(navController)
+                SearchBarD(bottomBarNavHostController)
         },
         content = { padding ->
             Column(
                 modifier = Modifier
                     .fillMaxSize()
-                    .background(color = C2)
                     .padding(bottom = 75.dp)
                     .verticalScroll(rememberScrollState()),
                 verticalArrangement = Arrangement.spacedBy(16.dp),
@@ -64,7 +58,6 @@ fun HomeScreen(navController: NavController) {
                 Column(
                     modifier = Modifier
                         .fillMaxWidth()
-                        .background(color = C2)
                         .padding(padding),
                     verticalArrangement = Arrangement.spacedBy(16.dp),
                     horizontalAlignment = Alignment.CenterHorizontally
@@ -78,14 +71,12 @@ fun HomeScreen(navController: NavController) {
                             text = "Recommended for you",
                             fontSize = 20.sp,
                             fontWeight = FontWeight.SemiBold,
-                            color = C3,
                             modifier = Modifier.padding(start = 16.dp)
                         )
                         Text(
                             text = "See more",
                             fontSize = 16.sp,
                             fontWeight = FontWeight.Medium,
-                            color = C3,
                             modifier = Modifier.padding(end = 16.dp)
                         )
                     }
@@ -101,7 +92,6 @@ fun HomeScreen(navController: NavController) {
                 Column(
                     modifier = Modifier
                         .fillMaxWidth()
-                        .background(color = C2)
                         .padding(padding),
                     verticalArrangement = Arrangement.spacedBy(16.dp),
                     horizontalAlignment = Alignment.CenterHorizontally
@@ -115,14 +105,12 @@ fun HomeScreen(navController: NavController) {
                             text = "My posts",
                             fontSize = 20.sp,
                             fontWeight = FontWeight.SemiBold,
-                            color = C3,
                             modifier = Modifier.padding(start = 16.dp)
                         )
                         Text(
                             text = "See more",
                             fontSize = 16.sp,
                             fontWeight = FontWeight.Medium,
-                            color = C3,
                             modifier = Modifier.padding(end = 16.dp)
                         )
                     }
@@ -156,7 +144,6 @@ fun SearchBarD(navController: NavController) {
 
     SearchBar(
         modifier = Modifier
-            .background(C2)
             .padding(if (active) {
                 0.dp
             } else {
@@ -209,7 +196,6 @@ fun SearchBarD(navController: NavController) {
             }
         },
         shape = RoundedCornerShape(14.dp),
-        colors = SearchBarDefaults.colors(containerColor = C5),
         windowInsets = WindowInsets(left = 14.dp,top = 20.dp, bottom = 20.dp)
     ) {
         items.forEach {

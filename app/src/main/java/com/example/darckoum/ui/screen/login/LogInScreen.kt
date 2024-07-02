@@ -4,7 +4,6 @@ import android.util.Log
 import android.widget.Toast
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.gestures.scrollBy
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -24,15 +23,14 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonColors
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.CircularProgressIndicator
-import androidx.compose.material3.OutlinedTextField
-import androidx.compose.material3.OutlinedTextFieldDefaults
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -48,16 +46,15 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.navigation.NavController
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import com.example.darckoum.R
 import com.example.darckoum.data.state.LoginState
 import com.example.darckoum.navigation.screen.AuthenticationScreen
 import com.example.darckoum.navigation.screen.LeafScreen
-import com.example.darckoum.ui.theme.C1
+import com.example.darckoum.ui.screen.common.OutlinedTextFieldSample
 import com.example.darckoum.util.KeyboardAware
 import kotlinx.coroutines.launch
-import androidx.hilt.navigation.compose.hiltViewModel
 
 @Composable
 fun LoginScreen(
@@ -70,6 +67,7 @@ fun LoginScreen(
     val keyboardHeight = WindowInsets.ime.getBottom(LocalDensity.current)
     val scope = rememberCoroutineScope()
     val loginState by loginViewModel.loginState
+    val context = LocalContext.current
 
     LaunchedEffect(key1 = keyboardHeight) {
         scope.launch {
@@ -82,12 +80,8 @@ fun LoginScreen(
 
     KeyboardAware {
         Scaffold(
-            containerColor = Color.Transparent,
-
+            containerColor = Color.Transparent
         ) { contentPadding ->
-
-            val context = LocalContext.current
-
             Column(
                 modifier = Modifier
                     .verticalScroll(scrollState)
@@ -95,7 +89,6 @@ fun LoginScreen(
                     .padding(contentPadding),
                 verticalArrangement = Arrangement.Center
             ) {
-
                 when (loginState) {
                     is LoginState.Loading -> {
                         Box(
@@ -110,23 +103,19 @@ fun LoginScreen(
                             ) {
                                 CircularProgressIndicator(
                                     modifier = Modifier.size(64.dp),
-                                    color = C1,
                                 )
                                 Spacer(modifier = Modifier.height(32.dp))
                                 Text(
                                     text = "Hang tight...",
                                     fontSize = 24.sp,
                                     fontWeight = FontWeight.Medium,
-                                    color = C1,
                                 )
                             }
                         }
                     }
-
                     is LoginState.Success -> {
                         navHostController.navigate(LeafScreen.Main.route)
                     }
-
                     is LoginState.Error -> {
                         Toast.makeText(
                             context,
@@ -135,7 +124,6 @@ fun LoginScreen(
                         ).show()
                         loginViewModel.setLoginState(LoginState.Initial)
                     }
-
                     else -> {
                         Box(
                             modifier = Modifier
@@ -158,11 +146,11 @@ fun LoginScreen(
                                 Spacer(modifier = Modifier.height(64.dp))
                                 Text(
                                     text = "Easily find real estate in the Maghreb region for rent or purchase",
-                                    color = C1,
                                     fontSize = 16.sp,
                                     fontWeight = FontWeight.Normal,
                                     textAlign = TextAlign.Center,
-                                    modifier = Modifier.padding(horizontal = 16.dp)
+                                    modifier = Modifier.padding(horizontal = 16.dp),
+                                    color = MaterialTheme.colorScheme.onSurface
                                 )
                             }
                         }
@@ -173,8 +161,6 @@ fun LoginScreen(
                                 .padding(top = 32.dp),
                             contentAlignment = Alignment.Center
                         ) {
-
-
                             Column(
                                 verticalArrangement = Arrangement.SpaceAround,
                                 horizontalAlignment = Alignment.CenterHorizontally,
@@ -182,25 +168,23 @@ fun LoginScreen(
                                     .padding(horizontal = 18.dp)
                                     .fillMaxWidth(1f)
                             ) {
-                                LoginScreenOutlinedTextFieldSample(
+                                OutlinedTextFieldSample(
                                     label = "Username",
                                     modifier = Modifier
                                         .fillMaxWidth()
                                         .height(64.dp),
                                     text = usernameState,
                                     onValueChange = { usernameState.value = it },
-                                    temp = C1,
                                     keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Text)
                                 )
                                 Spacer(modifier = Modifier.height(32.dp))
-                                LoginScreenOutlinedTextFieldSample(
+                                OutlinedTextFieldSample(
                                     label = "Password",
                                     modifier = Modifier
                                         .fillMaxWidth()
                                         .height(64.dp),
                                     text = passwordState,
                                     onValueChange = { passwordState.value = it },
-                                    temp = C1,
                                     keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password)
                                 )
                                 Spacer(modifier = Modifier.height(32.dp))
@@ -208,7 +192,7 @@ fun LoginScreen(
                                     text = "Forgot password?",
                                     fontSize = 16.sp,
                                     fontWeight = FontWeight.Normal,
-                                    color = C1,
+                                    color = MaterialTheme.colorScheme.onSurface
                                 )
                                 Spacer(modifier = Modifier.height(32.dp))
                                 Button(
@@ -226,7 +210,9 @@ fun LoginScreen(
                                         }
                                     },
                                     shape = RoundedCornerShape(14.dp),
-                                    colors = ButtonDefaults.buttonColors(containerColor = C1),
+                                    colors = ButtonDefaults.buttonColors(
+                                        containerColor = MaterialTheme.colorScheme.primary
+                                    ),
                                     modifier = Modifier
                                         .fillMaxWidth(1f)
                                         .height(64.dp)
@@ -245,18 +231,18 @@ fun LoginScreen(
                                 ) {
                                     Text(
                                         text = "Don't have an account?",
-                                        color = C1,
                                         fontSize = 16.sp,
                                         fontWeight = FontWeight.Normal,
-                                        textAlign = TextAlign.Center
+                                        textAlign = TextAlign.Center,
+                                        color = MaterialTheme.colorScheme.onSurface
                                     )
                                     Spacer(modifier = Modifier.width(4.dp))
                                     Text(
                                         text = "Sign Up",
-                                        color = C1,
                                         fontSize = 16.sp,
                                         fontWeight = FontWeight.SemiBold,
                                         textAlign = TextAlign.Center,
+                                        color = MaterialTheme.colorScheme.onSurface,
                                         modifier = Modifier
                                             .clickable {
                                                 Log.d(tag, "Sign up text clicked")
@@ -267,7 +253,7 @@ fun LoginScreen(
                                                 inclusive = true
                                                 }
                                                 }
-                                                 */
+                                                */
                                             }
                                     )
                                 }
@@ -278,41 +264,4 @@ fun LoginScreen(
             }
         }
     }
-
-}
-
-
-@Composable
-fun LoginScreenOutlinedTextFieldSample(
-    label: String,
-    modifier: Modifier,
-    text: MutableState<String>,
-    onValueChange: (String) -> Unit,
-    temp: Color,
-    keyboardOptions: KeyboardOptions
-) {
-    OutlinedTextField(
-        value = text.value,
-        onValueChange = onValueChange,
-        label = { Text(label) },
-        modifier = modifier,
-        colors = OutlinedTextFieldDefaults.colors(
-            unfocusedContainerColor = Color.Transparent,
-            focusedContainerColor = Color.Transparent,
-            unfocusedLabelColor = temp,
-            focusedLabelColor = temp,
-            focusedBorderColor = temp,
-            unfocusedBorderColor = temp,
-            focusedTextColor = temp,
-            unfocusedTextColor = temp,
-            focusedPlaceholderColor = temp,
-            unfocusedPlaceholderColor = temp,
-            focusedSupportingTextColor = temp,
-            unfocusedSupportingTextColor = temp,
-            cursorColor = temp
-        ),
-        singleLine = true,
-        shape = RoundedCornerShape(14.dp),
-        keyboardOptions = keyboardOptions
-    )
 }

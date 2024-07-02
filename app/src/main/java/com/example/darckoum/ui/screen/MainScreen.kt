@@ -32,9 +32,6 @@ import com.example.darckoum.navigation.BottomNavGraph
 import com.example.darckoum.ui.screen.add.AddViewModel
 import com.example.darckoum.ui.screen.announcement.AnnouncementViewModel
 import com.example.darckoum.ui.screen.profile.ProfileViewModel
-import com.example.darckoum.ui.theme.C1
-import com.example.darckoum.ui.theme.C2
-import com.example.darckoum.ui.theme.C3
 
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @Composable
@@ -42,7 +39,6 @@ fun MainScreen(navController: NavHostController, addViewModel: AddViewModel, pro
     val bottomBarNavController = rememberNavController()
     Scaffold(
         bottomBar = { BottomBar(navController = bottomBarNavController) },
-        containerColor = C2
     ) {
         BottomNavGraph(bottomBarNavController = bottomBarNavController, navController = navController, addViewModel, profileViewModel = profileViewModel, announcementViewModel = announcementViewModel, sharedViewModel = sharedViewModel)
     }
@@ -60,7 +56,6 @@ fun BottomBar(navController: NavHostController) {
 
     Row(
         modifier = Modifier
-            .background(C2)
             .fillMaxWidth()
             .height(75.dp)
             .padding(top = 8.dp),
@@ -97,13 +92,11 @@ fun AddItem(
 ) {
     val selected = currentDestination?.hierarchy?.any { it.route == screen.route } == true
 
-    val background = if (selected) C1 else Color.Transparent
 
     Box(
         modifier = Modifier
             .size(50.dp)
             .clip(RoundedCornerShape(15.dp))
-            .background(background)
             .clickable(onClick = {
                 navController.navigate(screen.route) {
                     popUpTo(navController.graph.findStartDestination().id)
@@ -115,7 +108,6 @@ fun AddItem(
         Icon(
             painter = painterResource(id = screen.icon),
             contentDescription = "icon",
-            tint = C3
         )
     }
 }

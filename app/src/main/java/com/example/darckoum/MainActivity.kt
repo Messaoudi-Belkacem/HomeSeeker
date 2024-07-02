@@ -16,13 +16,11 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.core.view.WindowCompat
 import androidx.navigation.NavHostController
-import androidx.navigation.compose.rememberNavController
 import com.example.darckoum.data.repository.DataStoreRepository
 import com.example.darckoum.navigation.Graph
 import com.example.darckoum.navigation.RootNavigationGraph
-import com.example.darckoum.navigation.screen.AuthenticationScreen
-import com.example.darckoum.navigation.screen.LeafScreen
 import com.example.darckoum.ui.screen.SharedViewModel
+import com.example.darckoum.ui.theme.AppTheme
 import com.example.darckoum.util.TokenUtil
 import com.google.accompanist.systemuicontroller.rememberSystemUiController
 import dagger.hilt.android.AndroidEntryPoint
@@ -63,29 +61,29 @@ class MainActivity : ComponentActivity() {
         }
 
         setContent {
-            Box(
-                modifier = Modifier
-                    .fillMaxSize()
-                    .paint(
-                        painter = painterResource(R.drawable.onboarding_screen_background),
-                        contentScale = ContentScale.FillBounds
+            AppTheme {
+                Box(
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .paint(
+                            painter = painterResource(R.drawable.onboarding_screen_background),
+                            contentScale = ContentScale.FillBounds
+                        )
+                        .imePadding()
+                ) {
+                    RootNavigationGraph(
+                        startDestination = Graph.AUTHENTICATION
                     )
-                    .imePadding()
-            ) {
 
-                RootNavigationGraph(
-                    navHostController = rememberNavController(),
-                    startDestination = Graph.AUTHENTICATION
-                )
-
-                val systemUiController = rememberSystemUiController()
-                DisposableEffect(systemUiController) {
-                    systemUiController.setSystemBarsColor(
-                        color = Color.Transparent,
-                        darkIcons = false,
-                        isNavigationBarContrastEnforced = false
-                    )
-                    onDispose {}
+                    val systemUiController = rememberSystemUiController()
+                    DisposableEffect(systemUiController) {
+                        systemUiController.setSystemBarsColor(
+                            color = Color.Transparent,
+                            darkIcons = false,
+                            isNavigationBarContrastEnforced = false
+                        )
+                        onDispose {}
+                    }
                 }
             }
         }
