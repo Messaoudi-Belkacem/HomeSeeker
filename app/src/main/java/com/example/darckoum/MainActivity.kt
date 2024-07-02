@@ -33,33 +33,28 @@ class MainActivity : ComponentActivity() {
 
     private val tag = "MainActivity"
     lateinit var navController: NavHostController
-    private val sharedViewModel: SharedViewModel by viewModels()
-    private val mainViewModel: MainViewModel by viewModels()
+    /*private val sharedViewModel: SharedViewModel by viewModels()
+    private val mainViewModel: MainViewModel by viewModels()*/
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         WindowCompat.setDecorFitsSystemWindows(window, false)
-
         var token: String
         val tokenIsValid: Boolean
         val context = this.applicationContext
-
-        runBlocking {
+        /*runBlocking {
             token = withContext(Dispatchers.IO) {
                 DataStoreRepository.TokenManager.getToken(context).toString()
             }
             tokenIsValid = mainViewModel.checkToken(token).value
         }
-
         Log.d(tag, "token : $token")
-
         val tokenIsExpired = TokenUtil.isTokenExpired(token)
         val startDestination: String = if (tokenIsExpired || token.isBlank() || tokenIsValid) {
             Graph.AUTHENTICATION
         } else {
             Graph.HOME
-        }
-
+        }*/
         setContent {
             AppTheme {
                 Box(
@@ -74,7 +69,6 @@ class MainActivity : ComponentActivity() {
                     RootNavigationGraph(
                         startDestination = Graph.AUTHENTICATION
                     )
-
                     val systemUiController = rememberSystemUiController()
                     DisposableEffect(systemUiController) {
                         systemUiController.setSystemBarsColor(

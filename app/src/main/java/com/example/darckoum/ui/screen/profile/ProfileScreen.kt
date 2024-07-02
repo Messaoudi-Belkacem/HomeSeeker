@@ -60,6 +60,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
+import androidx.navigation.NavHostController
 import com.example.darckoum.R
 import com.example.darckoum.navigation.Graph
 import kotlinx.coroutines.launch
@@ -68,12 +69,11 @@ import kotlinx.coroutines.launch
 @Composable
 fun ProfileScreen(
     bottomBarNavHostController: NavController,
+    navHostController: NavHostController,
     profileViewModel: ProfileViewModel = hiltViewModel()
 ) {
-
     var areFieldsEnabled by remember { mutableStateOf(false) }
     val scope = rememberCoroutineScope()
-
     Box(
         modifier = Modifier.fillMaxSize()
     ) {
@@ -309,7 +309,7 @@ fun GenderRow(selectedGender: Gender/*, onGenderSelected: (Gender) -> Unit*/, en
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.spacedBy(12.dp)
     ) {
-        val genders = Gender.values()
+        val genders = Gender.entries.toTypedArray()
         genders.forEach { gender ->
             RadioButton(
                 selected = selectedGender == gender,

@@ -12,6 +12,7 @@ import androidx.navigation.compose.rememberNavController
 import com.example.darckoum.navigation.screen.AuthenticationScreen
 import com.example.darckoum.navigation.screen.BottomBarScreen
 import com.example.darckoum.navigation.screen.LeafScreen
+import com.example.darckoum.ui.screen.MainScreen
 import com.example.darckoum.ui.screen.login.LoginScreen
 import com.example.darckoum.ui.screen.register.RegisterScreen
 
@@ -20,7 +21,6 @@ fun RootNavigationGraph(
     startDestination: String
 ) {
     val navHostController = rememberNavController()
-    val bottomBarNavHostController = rememberNavController()
     val time = 500
     NavHost(
         navController = navHostController,
@@ -54,14 +54,8 @@ fun RootNavigationGraph(
             route = Graph.HOME,
             startDestination = LeafScreen.Main.route
         ) {
-            composable(route = BottomBarScreen.Home.route) {
-
-            }
-            composable(route = BottomBarScreen.Add.route) {
-
-            }
-            composable(route = BottomBarScreen.Profile.route) {
-
+            composable(route = LeafScreen.Main.route) {
+                MainScreen(navHostController = navHostController)
             }
             navigation(
                 route = Graph.DETAILS,

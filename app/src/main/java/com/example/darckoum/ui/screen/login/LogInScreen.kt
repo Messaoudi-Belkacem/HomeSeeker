@@ -50,6 +50,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import com.example.darckoum.R
 import com.example.darckoum.data.state.LoginState
+import com.example.darckoum.navigation.Graph
 import com.example.darckoum.navigation.screen.AuthenticationScreen
 import com.example.darckoum.navigation.screen.LeafScreen
 import com.example.darckoum.ui.screen.common.OutlinedTextFieldSample
@@ -114,7 +115,7 @@ fun LoginScreen(
                         }
                     }
                     is LoginState.Success -> {
-                        navHostController.navigate(LeafScreen.Main.route)
+                        navHostController.navigate(Graph.HOME)
                     }
                     is LoginState.Error -> {
                         Toast.makeText(
@@ -197,7 +198,7 @@ fun LoginScreen(
                                 Spacer(modifier = Modifier.height(32.dp))
                                 Button(
                                     onClick = {
-                                        val username = usernameState.value
+                                        /*val username = usernameState.value
                                         val password = passwordState.value
                                         if (
                                             username.isBlank() || password.isBlank()
@@ -207,7 +208,9 @@ fun LoginScreen(
                                             scope.launch {
                                                 loginViewModel.loginUser(username, password)
                                             }
-                                        }
+                                        }*/
+                                        /* TODO remove comments */
+                                        loginViewModel.setLoginState(LoginState.Success)
                                     },
                                     shape = RoundedCornerShape(14.dp),
                                     colors = ButtonDefaults.buttonColors(

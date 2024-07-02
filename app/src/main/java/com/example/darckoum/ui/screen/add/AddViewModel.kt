@@ -34,18 +34,19 @@ class AddViewModel @Inject constructor(
     private val _announcementResponse = mutableStateOf<AnnouncementResponse?>(null)
     val announcementResponse = _announcementResponse
 
-    fun createAnnouncement(title: String,
-                           area: Int,
-                           numberOfRooms: Int,
-                           location: String,
-                           state: String,
-                           propertyType: String,
-                           price: Double,
-                           description: String,
-                           owner: String,
-                           selectedImageUris: List<Uri>,
-                           context: Context
-                           ) {
+    fun createAnnouncement(
+        title: String,
+        area: Int,
+        numberOfRooms: Int,
+        location: String,
+        state: String,
+        propertyType: String,
+        price: Double,
+        description: String,
+        owner: String,
+        selectedImageUris: List<Uri>,
+        context: Context
+    ) {
         viewModelScope.launch {
             try {
                 val newAddAnnouncementRequest = AddAnnouncementRequest(

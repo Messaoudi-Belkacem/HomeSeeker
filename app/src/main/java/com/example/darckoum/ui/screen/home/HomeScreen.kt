@@ -13,7 +13,7 @@ import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
-import androidx.compose.material.Scaffold
+import androidx.compose.material3.Scaffold
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Close
 import androidx.compose.material.icons.filled.Done
@@ -39,8 +39,9 @@ import com.example.darckoum.R
 import com.example.darckoum.navigation.screen.BottomBarScreen
 
 @Composable
-fun HomeScreen(bottomBarNavHostController: NavController) {
-
+fun HomeScreen(
+    bottomBarNavHostController: NavController
+) {
     Scaffold(
         modifier = Modifier.fillMaxSize(),
         topBar = {
@@ -62,24 +63,12 @@ fun HomeScreen(bottomBarNavHostController: NavController) {
                     verticalArrangement = Arrangement.spacedBy(16.dp),
                     horizontalAlignment = Alignment.CenterHorizontally
                 ) {
-                    Row(
-                        modifier = Modifier.fillMaxWidth(),
-                        horizontalArrangement = Arrangement.SpaceBetween,
-                        verticalAlignment = Alignment.CenterVertically
-                    ) {
-                        Text(
-                            text = "Recommended for you",
-                            fontSize = 20.sp,
-                            fontWeight = FontWeight.SemiBold,
-                            modifier = Modifier.padding(start = 16.dp)
-                        )
-                        Text(
-                            text = "See more",
-                            fontSize = 16.sp,
-                            fontWeight = FontWeight.Medium,
-                            modifier = Modifier.padding(end = 16.dp)
-                        )
-                    }
+                    Text(
+                        text = "Discover",
+                        fontSize = 20.sp,
+                        fontWeight = FontWeight.SemiBold,
+                        modifier = Modifier.padding(start = 16.dp)
+                    )
                     LazyRow(
                         horizontalArrangement = Arrangement.spacedBy(12.dp),
                         contentPadding = PaddingValues(horizontal = 12.dp)
@@ -96,24 +85,12 @@ fun HomeScreen(bottomBarNavHostController: NavController) {
                     verticalArrangement = Arrangement.spacedBy(16.dp),
                     horizontalAlignment = Alignment.CenterHorizontally
                 ) {
-                    Row(
-                        modifier = Modifier.fillMaxWidth(),
-                        horizontalArrangement = Arrangement.SpaceBetween,
-                        verticalAlignment = Alignment.CenterVertically
-                    ) {
-                        Text(
-                            text = "My posts",
-                            fontSize = 20.sp,
-                            fontWeight = FontWeight.SemiBold,
-                            modifier = Modifier.padding(start = 16.dp)
-                        )
-                        Text(
-                            text = "See more",
-                            fontSize = 16.sp,
-                            fontWeight = FontWeight.Medium,
-                            modifier = Modifier.padding(end = 16.dp)
-                        )
-                    }
+                    Text(
+                        text = "My posts",
+                        fontSize = 20.sp,
+                        fontWeight = FontWeight.SemiBold,
+                        modifier = Modifier.padding(start = 16.dp)
+                    )
                     LazyRow(
                         modifier = Modifier.padding(start = 16.dp),
                         horizontalArrangement = Arrangement.spacedBy(16.dp)

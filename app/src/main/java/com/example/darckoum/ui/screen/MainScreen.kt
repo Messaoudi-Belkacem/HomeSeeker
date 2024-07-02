@@ -12,6 +12,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Icon
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -27,33 +28,32 @@ import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
+import com.example.darckoum.navigation.HomeNavGraph
 import com.example.darckoum.navigation.screen.BottomBarScreen
-import com.example.darckoum.navigation.BottomNavGraph
-import com.example.darckoum.ui.screen.add.AddViewModel
-import com.example.darckoum.ui.screen.announcement.AnnouncementViewModel
-import com.example.darckoum.ui.screen.profile.ProfileViewModel
 
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @Composable
-fun MainScreen(navController: NavHostController, addViewModel: AddViewModel, profileViewModel: ProfileViewModel, announcementViewModel: AnnouncementViewModel, sharedViewModel: SharedViewModel) {
-    val bottomBarNavController = rememberNavController()
+fun MainScreen(navHostController: NavHostController) {
+    val bottomBarNavHostController = rememberNavController()
     Scaffold(
-        bottomBar = { BottomBar(navController = bottomBarNavController) },
+        bottomBar = { BottomBar(bottomBarNavHostController = bottomBarNavHostController) },
     ) {
-        BottomNavGraph(bottomBarNavController = bottomBarNavController, navController = navController, addViewModel, profileViewModel = profileViewModel, announcementViewModel = announcementViewModel, sharedViewModel = sharedViewModel)
+        HomeNavGraph(
+            bottomBarNavHostController = bottomBarNavHostController,
+            navHostController = navHostController
+        )
     }
 }
 
 @Composable
-fun BottomBar(navController: NavHostController) {
+fun BottomBar(bottomBarNavHostController: NavHostController) {
     val screens = listOf(
         BottomBarScreen.Home,
         BottomBarScreen.Add,
-        BottomBarScreen.Profile,
+        BottomBarScreen.Profile
     )
-    val navBackStackEntry by navController.currentBackStackEntryAsState()
+    val navBackStackEntry by bottomBarNavHostController.currentBackStackEntryAsState()
     val currentDestination = navBackStackEntry?.destination
-
     Row(
         modifier = Modifier
             .fillMaxWidth()
@@ -65,23 +65,10 @@ fun BottomBar(navController: NavHostController) {
             AddItem(
                 screen = screen,
                 currentDestination = currentDestination,
-                navController = navController
+                navController = bottomBarNavHostController
             )
         }
     }
-    /*
-    BottomNavigation(
-        backgroundColor = C2,
-    ) {
-        screens.forEach { screen ->
-            AddItem(
-                screen = screen,
-                currentDestination = currentDestination,
-                navController = navController
-            )
-        }
-    }
-    */
 }
 
 @Composable
@@ -91,12 +78,12 @@ fun AddItem(
     navController: NavHostController
 ) {
     val selected = currentDestination?.hierarchy?.any { it.route == screen.route } == true
-
-
+    val backgroundColor = if (selected) MaterialTheme.colorScheme.primary else Color.Unspecified
     Box(
         modifier = Modifier
             .size(50.dp)
             .clip(RoundedCornerShape(15.dp))
+            .background(color = backgroundColor)
             .clickable(onClick = {
                 navController.navigate(screen.route) {
                     popUpTo(navController.graph.findStartDestination().id)
@@ -107,34 +94,7 @@ fun AddItem(
     ) {
         Icon(
             painter = painterResource(id = screen.icon),
-            contentDescription = "icon",
+            contentDescription = "icon"
         )
     }
 }
-/*
-@Composable
-fun RowScope.AddItem(
-    screen: BottomBarScreen,
-    currentDestination: NavDestination?,
-    navController: NavHostController
-) {
-    BottomNavigationItem(
-        icon = {
-            Icon(
-                painter = painterResource(id = screen.icon),
-                contentDescription = "Navigation Icon"
-            )
-        },
-        selected = currentDestination?.hierarchy?.any {
-            it.route == screen.route
-        } == true,
-        unselectedContentColor = LocalContentColor.current.copy(alpha = ContentAlpha.disabled),
-        onClick = {
-            navController.navigate(screen.route) {
-                popUpTo(navController.graph.findStartDestination().id)
-                launchSingleTop = true
-            }
-        }
-    )
-}
-*/
