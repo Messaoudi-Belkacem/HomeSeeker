@@ -40,13 +40,15 @@ fun MainScreen(
     val bottomBarNavHostController = rememberNavController()
     Scaffold(
         bottomBar = { BottomBar(bottomBarNavHostController = bottomBarNavHostController) },
-    ) {
-        HomeNavGraph(
-            bottomBarNavHostController = bottomBarNavHostController,
-            navHostController = navHostController,
-            sharedViewModel = sharedViewModel
-        )
-    }
+        content = { paddingValues ->
+            HomeNavGraph(
+                bottomBarNavHostController = bottomBarNavHostController,
+                navHostController = navHostController,
+                sharedViewModel = sharedViewModel,
+                paddingValues = paddingValues
+            )
+        }
+    )
 }
 
 @Composable
@@ -62,7 +64,8 @@ fun BottomBar(bottomBarNavHostController: NavHostController) {
         modifier = Modifier
             .fillMaxWidth()
             .height(75.dp)
-            .padding(top = 8.dp),
+            .padding(top = 8.dp)
+            .background(MaterialTheme.colorScheme.surface),
         horizontalArrangement = Arrangement.SpaceEvenly
     ) {
         screens.forEach { screen ->

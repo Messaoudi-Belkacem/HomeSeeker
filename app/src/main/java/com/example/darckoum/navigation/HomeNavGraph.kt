@@ -3,6 +3,7 @@ package com.example.darckoum.navigation
 import androidx.compose.animation.core.tween
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.runtime.Composable
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
@@ -21,7 +22,8 @@ import com.example.darckoum.ui.screen.profile.ProfileScreen
 fun HomeNavGraph(
     bottomBarNavHostController: NavHostController,
     navHostController: NavHostController,
-    sharedViewModel: SharedViewModel
+    sharedViewModel: SharedViewModel,
+    paddingValues: PaddingValues
 ) {
     val time = 500
     NavHost(
@@ -37,7 +39,11 @@ fun HomeNavGraph(
             HomeScreen(bottomBarNavHostController = bottomBarNavHostController)
         }
         composable(route = BottomBarScreen.Add.route) {
-            AddScreen(bottomBarNavHostController = bottomBarNavHostController, sharedViewModel = sharedViewModel)
+            AddScreen(
+                bottomBarNavHostController = bottomBarNavHostController,
+                sharedViewModel = sharedViewModel,
+                paddingValues = paddingValues
+            )
         }
         composable(route = BottomBarScreen.Profile.route) {
             ProfileScreen(

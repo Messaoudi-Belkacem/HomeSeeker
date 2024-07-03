@@ -81,7 +81,8 @@ import kotlinx.coroutines.launch
 fun AddScreen(
     bottomBarNavHostController: NavController,
     sharedViewModel: SharedViewModel,
-    addViewModel: AddViewModel = hiltViewModel()
+    addViewModel: AddViewModel = hiltViewModel(),
+    paddingValues: PaddingValues
 ) {
     val tag = "AddScreen.kt"
     val scrollState = rememberScrollState()
@@ -97,7 +98,9 @@ fun AddScreen(
     KeyboardAware {
         Box(
             modifier = Modifier
-                .fillMaxSize(),
+                .fillMaxSize()
+                .padding(paddingValues)
+            ,
         ) {
             val modifier: Modifier
             when (addState) {
