@@ -17,7 +17,9 @@ fun OutlinedTextFieldSample(
     modifier: Modifier,
     text: MutableState<String>,
     onValueChange: (String) -> Unit,
-    keyboardOptions: KeyboardOptions
+    keyboardOptions: KeyboardOptions,
+    minLines: Int = 1,
+    maxLines: Int = 1
 ) {
     OutlinedTextField(
         value = text.value,

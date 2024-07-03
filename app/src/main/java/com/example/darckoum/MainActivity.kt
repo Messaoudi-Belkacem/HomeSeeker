@@ -66,7 +66,8 @@ class MainActivity : ComponentActivity() {
                         .imePadding()
                 ) {
                     RootNavigationGraph(
-                        startDestination = startDestination
+                        startDestination = startDestination,
+                        sharedViewModel = sharedViewModel
                     )
                     val systemUiController = rememberSystemUiController()
                     DisposableEffect(systemUiController) {

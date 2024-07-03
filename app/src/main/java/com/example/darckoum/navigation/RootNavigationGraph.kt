@@ -13,12 +13,14 @@ import com.example.darckoum.navigation.screen.AuthenticationScreen
 import com.example.darckoum.navigation.screen.BottomBarScreen
 import com.example.darckoum.navigation.screen.LeafScreen
 import com.example.darckoum.ui.screen.MainScreen
+import com.example.darckoum.ui.screen.SharedViewModel
 import com.example.darckoum.ui.screen.login.LoginScreen
 import com.example.darckoum.ui.screen.register.RegisterScreen
 
 @Composable
 fun RootNavigationGraph(
-    startDestination: String
+    startDestination: String,
+    sharedViewModel: SharedViewModel
 ) {
     val navHostController = rememberNavController()
     val time = 500
@@ -55,7 +57,10 @@ fun RootNavigationGraph(
             startDestination = LeafScreen.Main.route
         ) {
             composable(route = LeafScreen.Main.route) {
-                MainScreen(navHostController = navHostController)
+                MainScreen(
+                    navHostController = navHostController,
+                    sharedViewModel = sharedViewModel
+                )
             }
             navigation(
                 route = Graph.DETAILS,

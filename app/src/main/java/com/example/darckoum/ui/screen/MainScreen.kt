@@ -33,14 +33,18 @@ import com.example.darckoum.navigation.screen.BottomBarScreen
 
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @Composable
-fun MainScreen(navHostController: NavHostController) {
+fun MainScreen(
+    navHostController: NavHostController,
+    sharedViewModel: SharedViewModel
+) {
     val bottomBarNavHostController = rememberNavController()
     Scaffold(
         bottomBar = { BottomBar(bottomBarNavHostController = bottomBarNavHostController) },
     ) {
         HomeNavGraph(
             bottomBarNavHostController = bottomBarNavHostController,
-            navHostController = navHostController
+            navHostController = navHostController,
+            sharedViewModel = sharedViewModel
         )
     }
 }

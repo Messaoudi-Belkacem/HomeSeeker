@@ -41,6 +41,7 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.input.KeyboardCapitalization
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
@@ -163,7 +164,10 @@ fun LoginScreen(
                                     .height(64.dp),
                                 text = usernameState,
                                 onValueChange = { usernameState.value = it },
-                                keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Text)
+                                keyboardOptions = KeyboardOptions(
+                                    keyboardType = KeyboardType.Text,
+                                    capitalization = KeyboardCapitalization.Words
+                                )
                             )
                             Spacer(modifier = Modifier.height(32.dp))
                             OutlinedTextFieldSample(

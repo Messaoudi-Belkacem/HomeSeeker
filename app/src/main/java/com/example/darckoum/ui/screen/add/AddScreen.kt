@@ -31,6 +31,7 @@ import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
@@ -41,7 +42,6 @@ import androidx.compose.material3.ExposedDropdownMenuBox
 import androidx.compose.material3.ExposedDropdownMenuDefaults
 import androidx.compose.material3.MenuDefaults
 import androidx.compose.material3.OutlinedTextField
-import androidx.compose.material3.OutlinedTextFieldDefaults
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -60,9 +60,10 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.input.KeyboardCapitalization
+import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.core.text.isDigitsOnly
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import coil.compose.AsyncImage
@@ -72,53 +73,46 @@ import com.example.darckoum.data.model.enum_classes.State
 import com.example.darckoum.data.state.AddState
 import com.example.darckoum.navigation.screen.BottomBarScreen
 import com.example.darckoum.ui.screen.SharedViewModel
+import com.example.darckoum.ui.screen.common.OutlinedTextFieldSample
 import com.example.darckoum.util.KeyboardAware
 import kotlinx.coroutines.launch
 
 @Composable
 fun AddScreen(
     bottomBarNavHostController: NavController,
+    sharedViewModel: SharedViewModel,
     addViewModel: AddViewModel = hiltViewModel()
 ) {
-
     val tag = "AddScreen.kt"
-
     val scrollState = rememberScrollState()
     val keyboardHeight = WindowInsets.ime.getBottom(LocalDensity.current)
     val scope = rememberCoroutineScope()
-
     LaunchedEffect(key1 = keyboardHeight) {
         scope.launch {
             scrollState.animateScrollTo(keyboardHeight)
         }
     }
-
     val context = LocalContext.current
-
     val addState by addViewModel.addState
-
     KeyboardAware {
         Box(
             modifier = Modifier
                 .fillMaxSize(),
         ) {
-
-            val columnModifier : Modifier
-
+            val modifier: Modifier
             when (addState) {
                 is AddState.Loading -> {
-                    columnModifier = Modifier
+                    modifier = Modifier
                         .verticalScroll(scrollState)
                         .padding(bottom = 80.dp)
                         .fillMaxSize()
                         .blur(20.dp)
                     AddAnnouncementUI(
-                        columnModifier = columnModifier,
+                        modifier = modifier,
                         tag = tag,
                         addViewModel = addViewModel,
                         context = context
                     )
-
                     Column(
                         modifier = Modifier
                             .fillMaxSize(1f)
@@ -137,12 +131,10 @@ fun AddScreen(
                         )
                     }
                 }
-
                 is AddState.Success -> {
                     bottomBarNavHostController.navigate(BottomBarScreen.Announcement.route)
-                    /*sharedViewModel.addAnnouncementResponse(addViewModel.announcementResponse.value!!)*/
+                    sharedViewModel.addAnnouncementResponse(addViewModel.announcementResponse.value!!)
                 }
-
                 is AddState.Error -> {
                     Toast.makeText(
                         context,
@@ -151,14 +143,13 @@ fun AddScreen(
                     ).show()
                     addViewModel.setAddState(AddState.Initial)
                 }
-
                 else -> {
-                    columnModifier = Modifier
+                    modifier = Modifier
                         .verticalScroll(scrollState)
                         .padding(bottom = 80.dp)
                         .fillMaxSize()
                     AddAnnouncementUI(
-                        columnModifier = columnModifier,
+                        modifier = modifier,
                         tag = tag,
                         addViewModel = addViewModel,
                         context = context
@@ -171,33 +162,29 @@ fun AddScreen(
 
 @Composable
 fun AddAnnouncementUI(
-    columnModifier : Modifier,
-    tag : String,
+    modifier: Modifier,
+    tag: String,
     addViewModel: AddViewModel,
     context: Context
 ) {
 
-    var titleTextFieldText by remember { mutableStateOf("") }
-    var areaTextFieldText by remember { mutableStateOf("") }
-    var numberOfRoomsTextFieldText by remember { mutableStateOf("") }
-    var priceTextFieldText by remember { mutableStateOf("") }
-    var locationTextFieldText by remember { mutableStateOf("") }
-    var descriptionTextFieldText by remember { mutableStateOf("") }
-    var selectedPropertyTypeText by remember { mutableStateOf("") }
-    var selectedStateText by remember { mutableStateOf("") }
+    val titleTextFieldText = remember { mutableStateOf("") }
+    val areaTextFieldText = remember { mutableStateOf("") }
+    val numberOfRoomsTextFieldText = remember { mutableStateOf("") }
+    val priceTextFieldText = remember { mutableStateOf("") }
+    val locationTextFieldText = remember { mutableStateOf("") }
+    val descriptionTextFieldText = remember { mutableStateOf("") }
+    val selectedPropertyTypeText = remember { mutableStateOf("") }
+    val selectedStateText = remember { mutableStateOf("") }
 
     val scope = rememberCoroutineScope()
 
     Column(
-        modifier = columnModifier,
+        modifier = modifier,
     ) {
-
-
-
         var selectedImageUris by remember {
             mutableStateOf<List<Uri>>(emptyList())
         }
-
         val multiplePhotoPickerLauncher = rememberLauncherForActivityResult(
             contract = ActivityResultContracts.PickMultipleVisualMedia(),
             onResult = { uris ->
@@ -207,24 +194,22 @@ fun AddAnnouncementUI(
                 }
             }
         )
-
         Box(
             modifier = Modifier
                 .fillMaxWidth()
                 .aspectRatio(1f)
         ) {
-
             val pagerState = rememberPagerState(pageCount = { selectedImageUris.size })
-
-            Image(painter = painterResource(
-                id = R.drawable.default_image),
+            Image(
+                painter = painterResource(
+                    id = R.drawable.default_image
+                ),
                 contentDescription = null,
                 contentScale = ContentScale.FillBounds,
                 modifier = Modifier
                     .fillMaxSize(0.5f)
                     .align(Alignment.Center)
             )
-
             HorizontalPager(
                 state = pagerState,
                 modifier = Modifier
@@ -239,7 +224,6 @@ fun AddAnnouncementUI(
                     contentScale = ContentScale.Crop
                 )
             }
-
             Row(
                 modifier = Modifier
                     .padding(horizontal = 18.dp, vertical = 14.dp)
@@ -316,101 +300,103 @@ fun AddAnnouncementUI(
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.spacedBy(10.dp)
         ) {
-            AddScreenOutlinedTextFieldSample(
+            OutlinedTextFieldSample(
                 label = "Title",
                 modifier = Modifier.fillMaxWidth(),
-                maxLines = 1,
-                minLines = 1,
                 text = titleTextFieldText,
                 onValueChange = {
-                    titleTextFieldText = it
-                }
+                    titleTextFieldText.value = it
+                },
+                keyboardOptions = KeyboardOptions(
+                    keyboardType = KeyboardType.Text,
+                    capitalization = KeyboardCapitalization.Words
+                )
             )
-            AddScreenOutlinedTextFieldSample(
+            OutlinedTextFieldSample(
                 label = "Area",
                 modifier = Modifier.fillMaxWidth(),
-                maxLines = 1,
-                minLines = 1,
                 text = areaTextFieldText,
                 onValueChange = {
-                    if (it.isDigitsOnly()) {
-                        areaTextFieldText = it
-                    }
-                }
+                    areaTextFieldText.value = it
+                },
+                keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number)
             )
-            AddScreenOutlinedTextFieldSample(
+            OutlinedTextFieldSample(
                 label = "Number Of Rooms",
                 modifier = Modifier.fillMaxWidth(),
-                maxLines = 1,
-                minLines = 1,
                 text = numberOfRoomsTextFieldText,
                 onValueChange = {
-                    if (it.isDigitsOnly()) {
-                        numberOfRoomsTextFieldText = it
-                    }
-                }
+                    numberOfRoomsTextFieldText.value = it
+                },
+                keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number)
             )
             ExposedDropdownMenuSample(
-                options = PropertyType.values().map { it.description },
+                options = PropertyType.entries.map { it.description },
                 label = "Property type",
                 onOptionSelected = { selectedOption ->
-                    selectedPropertyTypeText = selectedOption}
+                    selectedPropertyTypeText.value = selectedOption
+                }
             )
-            AddScreenOutlinedTextFieldSample(
+            OutlinedTextFieldSample(
                 label = "Price",
                 modifier = Modifier.fillMaxWidth(),
-                maxLines = 1,
-                minLines = 1,
                 text = priceTextFieldText,
                 onValueChange = {
-                    if (it.isDigitsOnly()) {
-                        priceTextFieldText = it
-                    }
-                }
+                    priceTextFieldText.value = it
+                },
+                keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number)
             )
             ExposedDropdownMenuSample(
-                options = State.values().map { it.displayName },
-                label = "State",
+                options = State.entries.map { it.displayName },
+                label = "Wilaya",
                 onOptionSelected = { selectedOption ->
-                    selectedStateText = selectedOption}
+                    selectedStateText.value = selectedOption
+                }
             )
-            AddScreenOutlinedTextFieldSample(
+            OutlinedTextFieldSample(
                 label = "Location",
                 modifier = Modifier.fillMaxWidth(),
-                maxLines = 1,
-                minLines = 1,
                 text = locationTextFieldText,
                 onValueChange = {
-                    locationTextFieldText = it
-                }
+                    locationTextFieldText.value = it
+                },
+                keyboardOptions = KeyboardOptions(
+                    keyboardType = KeyboardType.Text,
+                    capitalization = KeyboardCapitalization.Words
+                )
             )
-            AddScreenOutlinedTextFieldSample(
+            OutlinedTextFieldSample(
                 label = "Description",
                 modifier = Modifier.fillMaxWidth(),
-                maxLines = 10,
-                minLines = 6,
                 text = descriptionTextFieldText,
                 onValueChange = {
-                    descriptionTextFieldText = it
-                }
+                    descriptionTextFieldText.value = it
+                },
+                keyboardOptions = KeyboardOptions(
+                    keyboardType = KeyboardType.Text,
+                    capitalization = KeyboardCapitalization.Sentences
+                ),
+                minLines = 6,
+                maxLines = 10
             )
             Button(
                 onClick = {
-                    val title = titleTextFieldText
-                    val area = areaTextFieldText.toInt()
-                    val numberOfRooms = numberOfRoomsTextFieldText.toInt()
-                    val propertyType = selectedPropertyTypeText
-                    val price = priceTextFieldText
-                    val state = selectedStateText
-                    val location = locationTextFieldText
-                    val description = descriptionTextFieldText
+                    val title = titleTextFieldText.value
+                    val area = areaTextFieldText.value.toInt()
+                    val numberOfRooms = numberOfRoomsTextFieldText.value.toInt()
+                    val propertyType = selectedPropertyTypeText.value
+                    val price = priceTextFieldText.value
+                    val state = selectedStateText.value
+                    val location = locationTextFieldText.value
+                    val description = descriptionTextFieldText.value
                     if (
                         title.isBlank() ||
                         price.isBlank() ||
                         location.isBlank() ||
                         description.isBlank()
                     ) {
-                        Toast.makeText(context,"Please fill in all fields", Toast.LENGTH_SHORT).show()
+                        Toast.makeText(context, "Please fill in all fields", Toast.LENGTH_SHORT)
+                            .show()
                     } else {
                         scope.launch {
                             addViewModel.createAnnouncement(
@@ -446,7 +432,7 @@ fun AddAnnouncementUI(
     }
 }
 
-@Composable
+/*@Composable
 fun AddScreenOutlinedTextFieldSample(
     label: String,
     modifier: Modifier,
@@ -464,7 +450,7 @@ fun AddScreenOutlinedTextFieldSample(
         minLines = minLines,
         shape = RoundedCornerShape(14.dp),
     )
-}
+}*/
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
