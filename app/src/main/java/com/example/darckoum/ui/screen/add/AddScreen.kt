@@ -40,6 +40,7 @@ import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.ExposedDropdownMenuBox
 import androidx.compose.material3.ExposedDropdownMenuDefaults
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.MenuDefaults
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
@@ -64,6 +65,7 @@ import androidx.compose.ui.text.input.KeyboardCapitalization
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.core.text.isDigitsOnly
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import coil.compose.AsyncImage
@@ -100,14 +102,13 @@ fun AddScreen(
             modifier = Modifier
                 .fillMaxSize()
                 .padding(paddingValues)
-            ,
         ) {
             val modifier: Modifier
             when (addState) {
                 is AddState.Loading -> {
                     modifier = Modifier
                         .verticalScroll(scrollState)
-                        .padding(bottom = 80.dp)
+                        .padding(bottom = 16.dp)
                         .fillMaxSize()
                         .blur(20.dp)
                     AddAnnouncementUI(
@@ -149,7 +150,7 @@ fun AddScreen(
                 else -> {
                     modifier = Modifier
                         .verticalScroll(scrollState)
-                        .padding(bottom = 80.dp)
+                        .padding(bottom = 16.dp)
                         .fillMaxSize()
                     AddAnnouncementUI(
                         modifier = modifier,
@@ -170,7 +171,6 @@ fun AddAnnouncementUI(
     addViewModel: AddViewModel,
     context: Context
 ) {
-
     val titleTextFieldText = remember { mutableStateOf("") }
     val areaTextFieldText = remember { mutableStateOf("") }
     val numberOfRoomsTextFieldText = remember { mutableStateOf("") }
@@ -235,12 +235,11 @@ fun AddAnnouncementUI(
                 horizontalArrangement = Arrangement.SpaceBetween,
                 verticalAlignment = Alignment.CenterVertically
             ) {
-
                 // Remove an image from the selected images
                 Box(
                     modifier = Modifier
                         .size(50.dp)
-                        .clip(RoundedCornerShape(15.dp))
+                        .clip(RoundedCornerShape(16.dp))
                         .clickable(onClick = {
                             val indexToRemove = pagerState.currentPage
                             if (indexToRemove in selectedImageUris.indices) {
@@ -257,6 +256,7 @@ fun AddAnnouncementUI(
                     androidx.compose.material.Icon(
                         painter = painterResource(id = R.drawable.ic_minus),
                         contentDescription = null,
+                        tint = MaterialTheme.colorScheme.onSurface
                     )
                 }
                 // Image Indicator
@@ -292,6 +292,7 @@ fun AddAnnouncementUI(
                     androidx.compose.material.Icon(
                         painter = painterResource(id = R.drawable.ic_add),
                         contentDescription = null,
+                        tint = MaterialTheme.colorScheme.onSurface
                     )
                 }
             }
@@ -320,7 +321,9 @@ fun AddAnnouncementUI(
                 modifier = Modifier.fillMaxWidth(),
                 text = areaTextFieldText,
                 onValueChange = {
-                    areaTextFieldText.value = it
+                    if(it.isDigitsOnly()) {
+                        areaTextFieldText.value = it
+                    }
                 },
                 keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number)
             )
@@ -329,7 +332,9 @@ fun AddAnnouncementUI(
                 modifier = Modifier.fillMaxWidth(),
                 text = numberOfRoomsTextFieldText,
                 onValueChange = {
-                    numberOfRoomsTextFieldText.value = it
+                    if(it.isDigitsOnly()) {
+                        numberOfRoomsTextFieldText.value = it
+                    }
                 },
                 keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number)
             )
@@ -345,7 +350,9 @@ fun AddAnnouncementUI(
                 modifier = Modifier.fillMaxWidth(),
                 text = priceTextFieldText,
                 onValueChange = {
-                    priceTextFieldText.value = it
+                    if(it.isDigitsOnly()) {
+                        priceTextFieldText.value = it
+                    }
                 },
                 keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number)
             )
@@ -385,8 +392,8 @@ fun AddAnnouncementUI(
             Button(
                 onClick = {
                     val title = titleTextFieldText.value
-                    val area = areaTextFieldText.value.toInt()
-                    val numberOfRooms = numberOfRoomsTextFieldText.value.toInt()
+                    val area = areaTextFieldText.value
+                    val numberOfRooms = numberOfRoomsTextFieldText.value
                     val propertyType = selectedPropertyTypeText.value
                     val price = priceTextFieldText.value
                     val state = selectedStateText.value
@@ -396,16 +403,19 @@ fun AddAnnouncementUI(
                         title.isBlank() ||
                         price.isBlank() ||
                         location.isBlank() ||
-                        description.isBlank()
+                        description.isBlank() ||
+                        numberOfRooms.isBlank() ||
+                        area.isBlank() ||
+                        selectedImageUris.isEmpty()
                     ) {
-                        Toast.makeText(context, "Please fill in all fields", Toast.LENGTH_SHORT)
+                        Toast.makeText(context, "Please fill in all fields and choose images", Toast.LENGTH_SHORT)
                             .show()
                     } else {
                         scope.launch {
                             addViewModel.createAnnouncement(
                                 title = title,
-                                area = area,
-                                numberOfRooms = numberOfRooms,
+                                area = area.toInt(),
+                                numberOfRooms = numberOfRooms.toInt(),
                                 location = location,
                                 state = state,
                                 propertyType = propertyType,
@@ -423,7 +433,7 @@ fun AddAnnouncementUI(
                 contentPadding = PaddingValues(vertical = 20.dp),
                 modifier = Modifier
                     .fillMaxWidth(1f)
-                    .padding(top = 32.dp, bottom = 16.dp)
+                    .padding(top = 32.dp)
             ) {
                 Text(
                     text = "Announce",

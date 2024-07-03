@@ -15,6 +15,7 @@ import com.example.darckoum.data.repository.Repository
 import com.example.darckoum.data.state.AddState
 import com.example.darckoum.data.state.LoginState
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import java.net.ConnectException
 import javax.inject.Inject
@@ -49,6 +50,7 @@ class AddViewModel @Inject constructor(
     ) {
         viewModelScope.launch {
             try {
+                _addState.value = AddState.Loading
                 val newAddAnnouncementRequest = AddAnnouncementRequest(
                     title = title,
                     area = area,
@@ -63,7 +65,7 @@ class AddViewModel @Inject constructor(
                 var token = DataStoreRepository.TokenManager.getToken(appContext)
                 token = "Bearer $token"
                 Log.d(tag, "token: $token")
-                _addState.value = AddState.Loading
+                delay(3000)
                 val addResponse = repository.createAnnouncement(
                     token = token,
                     addAnnouncementRequest = newAddAnnouncementRequest,
