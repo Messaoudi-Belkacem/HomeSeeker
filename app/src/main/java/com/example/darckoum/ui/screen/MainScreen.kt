@@ -1,6 +1,7 @@
 package com.example.darckoum.ui.screen
 
 import android.annotation.SuppressLint
+import android.util.Log
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -72,7 +73,7 @@ fun BottomBar(bottomBarNavHostController: NavHostController) {
             AddItem(
                 screen = screen,
                 currentDestination = currentDestination,
-                navController = bottomBarNavHostController
+                bottomBarNavHostController = bottomBarNavHostController
             )
         }
     }
@@ -82,8 +83,9 @@ fun BottomBar(bottomBarNavHostController: NavHostController) {
 fun AddItem(
     screen: BottomBarScreen,
     currentDestination: NavDestination?,
-    navController: NavHostController
+    bottomBarNavHostController: NavHostController
 ) {
+    val tag = "AddItem"
     val selected = currentDestination?.hierarchy?.any { it.route == screen.route } == true
     val backgroundColor = if (selected) MaterialTheme.colorScheme.primary else Color.Unspecified
     Box(
@@ -92,10 +94,8 @@ fun AddItem(
             .clip(RoundedCornerShape(15.dp))
             .background(color = backgroundColor)
             .clickable(onClick = {
-                navController.navigate(screen.route) {
-                    popUpTo(navController.graph.findStartDestination().id)
-                    launchSingleTop = true
-                }
+                Log.d(tag, "Bottom navigation bar item button clicked")
+                bottomBarNavHostController.navigate(screen.route)
             }),
         contentAlignment = Alignment.Center
     ) {

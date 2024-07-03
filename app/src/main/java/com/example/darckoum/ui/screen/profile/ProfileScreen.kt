@@ -1,5 +1,6 @@
 package com.example.darckoum.ui.screen.profile
 
+import android.util.Log
 import android.widget.Toast
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.expandVertically
@@ -72,6 +73,7 @@ fun ProfileScreen(
     navHostController: NavHostController,
     profileViewModel: ProfileViewModel = hiltViewModel()
 ) {
+    val tag = "ProfileScreen"
     var areFieldsEnabled by remember { mutableStateOf(false) }
     val scope = rememberCoroutineScope()
     Box(
@@ -100,7 +102,10 @@ fun ProfileScreen(
                     },
                     navigationIcon = {
                         IconButton(onClick = {
-                        // TODO : use nav controller to navigate back to the previous screen
+                            Log.d(tag, "Navigate back button clicked")
+                            if(!bottomBarNavHostController.navigateUp()) {
+                                Log.d(tag, "Failed to navigate back")
+                            }
                         }) {
                             Icon(
                                 imageVector = Icons.AutoMirrored.Rounded.ArrowBack,
