@@ -201,7 +201,7 @@ fun CustomSearchItem(announcement: Announcement, navController: NavController) {
 }
 
 fun formatPrice(price: Double): String {
-    val priceString = price.toString()
+    val priceString = price.toInt().toString()
     val formattedPrice = buildString {
         var count = 0
         for (i in priceString.length - 1 downTo 0) {
