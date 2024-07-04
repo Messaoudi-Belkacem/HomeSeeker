@@ -1,4 +1,4 @@
-package com.example.darckoum.ui.screen.add
+package com.example.darckoum.screen.add
 
 import android.app.Application
 import android.content.Context

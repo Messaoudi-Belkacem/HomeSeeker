@@ -1,4 +1,4 @@
-package com.example.darckoum.ui.screen
+package com.example.darckoum.screen
 
 import android.annotation.SuppressLint
 import android.util.Log
@@ -29,6 +29,7 @@ import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
+import com.example.darckoum.MainViewModel
 import com.example.darckoum.navigation.HomeNavGraph
 import com.example.darckoum.navigation.screen.BottomBarScreen
 
@@ -36,7 +37,8 @@ import com.example.darckoum.navigation.screen.BottomBarScreen
 @Composable
 fun MainScreen(
     navHostController: NavHostController,
-    sharedViewModel: SharedViewModel
+    sharedViewModel: SharedViewModel,
+    mainViewModel: MainViewModel
 ) {
     val bottomBarNavHostController = rememberNavController()
     Scaffold(
@@ -46,7 +48,8 @@ fun MainScreen(
                 bottomBarNavHostController = bottomBarNavHostController,
                 navHostController = navHostController,
                 sharedViewModel = sharedViewModel,
-                paddingValues = paddingValues
+                paddingValues = paddingValues,
+                mainViewModel = mainViewModel
             )
         }
     )

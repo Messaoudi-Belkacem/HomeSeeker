@@ -12,8 +12,8 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.Icon
-import androidx.compose.material.Text
+import androidx.compose.material3.Icon
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -26,12 +26,13 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
+import androidx.navigation.NavHostController
 import com.example.darckoum.R
 import com.example.darckoum.data.model.Announcement
 import com.example.darckoum.navigation.screen.BottomBarScreen
 
 @Composable
-fun CustomItem(announcement: Announcement, navController: NavController) {
+fun CustomItem(announcement: Announcement, navHostController: NavHostController) {
     val formattedPrice = formatPrice(announcement.price)
     val housePicture: Int = when (announcement.id) {
         0 -> R.drawable.house1photo
@@ -49,7 +50,7 @@ fun CustomItem(announcement: Announcement, navController: NavController) {
             .background(Color(0x994F4F4F))
             .padding(8.dp)
             .clickable {
-                navController.navigate(route = BottomBarScreen.Announcement.route)
+                navHostController.navigate(route = BottomBarScreen.Announcement.route)
             }
     ) {
         Column(
@@ -97,7 +98,7 @@ fun CustomItem(announcement: Announcement, navController: NavController) {
                         contentDescription = null,
                     )
                     Text(
-                        text = announcement.propertyType.description,
+                        text = announcement.propertyType,
                         fontSize = 10.sp,
                         fontWeight = FontWeight.Medium
                     )
@@ -184,7 +185,7 @@ fun CustomSearchItem(announcement: Announcement, navController: NavController) {
                         contentDescription = null,
                     )
                     Text(
-                        text = announcement.propertyType.description,
+                        text = announcement.propertyType,
                         fontSize = 16.sp,
                         fontWeight = FontWeight.Medium
                     )
@@ -199,7 +200,7 @@ fun CustomSearchItem(announcement: Announcement, navController: NavController) {
     }
 }
 
-fun formatPrice(price: Int): String {
+fun formatPrice(price: Double): String {
     val priceString = price.toString()
     val formattedPrice = buildString {
         var count = 0

@@ -4,6 +4,9 @@ import android.content.Context
 import android.net.Uri
 import android.provider.MediaStore
 import android.util.Log
+import androidx.paging.Pager
+import androidx.paging.PagingConfig
+import androidx.paging.PagingData
 import com.example.darckoum.api.AnnouncementService
 import com.example.darckoum.api.AuthenticationService
 import com.example.darckoum.data.model.Announcement
@@ -17,6 +20,9 @@ import com.example.darckoum.data.model.request.LogoutRequest
 import com.example.darckoum.data.model.request.LogoutResponse
 import com.example.darckoum.data.model.request.RegistrationRequest
 import com.example.darckoum.data.model.request.RegistrationResponse
+import com.example.darckoum.data.paging.DiscoverPagingSource
+import com.example.darckoum.util.Constants.Companion.ITEMS_PER_PAGE
+import kotlinx.coroutines.flow.Flow
 import okhttp3.MediaType.Companion.toMediaTypeOrNull
 import okhttp3.MultipartBody
 import okhttp3.RequestBody.Companion.asRequestBody
@@ -26,7 +32,7 @@ import javax.inject.Inject
 
 class Repository @Inject constructor(
     private val announcementService: AnnouncementService,
-    private val authenticationService: AuthenticationService
+    private val authenticationService: AuthenticationService,
 ) {
 
     private val tag = "Repository.kt"
@@ -48,8 +54,13 @@ class Repository @Inject constructor(
         return announcementService.createAnnouncement(token, addAnnouncementRequest, images)
     }
 
-    suspend fun getAnnouncement(): Response<Announcement> {
-        return announcementService.getAnnouncement()
+    fun getAnnouncements(token: String): Flow<PagingData<Announcement>> {
+        return Pager(
+            config = PagingConfig(pageSize = ITEMS_PER_PAGE),
+            pagingSourceFactory = {
+                DiscoverPagingSource(announcementService = announcementService, token = token)
+            }
+        ).flow
     }
 
     suspend fun registerUser(registrationRequest: RegistrationRequest): Response<RegistrationResponse> {

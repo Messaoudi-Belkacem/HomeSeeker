@@ -1,4 +1,4 @@
-package com.example.darckoum.ui.screen.common
+package com.example.darckoum.screen.common
 
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions

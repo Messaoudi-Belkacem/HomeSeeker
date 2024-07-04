@@ -1,4 +1,4 @@
-package com.example.darckoum.ui.screen.add
+package com.example.darckoum.screen.add
 
 import android.content.Context
 import android.net.Uri
@@ -74,8 +74,8 @@ import com.example.darckoum.data.model.enum_classes.PropertyType
 import com.example.darckoum.data.model.enum_classes.State
 import com.example.darckoum.data.state.AddState
 import com.example.darckoum.navigation.screen.BottomBarScreen
-import com.example.darckoum.ui.screen.SharedViewModel
-import com.example.darckoum.ui.screen.common.OutlinedTextFieldSample
+import com.example.darckoum.screen.SharedViewModel
+import com.example.darckoum.screen.common.OutlinedTextFieldSample
 import com.example.darckoum.util.KeyboardAware
 import kotlinx.coroutines.launch
 
@@ -136,8 +136,9 @@ fun AddScreen(
                     }
                 }
                 is AddState.Success -> {
-                    bottomBarNavHostController.navigate(BottomBarScreen.Announcement.route)
-                    sharedViewModel.addAnnouncementResponse(addViewModel.announcementResponse.value!!)
+                    bottomBarNavHostController.navigate(BottomBarScreen.Home.route)
+                    TODO("fix this")
+                    /*sharedViewModel.addAnnouncementResponse(addViewModel.announcementResponse.value!!)*/
                 }
                 is AddState.Error -> {
                     Toast.makeText(

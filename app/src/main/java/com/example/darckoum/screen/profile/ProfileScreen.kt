@@ -1,4 +1,4 @@
-package com.example.darckoum.ui.screen.profile
+package com.example.darckoum.screen.profile
 
 import android.util.Log
 import android.widget.Toast

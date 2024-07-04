@@ -1,4 +1,4 @@
-package com.example.darckoum.ui.screen.login
+package com.example.darckoum.screen.register
 
 import android.util.Log
 import android.widget.Toast
@@ -23,7 +23,6 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Button
-import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
@@ -41,7 +40,6 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.text.input.KeyboardCapitalization
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
@@ -49,46 +47,43 @@ import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import com.example.darckoum.R
-import com.example.darckoum.data.state.LoginState
-import com.example.darckoum.navigation.Graph
+import com.example.darckoum.data.state.RegistrationState
 import com.example.darckoum.navigation.screen.AuthenticationScreen
-import com.example.darckoum.ui.screen.common.OutlinedTextFieldSample
+import com.example.darckoum.screen.common.OutlinedTextFieldSample
 import com.example.darckoum.util.KeyboardAware
 import kotlinx.coroutines.launch
 
 @Composable
-fun LoginScreen(
+fun RegisterScreen(
     navHostController: NavHostController,
-    loginViewModel: LoginViewModel = hiltViewModel()
+    registerViewModel: RegisterViewModel = hiltViewModel()
 ) {
-
-    val tag = "LoginScreen"
+    val tag = "RegisterScreen"
     val scrollState = rememberScrollState()
     val keyboardHeight = WindowInsets.ime.getBottom(LocalDensity.current)
     val scope = rememberCoroutineScope()
-    val loginState by loginViewModel.loginState
-    val context = LocalContext.current
-
+    val registrationState by registerViewModel.registrationState
     LaunchedEffect(key1 = keyboardHeight) {
         scope.launch {
             scrollState.animateScrollTo(keyboardHeight)
         }
     }
-
     val usernameState = remember { mutableStateOf("") }
+    val firstNameState = remember { mutableStateOf("") }
+    val lastNameState = remember { mutableStateOf("") }
     val passwordState = remember { mutableStateOf("") }
 
     KeyboardAware {
         Scaffold(
-            containerColor = Color.Transparent,
-            modifier = Modifier.fillMaxSize()
-        ) { contentPadding ->
-            when (loginState) {
-                is LoginState.Loading -> {
+            containerColor = Color.Transparent
+        ) { paddingValues ->
+            val context = LocalContext.current
+            when (registrationState) {
+                is RegistrationState.Loading -> {
                     Box(
                         modifier = Modifier
                             .fillMaxSize()
-                            .padding(contentPadding),
+                            .padding(paddingValues),
                         contentAlignment = Alignment.Center,
                     ) {
                         Column(
@@ -108,30 +103,31 @@ fun LoginScreen(
                         }
                     }
                 }
-                is LoginState.Success -> {
-                    navHostController.navigate(Graph.HOME)
+                is RegistrationState.Success -> {
+                    Log.d(tag, "Sign up was successful, returning to login page")
+                    navHostController.popBackStack()
+                    navHostController.navigate(AuthenticationScreen.LogIn.route)
                 }
-                is LoginState.Error -> {
+                is RegistrationState.Error -> {
                     Toast.makeText(
                         context,
-                        (loginState as LoginState.Error).message,
+                        (registrationState as RegistrationState.Error).message,
                         Toast.LENGTH_SHORT
                     ).show()
-                    loginViewModel.setLoginState(LoginState.Initial)
+                    registerViewModel.setRegistrationState(RegistrationState.Initial)
                 }
                 else -> {
                     Column(
                         modifier = Modifier
                             .fillMaxSize()
                             .verticalScroll(scrollState)
-                            .padding(contentPadding)
+                            .padding(paddingValues = paddingValues)
                     ) {
                         Column(
                             verticalArrangement = Arrangement.SpaceAround,
                             horizontalAlignment = Alignment.CenterHorizontally,
                             modifier = Modifier
                                 .fillMaxWidth()
-                                .padding(top = 64.dp)
                         ) {
                             Image(
                                 painter = painterResource(id = R.drawable.logo_with_no_background),
@@ -149,13 +145,20 @@ fun LoginScreen(
                                 color = MaterialTheme.colorScheme.onSurface
                             )
                         }
+                    }
+                    Box(
+                        modifier = Modifier
+                            .fillMaxWidth(1f)
+                            .fillMaxHeight(1f)
+                            .padding(top = 32.dp),
+                        contentAlignment = Alignment.TopCenter
+                    ) {
                         Column(
                             verticalArrangement = Arrangement.SpaceAround,
                             horizontalAlignment = Alignment.CenterHorizontally,
                             modifier = Modifier
-                                .padding(start = 18.dp, end = 18.dp, top = 32.dp, bottom = 64.dp)
+                                .padding(horizontal = 18.dp)
                                 .fillMaxWidth(1f)
-                                .fillMaxHeight(1f)
                         ) {
                             OutlinedTextFieldSample(
                                 label = "Username",
@@ -164,12 +167,29 @@ fun LoginScreen(
                                     .height(64.dp),
                                 text = usernameState,
                                 onValueChange = { usernameState.value = it },
-                                keyboardOptions = KeyboardOptions(
-                                    keyboardType = KeyboardType.Text,
-                                    capitalization = KeyboardCapitalization.Words
-                                )
+                                keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Text)
                             )
-                            Spacer(modifier = Modifier.height(32.dp))
+                            Spacer(modifier = Modifier.height(20.dp))
+                            OutlinedTextFieldSample(
+                                label = "First Name",
+                                modifier = Modifier
+                                    .fillMaxWidth()
+                                    .height(64.dp),
+                                text = firstNameState,
+                                onValueChange = { firstNameState.value = it },
+                                keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Text)
+                            )
+                            Spacer(modifier = Modifier.height(20.dp))
+                            OutlinedTextFieldSample(
+                                label = "Last Name",
+                                modifier = Modifier
+                                    .fillMaxWidth()
+                                    .height(64.dp),
+                                text = lastNameState,
+                                onValueChange = { lastNameState.value = it },
+                                keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Text)
+                            )
+                            Spacer(modifier = Modifier.height(20.dp))
                             OutlinedTextFieldSample(
                                 label = "Password",
                                 modifier = Modifier
@@ -179,50 +199,40 @@ fun LoginScreen(
                                 onValueChange = { passwordState.value = it },
                                 keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password)
                             )
-                            Spacer(modifier = Modifier.height(32.dp))
-                            Text(
-                                text = "Forgot password?",
-                                fontSize = 16.sp,
-                                fontWeight = FontWeight.Normal,
-                                color = MaterialTheme.colorScheme.onSurface
-                            )
-                            Spacer(modifier = Modifier.height(32.dp))
+                            Spacer(modifier = Modifier.height(30.dp))
                             Button(
                                 onClick = {
                                     val username = usernameState.value
+                                    val firstName = firstNameState.value
+                                    val lastName = lastNameState.value
                                     val password = passwordState.value
-                                    if (
-                                        username.isBlank() || password.isBlank()
-                                    ) {
+                                    if (username.isBlank() || firstName.isBlank() || lastName.isBlank() || password.isBlank()) {
                                         Toast.makeText(context, "Please fill in all fields", Toast.LENGTH_SHORT).show()
                                     } else {
                                         scope.launch {
-                                            loginViewModel.loginUser(username, password)
+                                            registerViewModel.registerUser(username, firstName, lastName, password)
                                         }
                                     }
                                 },
                                 shape = RoundedCornerShape(14.dp),
-                                colors = ButtonDefaults.buttonColors(
-                                    containerColor = MaterialTheme.colorScheme.primary
-                                ),
                                 modifier = Modifier
                                     .fillMaxWidth(1f)
                                     .height(64.dp)
                             ) {
                                 Text(
-                                    text = "Login",
+                                    text = "Register",
                                     fontSize = 20.sp,
                                     fontWeight = FontWeight.SemiBold
                                 )
                             }
-                            Spacer(modifier = Modifier.height(64.dp))
+                            Spacer(modifier = Modifier.height(24.dp))
                             Row(
                                 verticalAlignment = Alignment.Bottom,
                                 horizontalArrangement = Arrangement.Center,
                                 modifier = Modifier.fillMaxWidth(1f)
                             ) {
                                 Text(
-                                    text = "Don't have an account?",
+                                    text = "Already have an account?",
                                     fontSize = 16.sp,
                                     fontWeight = FontWeight.Normal,
                                     textAlign = TextAlign.Center,
@@ -230,15 +240,15 @@ fun LoginScreen(
                                 )
                                 Spacer(modifier = Modifier.width(4.dp))
                                 Text(
-                                    text = "Sign Up",
+                                    text = "Sign in",
                                     fontSize = 16.sp,
                                     fontWeight = FontWeight.SemiBold,
                                     textAlign = TextAlign.Center,
                                     color = MaterialTheme.colorScheme.onSurface,
                                     modifier = Modifier
                                         .clickable {
-                                            Log.d(tag, "Sign up text clicked")
-                                            navHostController.navigate(route = AuthenticationScreen.SignUp.route)
+                                            Log.d(tag, "Sign in text clicked")
+                                            navHostController.popBackStack()
                                         }
                                 )
                             }

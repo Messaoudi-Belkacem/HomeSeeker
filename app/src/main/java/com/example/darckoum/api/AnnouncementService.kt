@@ -14,10 +14,15 @@ import retrofit2.http.Multipart
 import retrofit2.http.POST
 import retrofit2.http.Part
 import retrofit2.http.Path
+import retrofit2.http.Query
 
 interface AnnouncementService {
     @GET("announcements")
-    suspend fun getAnnouncements(): Response<List<Announcement>>
+    suspend fun getAnnouncements(
+        @Header("Authorization") token: String,
+        @Query("page") currentPage: Int
+    ): AnnouncementResponse
+
     @GET("announcements/{announcementId}")
     suspend fun getAnnouncement(): Response<Announcement>
 

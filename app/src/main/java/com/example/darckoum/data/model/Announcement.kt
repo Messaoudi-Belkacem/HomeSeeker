@@ -8,9 +8,11 @@ data class Announcement(
     val title: String,
     val area: Int,
     val numberOfRooms: Int,
-    val propertyType: PropertyType,
+    val propertyType: String,
     val location: String,
-    val state: State,
-    val price: Int,
+    val state: String,
+    val price: Double,
     val description: String,
+    val owner: String,
+    val user: String
 )

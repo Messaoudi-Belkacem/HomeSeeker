@@ -9,18 +9,21 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.navigation
 import androidx.navigation.compose.rememberNavController
+import com.example.darckoum.MainViewModel
 import com.example.darckoum.navigation.screen.AuthenticationScreen
 import com.example.darckoum.navigation.screen.BottomBarScreen
 import com.example.darckoum.navigation.screen.LeafScreen
-import com.example.darckoum.ui.screen.MainScreen
-import com.example.darckoum.ui.screen.SharedViewModel
-import com.example.darckoum.ui.screen.login.LoginScreen
-import com.example.darckoum.ui.screen.register.RegisterScreen
+import com.example.darckoum.screen.MainScreen
+import com.example.darckoum.screen.SharedViewModel
+import com.example.darckoum.screen.announcement.AnnouncementScreen
+import com.example.darckoum.screen.login.LoginScreen
+import com.example.darckoum.screen.register.RegisterScreen
 
 @Composable
 fun RootNavigationGraph(
     startDestination: String,
-    sharedViewModel: SharedViewModel
+    sharedViewModel: SharedViewModel,
+    mainViewModel: MainViewModel
 ) {
     val navHostController = rememberNavController()
     val time = 500
@@ -59,7 +62,8 @@ fun RootNavigationGraph(
             composable(route = LeafScreen.Main.route) {
                 MainScreen(
                     navHostController = navHostController,
-                    sharedViewModel = sharedViewModel
+                    sharedViewModel = sharedViewModel,
+                    mainViewModel = mainViewModel
                 )
             }
             navigation(
@@ -67,7 +71,7 @@ fun RootNavigationGraph(
                 startDestination = LeafScreen.Announcement.route
             ) {
                 composable(route = LeafScreen.Announcement.route) {
-
+                    AnnouncementScreen(navHostController = navHostController, sharedViewModel = sharedViewModel)
                 }
             }
         }

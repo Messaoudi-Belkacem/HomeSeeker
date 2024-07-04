@@ -19,7 +19,7 @@ import androidx.navigation.NavHostController
 import com.example.darckoum.data.repository.DataStoreRepository
 import com.example.darckoum.navigation.Graph
 import com.example.darckoum.navigation.RootNavigationGraph
-import com.example.darckoum.ui.screen.SharedViewModel
+import com.example.darckoum.screen.SharedViewModel
 import com.example.darckoum.ui.theme.AppTheme
 import com.example.darckoum.util.TokenUtil
 import com.google.accompanist.systemuicontroller.rememberSystemUiController
@@ -67,7 +67,8 @@ class MainActivity : ComponentActivity() {
                 ) {
                     RootNavigationGraph(
                         startDestination = startDestination,
-                        sharedViewModel = sharedViewModel
+                        sharedViewModel = sharedViewModel,
+                        mainViewModel = mainViewModel
                     )
                     val systemUiController = rememberSystemUiController()
                     DisposableEffect(systemUiController) {

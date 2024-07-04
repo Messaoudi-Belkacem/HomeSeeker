@@ -1,4 +1,4 @@
-package com.example.darckoum.ui.screen.login
+package com.example.darckoum.screen.login
 
 import android.app.Application
 import android.content.Context

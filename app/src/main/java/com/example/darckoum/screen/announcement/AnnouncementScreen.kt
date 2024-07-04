@@ -1,4 +1,4 @@
-package com.example.darckoum.ui.screen.announcement
+package com.example.darckoum.screen.announcement
 
 import android.content.Intent
 import android.graphics.Bitmap
@@ -39,21 +39,22 @@ import androidx.compose.ui.unit.sp
 import androidx.core.content.ContextCompat.startActivity
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
+import androidx.navigation.NavHostController
 import com.example.darckoum.R
 import com.example.darckoum.navigation.screen.BottomBarScreen
-import com.example.darckoum.ui.screen.SharedViewModel
+import com.example.darckoum.screen.SharedViewModel
 import java.util.Base64
 
 
 @Composable
 fun AnnouncementScreen(
-    bottomBarNavHostController: NavController,
+    navHostController: NavHostController,
     announcementViewModel: AnnouncementViewModel = hiltViewModel(),
-    sharedViewModel: SharedViewModel = hiltViewModel()
+    sharedViewModel: SharedViewModel
 ) {
     val tag = "AnnouncementScreen.kt"
     val context = LocalContext.current
-    val announcementResponse = sharedViewModel.announcementWithImages
+    val announcementResponse = sharedViewModel.announcement
     if (announcementResponse == null) {
         Log.d(tag, "announcementResponse is null")
         Toast.makeText(
@@ -61,7 +62,7 @@ fun AnnouncementScreen(
             "announcementResponse is null",
             Toast.LENGTH_SHORT
         ).show()
-        bottomBarNavHostController.navigate(BottomBarScreen.Home.route)
+        navHostController.navigate(BottomBarScreen.Home.route)
     } else {
         Column(
             modifier = Modifier
@@ -72,12 +73,12 @@ fun AnnouncementScreen(
                     .fillMaxWidth()
                     .aspectRatio(1.4f)
             ) {
-                var announcementHasImages = false
-                if (announcementResponse.images != null) {
+                val announcementHasImages = false
+                /*if (announcementResponse.images != null) {
                     announcementHasImages = true
-                }
+                }*/
                 if (announcementHasImages) {
-                    val pagerState = rememberPagerState(pageCount = { announcementResponse.images?.size ?: 0 })
+                    /*val pagerState = rememberPagerState(pageCount = { announcementResponse.images?.size ?: 0 })
                     HorizontalPager(
                         state = pagerState,
                         modifier = Modifier
@@ -87,18 +88,17 @@ fun AnnouncementScreen(
                     ) { index ->
                         val encodedByteArrayString = announcementResponse.images?.get(index).toString()
                         val decodedByteArray = Base64.getDecoder().decode(encodedByteArrayString)
-                        /*Log.d(tag, "encodedByteArrayString : $decodedByteArrayString")*/
                         Log.d(tag, "byteArray : $decodedByteArray")
                         byteArrayToBitmap(decodedByteArray)?.let {
                             Image(
                                 bitmap = it.asImageBitmap(),
-                                /*model = selectedImageUris[index],*/
+                                *//*model = selectedImageUris[index],*//*
                                 contentDescription = null,
                                 modifier = Modifier.fillMaxWidth(),
                                 contentScale = ContentScale.Crop
                             )
                         }
-                    }
+                    }*/
                 } else {
                     Image(painter = painterResource(
                         id = R.drawable.house6photo),

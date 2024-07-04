@@ -21,6 +21,9 @@ class MainViewModel @Inject constructor(private val repository: Repository) : Vi
     private val _checkTokenResponse = mutableStateOf<CheckTokenResponse?>(null)
     val checkTokenResponse = _checkTokenResponse
 
+    private val _token = mutableStateOf<String?>(null)
+    val token = _token
+
     fun checkToken(token: String?) : MutableState<Boolean> {
         val isTokenValid: MutableState<Boolean> = mutableStateOf(false)
         viewModelScope.launch {
@@ -36,6 +39,7 @@ class MainViewModel @Inject constructor(private val repository: Repository) : Vi
                         Log.d(tag, "response was successful")
                         Log.d(tag, "response: " + checkTokenResponse.body().toString())
                         Log.d(tag, "response raw: " + checkTokenResponse.raw().toString())
+                        _token.value = token
                     } else {
                         isTokenValid.value = false
                         Log.d(tag, "response was not successful")

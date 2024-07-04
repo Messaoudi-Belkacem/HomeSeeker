@@ -10,20 +10,22 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navigation
+import com.example.darckoum.MainViewModel
 import com.example.darckoum.navigation.screen.BottomBarScreen
 import com.example.darckoum.navigation.screen.LeafScreen
-import com.example.darckoum.ui.screen.SharedViewModel
-import com.example.darckoum.ui.screen.add.AddScreen
-import com.example.darckoum.ui.screen.announcement.AnnouncementScreen
-import com.example.darckoum.ui.screen.home.HomeScreen
-import com.example.darckoum.ui.screen.profile.ProfileScreen
+import com.example.darckoum.screen.SharedViewModel
+import com.example.darckoum.screen.add.AddScreen
+import com.example.darckoum.screen.announcement.AnnouncementScreen
+import com.example.darckoum.screen.home.HomeScreen
+import com.example.darckoum.screen.profile.ProfileScreen
 
 @Composable
 fun HomeNavGraph(
     bottomBarNavHostController: NavHostController,
     navHostController: NavHostController,
     sharedViewModel: SharedViewModel,
-    paddingValues: PaddingValues
+    paddingValues: PaddingValues,
+    mainViewModel: MainViewModel
 ) {
     val time = 500
     NavHost(
@@ -36,7 +38,11 @@ fun HomeNavGraph(
         popExitTransition = { fadeOut(animationSpec = tween(time)) }
     ) {
         composable(route = BottomBarScreen.Home.route) {
-            HomeScreen(bottomBarNavHostController = bottomBarNavHostController)
+            HomeScreen(
+                bottomBarNavHostController = bottomBarNavHostController,
+                navHostController = navHostController,
+                mainViewModel = mainViewModel
+            )
         }
         composable(route = BottomBarScreen.Add.route) {
             AddScreen(

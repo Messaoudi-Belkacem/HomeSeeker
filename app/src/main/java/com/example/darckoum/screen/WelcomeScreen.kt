@@ -1,4 +1,4 @@
-package com.example.darckoum.ui.screen
+package com.example.darckoum.screen
 
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
