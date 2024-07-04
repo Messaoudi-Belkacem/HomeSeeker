@@ -13,6 +13,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Icon
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -45,13 +46,15 @@ fun CustomItem(announcement: Announcement, navHostController: NavHostController)
     }
     Box(
         modifier = Modifier
-            .size(width = 180.dp, height = 280.dp)
+            .size(width = 210.dp, height = 300.dp)
             .clip(RoundedCornerShape(14.dp))
-            .background(Color(0x994F4F4F))
+            .background(MaterialTheme.colorScheme.outlineVariant)
+            .border(width = 2.dp, color = Color(0xFF666666), shape = RoundedCornerShape(14.dp))
             .padding(8.dp)
             .clickable {
                 navHostController.navigate(route = BottomBarScreen.Announcement.route)
-            }
+            },
+        contentAlignment = Alignment.Center
     ) {
         Column(
             verticalArrangement = Arrangement.spacedBy(6.dp),
@@ -60,15 +63,15 @@ fun CustomItem(announcement: Announcement, navHostController: NavHostController)
             Image(
                 painter = painterResource(housePicture),
                 contentDescription = null,
+                contentScale = ContentScale.Fit,
                 modifier = Modifier
-                    .size(width = 178.dp, height = 150.dp)
-                    .clip(RoundedCornerShape(14.dp)),
-                contentScale = ContentScale.Fit
+                    .size(width = 180.dp, height = 150.dp)
+                    .clip(RoundedCornerShape(12.dp)),
             )
             Text(
                 text = announcement.title,
-                fontSize = 12.sp,
-                fontWeight = FontWeight.SemiBold,
+                fontSize = 18.sp,
+                fontWeight = FontWeight.Bold,
                 textAlign = TextAlign.Center
             )
             Column(
@@ -85,7 +88,7 @@ fun CustomItem(announcement: Announcement, navHostController: NavHostController)
                     )
                     Text(
                         text = announcement.location,
-                        fontSize = 10.sp,
+                        fontSize = 16.sp,
                         fontWeight = FontWeight.Medium
                     )
                 }
@@ -99,15 +102,16 @@ fun CustomItem(announcement: Announcement, navHostController: NavHostController)
                     )
                     Text(
                         text = announcement.propertyType,
-                        fontSize = 10.sp,
+                        fontSize = 16.sp,
                         fontWeight = FontWeight.Medium
                     )
                 }
             }
             Text(
                 text = "$formattedPrice DZD",
-                fontSize = 16.sp,
-                fontWeight = FontWeight.SemiBold
+                fontSize = 20.sp,
+                fontWeight = FontWeight.Bold,
+                color = MaterialTheme.colorScheme.primary
             )
         }
     }
