@@ -12,6 +12,7 @@ data class AddAnnouncementRequest(
     val price: Double,
     val description: String,
     val owner: String,
+    val imageNames: MutableList<String>
 )
 
 data class AnnouncementResponse(

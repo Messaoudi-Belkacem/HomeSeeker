@@ -13,7 +13,6 @@ import com.example.darckoum.data.model.request.AnnouncementResponse
 import com.example.darckoum.data.repository.DataStoreRepository
 import com.example.darckoum.data.repository.Repository
 import com.example.darckoum.data.state.AddState
-import com.example.darckoum.data.state.LoginState
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
@@ -32,8 +31,8 @@ class AddViewModel @Inject constructor(
     private val _addState = mutableStateOf<AddState>(AddState.Initial)
     val addState: State<AddState> = _addState
 
-    private val _announcementResponse = mutableStateOf<AnnouncementResponse?>(null)
-    val announcementResponse = _announcementResponse
+    private val _announcementResponse = mutableStateOf<String?>(null)
+    private val announcementResponse = _announcementResponse
 
     fun createAnnouncement(
         title: String,
@@ -60,7 +59,8 @@ class AddViewModel @Inject constructor(
                     propertyType = propertyType,
                     price = price,
                     description = description,
-                    owner = owner
+                    owner = owner,
+                    imageNames = mutableListOf()
                 )
                 var token = DataStoreRepository.TokenManager.getToken(appContext)
                 token = "Bearer $token"

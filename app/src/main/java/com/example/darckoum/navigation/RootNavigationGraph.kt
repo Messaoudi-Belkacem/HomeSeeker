@@ -66,14 +66,14 @@ fun RootNavigationGraph(
                     mainViewModel = mainViewModel
                 )
             }
-            navigation(
+            /*navigation(
                 route = Graph.DETAILS,
                 startDestination = LeafScreen.Announcement.route
             ) {
                 composable(route = LeafScreen.Announcement.route) {
                     AnnouncementScreen(navHostController = navHostController, sharedViewModel = sharedViewModel)
                 }
-            }
+            }*/
         }
     }
 }

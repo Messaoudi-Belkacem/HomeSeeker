@@ -1,5 +1,6 @@
 package com.example.darckoum.items
 
+import android.util.Log
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
@@ -21,6 +22,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
@@ -28,22 +30,19 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import androidx.navigation.NavHostController
+import coil.compose.AsyncImage
+import coil.request.ImageRequest
 import com.example.darckoum.R
 import com.example.darckoum.data.model.Announcement
+import com.example.darckoum.navigation.Graph
 import com.example.darckoum.navigation.screen.BottomBarScreen
+import com.example.darckoum.screen.SharedViewModel
+import com.example.darckoum.util.Constants.Companion.IMAGE_BASE_URL
 
 @Composable
-fun CustomItem(announcement: Announcement, navHostController: NavHostController) {
+fun CustomItem(announcement: Announcement, bottomBarNavHostController: NavHostController, sharedViewModel: SharedViewModel) {
     val formattedPrice = formatPrice(announcement.price)
-    val housePicture: Int = when (announcement.id) {
-        0 -> R.drawable.house1photo
-        1 -> R.drawable.house2photo
-        2 -> R.drawable.house3photo
-        3 -> R.drawable.house4photo
-        4 -> R.drawable.house5photo
-        5 -> R.drawable.house6photo
-        else -> R.drawable.house_default_pic
-    }
+    val tag = "CustomItem"
     Box(
         modifier = Modifier
             .size(width = 210.dp, height = 300.dp)
@@ -52,7 +51,8 @@ fun CustomItem(announcement: Announcement, navHostController: NavHostController)
             .border(width = 2.dp, color = Color(0xFF666666), shape = RoundedCornerShape(14.dp))
             .padding(8.dp)
             .clickable {
-                navHostController.navigate(route = BottomBarScreen.Announcement.route)
+                sharedViewModel.announcement = announcement
+                bottomBarNavHostController.navigate(route = Graph.DETAILS)
             },
         contentAlignment = Alignment.Center
     ) {
@@ -60,10 +60,16 @@ fun CustomItem(announcement: Announcement, navHostController: NavHostController)
             verticalArrangement = Arrangement.spacedBy(6.dp),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            Image(
-                painter = painterResource(housePicture),
+            val imageUrl = IMAGE_BASE_URL + announcement.imageNames.first()
+            Log.d(tag, "image url: $imageUrl")
+            AsyncImage(
+                model = ImageRequest.Builder(LocalContext.current)
+                    .data(imageUrl)
+                    .crossfade(true)
+                    .build(),
                 contentDescription = null,
-                contentScale = ContentScale.Fit,
+                contentScale = ContentScale.Crop,
+                error = painterResource(id = R.drawable.darckoum_logo),
                 modifier = Modifier
                     .size(width = 180.dp, height = 150.dp)
                     .clip(RoundedCornerShape(12.dp)),

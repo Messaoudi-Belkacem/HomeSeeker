@@ -35,5 +35,5 @@ interface AnnouncementService {
         @Header("Authorization") token: String,
         @Part("data") addAnnouncementRequest: AddAnnouncementRequest,
         @Part images: List<MultipartBody.Part>
-    ): Response<AnnouncementResponse>
+    ): Response<String>
 }

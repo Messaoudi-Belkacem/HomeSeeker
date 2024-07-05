@@ -56,13 +56,15 @@ import com.example.darckoum.data.state.HomeState
 import com.example.darckoum.data.state.LoginState
 import com.example.darckoum.items.CustomItem
 import com.example.darckoum.navigation.screen.BottomBarScreen
+import com.example.darckoum.screen.SharedViewModel
 
 @Composable
 fun HomeScreen(
-    bottomBarNavHostController: NavController,
+    bottomBarNavHostController: NavHostController,
     navHostController: NavHostController,
     homeViewModel: HomeViewModel = hiltViewModel(),
-    mainViewModel: MainViewModel
+    mainViewModel: MainViewModel,
+    sharedViewModel: SharedViewModel
 ) {
 
     val tag = "HomeScreen"
@@ -163,7 +165,11 @@ fun HomeScreen(
                                     items(count = announcementsByDiscoverLazyPagingItems.itemCount) { index ->
                                         val item = announcementsByDiscoverLazyPagingItems[index]
                                         if (item != null) {
-                                            CustomItem(announcement = item, navHostController = navHostController)
+                                            CustomItem(
+                                                announcement = item,
+                                                bottomBarNavHostController = bottomBarNavHostController,
+                                                sharedViewModel = sharedViewModel
+                                            )
                                         } else {
                                             Log.d(tag, "item number $index is null")
                                         }

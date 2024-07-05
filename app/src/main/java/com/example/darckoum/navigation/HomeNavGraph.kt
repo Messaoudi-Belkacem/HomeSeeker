@@ -41,7 +41,8 @@ fun HomeNavGraph(
             HomeScreen(
                 bottomBarNavHostController = bottomBarNavHostController,
                 navHostController = navHostController,
-                mainViewModel = mainViewModel
+                mainViewModel = mainViewModel,
+                sharedViewModel = sharedViewModel
             )
         }
         composable(route = BottomBarScreen.Add.route) {
@@ -57,13 +58,16 @@ fun HomeNavGraph(
                 navHostController = navHostController
             )
         }
-        /*navigation(
+        navigation(
             route = Graph.DETAILS,
             startDestination = LeafScreen.Announcement.route
         ) {
             composable(route = LeafScreen.Announcement.route) {
-                AnnouncementScreen(bottomBarNavHostController = bottomBarNavHostController)
+                AnnouncementScreen(
+                    bottomBarNavHostController = bottomBarNavHostController,
+                    sharedViewModel = sharedViewModel
+                )
             }
-        }*/
+        }
     }
 }

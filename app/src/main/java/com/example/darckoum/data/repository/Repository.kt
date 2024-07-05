@@ -37,7 +37,7 @@ class Repository @Inject constructor(
 
     private val tag = "Repository.kt"
 
-    suspend fun createAnnouncement(token: String, addAnnouncementRequest: AddAnnouncementRequest, selectedImageUris: List<Uri>, context: Context): Response<AnnouncementResponse> {
+    suspend fun createAnnouncement(token: String, addAnnouncementRequest: AddAnnouncementRequest, selectedImageUris: List<Uri>, context: Context): Response<String> {
         val images = mutableListOf<MultipartBody.Part>()
         for (uri in selectedImageUris) {
             val selectImageRealPath = getRealPathFromURI(uri = uri, context = context)
@@ -49,6 +49,7 @@ class Repository @Inject constructor(
                 val requestBody = file.asRequestBody("image/*".toMediaTypeOrNull())
                 val part = MultipartBody.Part.createFormData("images", file.name, requestBody)
                 images.add(part)
+                addAnnouncementRequest.imageNames.add(file.name)
             }
         }
         return announcementService.createAnnouncement(token, addAnnouncementRequest, images)

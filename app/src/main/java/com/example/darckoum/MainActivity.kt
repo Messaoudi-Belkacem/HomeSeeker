@@ -46,6 +46,7 @@ class MainActivity : ComponentActivity() {
                 DataStoreRepository.TokenManager.getToken(context)
             }
             tokenIsValid = mainViewModel.checkToken(token).value
+            Log.d(tag, "is token valid? : $tokenIsValid")
         }
         Log.d(tag, "token: $token")
         val tokenIsExpired = TokenUtil.isTokenExpired(token)
@@ -63,7 +64,6 @@ class MainActivity : ComponentActivity() {
                             painter = painterResource(R.drawable.onboarding_screen_background),
                             contentScale = ContentScale.FillBounds
                         )
-                        .imePadding()
                 ) {
                     RootNavigationGraph(
                         startDestination = startDestination,

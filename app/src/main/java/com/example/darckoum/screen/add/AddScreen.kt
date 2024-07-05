@@ -16,12 +16,11 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.ime
+import androidx.compose.foundation.layout.imePadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
@@ -45,7 +44,6 @@ import androidx.compose.material3.MenuDefaults
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -58,7 +56,6 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardCapitalization
@@ -76,7 +73,6 @@ import com.example.darckoum.data.state.AddState
 import com.example.darckoum.navigation.screen.BottomBarScreen
 import com.example.darckoum.screen.SharedViewModel
 import com.example.darckoum.screen.common.OutlinedTextFieldSample
-import com.example.darckoum.util.KeyboardAware
 import kotlinx.coroutines.launch
 
 @Composable
@@ -87,79 +83,72 @@ fun AddScreen(
     paddingValues: PaddingValues
 ) {
     val tag = "AddScreen.kt"
-    val scrollState = rememberScrollState()
-    val keyboardHeight = WindowInsets.ime.getBottom(LocalDensity.current)
-    val scope = rememberCoroutineScope()
-    LaunchedEffect(key1 = keyboardHeight) {
-        scope.launch {
-            scrollState.animateScrollTo(keyboardHeight)
-        }
-    }
     val context = LocalContext.current
     val addState by addViewModel.addState
-    KeyboardAware {
-        Box(
-            modifier = Modifier
-                .fillMaxSize()
-                .padding(paddingValues)
-        ) {
-            val modifier: Modifier
-            when (addState) {
-                is AddState.Loading -> {
+    val scrollState = rememberScrollState()
+    Box(
+        modifier = Modifier
+            .fillMaxSize()
+            .padding()
+            .imePadding()
+    ) {
+        val modifier: Modifier
+        when (addState) {
+            is AddState.Loading -> {
+                modifier = Modifier
+                    .padding(bottom = 16.dp)
+                    .fillMaxSize()
+                    .blur(20.dp)
+                AddAnnouncementUI(
+                    modifier = modifier,
+                    tag = tag,
+                    addViewModel = addViewModel,
+                    context = context,
+                    paddingValues = paddingValues
+                )
+                Column(
                     modifier = Modifier
-                        .verticalScroll(scrollState)
-                        .padding(bottom = 16.dp)
-                        .fillMaxSize()
-                        .blur(20.dp)
-                    AddAnnouncementUI(
-                        modifier = modifier,
-                        tag = tag,
-                        addViewModel = addViewModel,
-                        context = context
+                        .fillMaxSize(1f)
+                        .background(color = Color.Transparent),
+                    horizontalAlignment = Alignment.CenterHorizontally,
+                    verticalArrangement = Arrangement.Center
+                ) {
+                    CircularProgressIndicator(
+                        modifier = Modifier.size(64.dp),
                     )
-                    Column(
-                        modifier = Modifier
-                            .fillMaxSize(1f)
-                            .background(color = Color.Transparent),
-                        horizontalAlignment = Alignment.CenterHorizontally,
-                        verticalArrangement = Arrangement.Center
-                    ) {
-                        CircularProgressIndicator(
-                            modifier = Modifier.size(64.dp),
-                        )
-                        Spacer(modifier = Modifier.height(32.dp))
-                        Text(
-                            text = "Hang tight...",
-                            fontSize = 24.sp,
-                            fontWeight = FontWeight.Medium,
-                        )
-                    }
-                }
-                is AddState.Success -> {
-                    bottomBarNavHostController.navigate(BottomBarScreen.Home.route)
-                    TODO("fix this")
-                    /*sharedViewModel.addAnnouncementResponse(addViewModel.announcementResponse.value!!)*/
-                }
-                is AddState.Error -> {
-                    Toast.makeText(
-                        context,
-                        (addState as AddState.Error).message,
-                        Toast.LENGTH_SHORT
-                    ).show()
-                    addViewModel.setAddState(AddState.Initial)
-                }
-                else -> {
-                    modifier = Modifier
-                        .verticalScroll(scrollState)
-                        .padding(bottom = 16.dp)
-                        .fillMaxSize()
-                    AddAnnouncementUI(
-                        modifier = modifier,
-                        tag = tag,
-                        addViewModel = addViewModel,
-                        context = context
+                    Spacer(modifier = Modifier.height(32.dp))
+                    Text(
+                        text = "Hang tight...",
+                        fontSize = 24.sp,
+                        fontWeight = FontWeight.Medium,
                     )
                 }
+            }
+            is AddState.Success -> {
+                bottomBarNavHostController.navigate(BottomBarScreen.Home.route)
+                TODO("fix this")
+                /*sharedViewModel.addAnnouncementResponse(addViewModel.announcementResponse.value!!)*/
+            }
+            is AddState.Error -> {
+                Toast.makeText(
+                    context,
+                    (addState as AddState.Error).message,
+                    Toast.LENGTH_SHORT
+                ).show()
+                addViewModel.setAddState(AddState.Initial)
+            }
+            else -> {
+                modifier = Modifier
+                    .verticalScroll(scrollState)
+                    .padding(bottom = 16.dp)
+                    .fillMaxSize()
+                AddAnnouncementUI(
+                    modifier = modifier,
+                    tag = tag,
+                    addViewModel = addViewModel,
+                    context = context,
+                    paddingValues = paddingValues
+                )
             }
         }
     }
@@ -170,7 +159,8 @@ fun AddAnnouncementUI(
     modifier: Modifier,
     tag: String,
     addViewModel: AddViewModel,
-    context: Context
+    context: Context,
+    paddingValues: PaddingValues
 ) {
     val titleTextFieldText = remember { mutableStateOf("") }
     val areaTextFieldText = remember { mutableStateOf("") }
@@ -184,7 +174,8 @@ fun AddAnnouncementUI(
     val scope = rememberCoroutineScope()
 
     Column(
-        modifier = modifier,
+        modifier = modifier
+            .padding(paddingValues),
     ) {
         var selectedImageUris by remember {
             mutableStateOf<List<Uri>>(emptyList())

@@ -14,5 +14,6 @@ data class Announcement(
     val price: Double,
     val description: String,
     val owner: String,
-    val user: String
+    val user: String,
+    val imageNames: List<String>
 )

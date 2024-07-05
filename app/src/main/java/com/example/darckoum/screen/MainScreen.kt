@@ -67,10 +67,11 @@ fun BottomBar(bottomBarNavHostController: NavHostController) {
     Row(
         modifier = Modifier
             .fillMaxWidth()
-            .height(75.dp)
+            .height(70.dp)
             .padding(top = 8.dp)
-            .background(MaterialTheme.colorScheme.surface),
-        horizontalArrangement = Arrangement.SpaceEvenly
+            .background(MaterialTheme.colorScheme.surface/*Color.Transparent*/),
+        horizontalArrangement = Arrangement.SpaceEvenly,
+        verticalAlignment = Alignment.CenterVertically
     ) {
         screens.forEach { screen ->
             AddItem(
@@ -94,7 +95,7 @@ fun AddItem(
     Box(
         modifier = Modifier
             .size(50.dp)
-            .clip(RoundedCornerShape(15.dp))
+            .clip(RoundedCornerShape(16.dp))
             .background(color = backgroundColor)
             .clickable(onClick = {
                 Log.d(tag, "Bottom navigation bar item button clicked")
