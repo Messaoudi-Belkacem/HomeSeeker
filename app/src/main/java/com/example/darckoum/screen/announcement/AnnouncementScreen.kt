@@ -42,7 +42,6 @@ import com.example.darckoum.navigation.Graph
 import com.example.darckoum.screen.SharedViewModel
 import com.example.darckoum.util.Constants.Companion.IMAGE_BASE_URL
 
-
 @Composable
 fun AnnouncementScreen(
     bottomBarNavHostController: NavHostController,
