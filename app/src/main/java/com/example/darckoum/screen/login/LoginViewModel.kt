@@ -1,7 +1,5 @@
 package com.example.darckoum.screen.login
 
-import android.app.Application
-import android.content.Context
 import android.util.Log
 import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableStateOf
@@ -40,18 +38,18 @@ class LoginViewModel @Inject constructor(
                 val loginResponse = repository.loginUser(LoginRequest(username, password))
                 delay(3000)
                 if (loginResponse.isSuccessful) {
-                    _loginState.value = LoginState.Success
                     val token = loginResponse.body()?.token
                     repository.saveTokenToDatastore(token = token.toString())
                     _token.value = token
                     Log.d(tag, "response was successful")
                     Log.d(tag, "response: " + loginResponse.body().toString())
+                    _loginState.value = LoginState.Success
                 } else {
-                    _loginState.value = LoginState.Error("Login failed. Please try again.")
                     Log.d(tag, "response was not successful")
                     Log.d(tag, "response error body (string): " + (loginResponse.errorBody()!!.string()))
                     Log.d(tag, "response error body (to string): " + (loginResponse.errorBody().toString()))
                     Log.d(tag, "response code: " + (loginResponse.code().toString()))
+                    _loginState.value = LoginState.Error("Login failed. Please try again.")
                 }
             } catch (e: ConnectException) {
                 Log.d(tag, "Failed to connect to the server. Please check your internet connection.")
