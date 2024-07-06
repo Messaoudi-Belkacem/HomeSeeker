@@ -4,6 +4,10 @@ import android.content.Context
 import android.net.Uri
 import android.provider.MediaStore
 import android.util.Log
+import androidx.datastore.core.DataStore
+import androidx.datastore.preferences.core.Preferences
+import androidx.datastore.preferences.core.edit
+import androidx.datastore.preferences.core.stringPreferencesKey
 import androidx.paging.Pager
 import androidx.paging.PagingConfig
 import androidx.paging.PagingData
@@ -11,7 +15,6 @@ import com.example.darckoum.api.AnnouncementService
 import com.example.darckoum.api.AuthenticationService
 import com.example.darckoum.data.model.Announcement
 import com.example.darckoum.data.model.request.AddAnnouncementRequest
-import com.example.darckoum.data.model.request.AnnouncementResponse
 import com.example.darckoum.data.model.request.CheckTokenRequest
 import com.example.darckoum.data.model.request.CheckTokenResponse
 import com.example.darckoum.data.model.request.LoginRequest
@@ -23,6 +26,7 @@ import com.example.darckoum.data.model.request.RegistrationResponse
 import com.example.darckoum.data.paging.DiscoverPagingSource
 import com.example.darckoum.util.Constants.Companion.ITEMS_PER_PAGE
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.first
 import okhttp3.MediaType.Companion.toMediaTypeOrNull
 import okhttp3.MultipartBody
 import okhttp3.RequestBody.Companion.asRequestBody
@@ -33,9 +37,31 @@ import javax.inject.Inject
 class Repository @Inject constructor(
     private val announcementService: AnnouncementService,
     private val authenticationService: AuthenticationService,
+    private val dataStore: DataStore<Preferences>
 ) {
 
     private val tag = "Repository.kt"
+    private val TOKEN = stringPreferencesKey("token")
+
+    suspend fun getTokenFromDatastore(): String? {
+        Log.d(tag, "getTokenFromDatastore is called")
+        val preferencesFlow = dataStore.data.first()
+        return preferencesFlow[TOKEN]
+    }
+
+    suspend fun saveTokenToDatastore(token: String) {
+        Log.d(tag, "saveTokenToDatastore is called")
+        dataStore.edit {preferences ->
+            preferences[this.TOKEN] = token
+        }
+    }
+
+    suspend fun clearTokenFromDataStore() {
+        Log.d(tag, "clearTokenFromDataStore is called")
+        dataStore.edit { preferences ->
+            preferences.remove(this.TOKEN)
+        }
+    }
 
     suspend fun createAnnouncement(token: String, addAnnouncementRequest: AddAnnouncementRequest, selectedImageUris: List<Uri>, context: Context): Response<String> {
         val images = mutableListOf<MultipartBody.Part>()
