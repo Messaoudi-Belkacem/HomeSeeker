@@ -27,10 +27,16 @@ class RegisterViewModel @Inject constructor(
     private val _registrationState = mutableStateOf<RegistrationState>(RegistrationState.Initial)
     val registrationState: State<RegistrationState> = _registrationState
 
-    fun registerUser(username: String, firstName: String, lastName: String, password: String) {
+    fun registerUser(username: String, firstName: String, lastName: String, password: String, phone: String) {
         viewModelScope.launch {
             try {
-                if (username.isBlank() || firstName.isBlank() || lastName.isBlank() || password.isBlank()) {
+                if (
+                    username.isBlank() ||
+                    firstName.isBlank() ||
+                    lastName.isBlank() ||
+                    password.isBlank() ||
+                    phone.isBlank()
+                ) {
                     _registrationState.value = RegistrationState.Error("Please fill in all fields")
                     return@launch
                 }
@@ -40,7 +46,8 @@ class RegisterViewModel @Inject constructor(
                         username,
                         firstName,
                         lastName,
-                        password
+                        password,
+                        phone
                     )
                 )
                 if (registrationResponse.isSuccessful) {

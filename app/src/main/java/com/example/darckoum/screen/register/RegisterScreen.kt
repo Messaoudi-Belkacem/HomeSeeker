@@ -72,6 +72,7 @@ fun RegisterScreen(
     val firstNameState = remember { mutableStateOf("") }
     val lastNameState = remember { mutableStateOf("") }
     val passwordState = remember { mutableStateOf("") }
+    val phoneState = remember { mutableStateOf("") }
 
     KeyboardAware {
         Scaffold(
@@ -199,6 +200,16 @@ fun RegisterScreen(
                                 onValueChange = { passwordState.value = it },
                                 keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password)
                             )
+                            Spacer(modifier = Modifier.height(20.dp))
+                            OutlinedTextFieldSample(
+                                label = "Phone number",
+                                modifier = Modifier
+                                    .fillMaxWidth()
+                                    .height(64.dp),
+                                text = passwordState,
+                                onValueChange = { passwordState.value = it },
+                                keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Phone)
+                            )
                             Spacer(modifier = Modifier.height(30.dp))
                             Button(
                                 onClick = {
@@ -206,11 +217,18 @@ fun RegisterScreen(
                                     val firstName = firstNameState.value
                                     val lastName = lastNameState.value
                                     val password = passwordState.value
-                                    if (username.isBlank() || firstName.isBlank() || lastName.isBlank() || password.isBlank()) {
+                                    val phone = phoneState.value
+                                    if (
+                                        username.isBlank() ||
+                                        firstName.isBlank() ||
+                                        lastName.isBlank() ||
+                                        password.isBlank() ||
+                                        phone.isBlank()
+                                        ) {
                                         Toast.makeText(context, "Please fill in all fields", Toast.LENGTH_SHORT).show()
                                     } else {
                                         scope.launch {
-                                            registerViewModel.registerUser(username, firstName, lastName, password)
+                                            registerViewModel.registerUser(username, firstName, lastName, password, phone)
                                         }
                                     }
                                 },
