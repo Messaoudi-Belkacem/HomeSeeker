@@ -64,6 +64,7 @@ import androidx.navigation.NavController
 import androidx.navigation.NavHostController
 import com.example.darckoum.R
 import com.example.darckoum.navigation.Graph
+import com.example.darckoum.screen.common.LoadingDialog
 import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -76,6 +77,7 @@ fun ProfileScreen(
     val tag = "ProfileScreen"
     var areFieldsEnabled by remember { mutableStateOf(false) }
     val scope = rememberCoroutineScope()
+    val showDialog = profileViewModel.showDialog.value
     Box(
         modifier = Modifier.fillMaxSize()
     ) {
@@ -124,8 +126,7 @@ fun ProfileScreen(
                             )
                         }
                     },
-                    modifier = Modifier.fillMaxWidth(),
-
+                    modifier = Modifier.fillMaxWidth()
                     )
             },
             content = { padding ->
@@ -255,7 +256,7 @@ fun ProfileScreen(
                                         if (profileViewModel.logout()) {
                                             Toast.makeText(context, "Log out was successful", Toast.LENGTH_SHORT)
                                                 .show()
-                                            bottomBarNavHostController.navigate(route = Graph.AUTHENTICATION)
+                                            navHostController.navigate(route = Graph.AUTHENTICATION)
                                         } else {
                                             Toast.makeText(context, "Log out was not successful", Toast.LENGTH_SHORT)
                                                 .show()
@@ -280,6 +281,10 @@ fun ProfileScreen(
                 }
             }
         )
+    }
+
+    if (showDialog) {
+        LoadingDialog("Logging out, please wait ")
     }
 }
 
