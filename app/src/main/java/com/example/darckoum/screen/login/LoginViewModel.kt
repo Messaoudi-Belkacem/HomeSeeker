@@ -8,7 +8,6 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.darckoum.data.model.request.LoginRequest
-import com.example.darckoum.data.repository.DataStoreRepository
 import com.example.darckoum.data.repository.Repository
 import com.example.darckoum.data.state.LoginState
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -19,15 +18,16 @@ import javax.inject.Inject
 
 @HiltViewModel
 class LoginViewModel @Inject constructor(
-    private val repository: Repository,
-    application: Application
+    private val repository: Repository
 ) : ViewModel() {
 
     private val tag: String = "LoginViewModel.kt"
-    private val appContext: Context = application.applicationContext
 
     private val _loginState = mutableStateOf<LoginState>(LoginState.Initial)
     val loginState: State<LoginState> = _loginState
+
+    private val _token = mutableStateOf<String?>(null)
+    val token = _token
 
     fun loginUser(username: String, password: String) {
         viewModelScope.launch {
@@ -38,14 +38,12 @@ class LoginViewModel @Inject constructor(
                 }
                 _loginState.value = LoginState.Loading
                 val loginResponse = repository.loginUser(LoginRequest(username, password))
-                delay(4000)
+                delay(3000)
                 if (loginResponse.isSuccessful) {
                     _loginState.value = LoginState.Success
                     val token = loginResponse.body()?.token
-                    DataStoreRepository.TokenManager.saveToken(
-                        context = appContext,
-                        token = token.toString()
-                    )
+                    repository.saveTokenToDatastore(token = token.toString())
+                    _token.value = token
                     Log.d(tag, "response was successful")
                     Log.d(tag, "response: " + loginResponse.body().toString())
                 } else {

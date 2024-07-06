@@ -8,7 +8,6 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.darckoum.data.model.request.RegistrationRequest
-import com.example.darckoum.data.repository.DataStoreRepository
 import com.example.darckoum.data.repository.Repository
 import com.example.darckoum.data.state.RegistrationState
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -47,10 +46,7 @@ class RegisterViewModel @Inject constructor(
                 if (registrationResponse.isSuccessful) {
                     _registrationState.value = RegistrationState.Success
                     val token = registrationResponse.body()?.token
-                    DataStoreRepository.TokenManager.saveToken(
-                        context = appContext,
-                        token = token.toString()
-                    )
+                    repository.saveTokenToDatastore(token = token.toString())
                     Log.d(tag, "response was successful")
                     Log.d(tag, "response: " + registrationResponse.body().toString())
                 } else {

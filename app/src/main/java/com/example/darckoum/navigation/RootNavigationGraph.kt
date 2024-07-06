@@ -4,18 +4,15 @@ import androidx.compose.animation.core.tween
 import androidx.compose.animation.slideInHorizontally
 import androidx.compose.animation.slideOutHorizontally
 import androidx.compose.runtime.Composable
-import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.navigation
 import androidx.navigation.compose.rememberNavController
 import com.example.darckoum.MainViewModel
 import com.example.darckoum.navigation.screen.AuthenticationScreen
-import com.example.darckoum.navigation.screen.BottomBarScreen
 import com.example.darckoum.navigation.screen.LeafScreen
 import com.example.darckoum.screen.MainScreen
 import com.example.darckoum.screen.SharedViewModel
-import com.example.darckoum.screen.announcement.AnnouncementScreen
 import com.example.darckoum.screen.login.LoginScreen
 import com.example.darckoum.screen.register.RegisterScreen
 
@@ -49,7 +46,10 @@ fun RootNavigationGraph(
             startDestination = AuthenticationScreen.LogIn.route
         ) {
             composable(route = AuthenticationScreen.LogIn.route) {
-                LoginScreen(navHostController = navHostController)
+                LoginScreen(
+                    navHostController = navHostController,
+                    mainViewModel = mainViewModel
+                )
             }
             composable(route = AuthenticationScreen.SignUp.route) {
                 RegisterScreen(navHostController = navHostController)

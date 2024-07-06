@@ -10,7 +10,6 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.darckoum.data.model.request.AddAnnouncementRequest
 import com.example.darckoum.data.model.request.AnnouncementResponse
-import com.example.darckoum.data.repository.DataStoreRepository
 import com.example.darckoum.data.repository.Repository
 import com.example.darckoum.data.state.AddState
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -62,10 +61,11 @@ class AddViewModel @Inject constructor(
                     owner = owner,
                     imageNames = mutableListOf()
                 )
-                var token = DataStoreRepository.TokenManager.getToken(appContext)
+                // TODO("replace with main viewmodel token attribute")
+                var token = repository.getTokenFromDatastore()
+                delay(3000)
                 token = "Bearer $token"
                 Log.d(tag, "token: $token")
-                delay(3000)
                 val addResponse = repository.createAnnouncement(
                     token = token,
                     addAnnouncementRequest = newAddAnnouncementRequest,

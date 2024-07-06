@@ -5,7 +5,6 @@ import android.content.Context
 import android.util.Log
 import androidx.lifecycle.ViewModel
 import com.example.darckoum.data.model.request.LogoutRequest
-import com.example.darckoum.data.repository.DataStoreRepository
 import com.example.darckoum.data.repository.Repository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
@@ -21,12 +20,12 @@ class ProfileViewModel @Inject constructor(
 
     suspend fun logout(): Boolean {
         try {
-            val token = DataStoreRepository.TokenManager.getToken(appContext)
+            val token = repository.getTokenFromDatastore()
             Log.d(tag, "token : " + token.toString())
             val logoutRequest = LogoutRequest(token.toString())
             val logoutResponse = repository.logoutUser(logoutRequest)
             return if (logoutResponse.isSuccessful) {
-                DataStoreRepository.TokenManager.clearToken(appContext)
+                repository.clearTokenFromDataStore()
                 Log.d(tag, "response was successful")
                 Log.d(tag, "response message : " + logoutResponse.message())
                 true

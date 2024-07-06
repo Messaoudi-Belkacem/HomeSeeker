@@ -7,26 +7,19 @@ import androidx.activity.compose.setContent
 import androidx.activity.viewModels
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.imePadding
 import androidx.compose.runtime.DisposableEffect
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.paint
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
+import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import androidx.core.view.WindowCompat
-import androidx.navigation.NavHostController
-import com.example.darckoum.data.repository.DataStoreRepository
-import com.example.darckoum.navigation.Graph
 import com.example.darckoum.navigation.RootNavigationGraph
 import com.example.darckoum.screen.SharedViewModel
 import com.example.darckoum.ui.theme.AppTheme
-import com.example.darckoum.util.TokenUtil
 import com.google.accompanist.systemuicontroller.rememberSystemUiController
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.runBlocking
-import kotlinx.coroutines.withContext
 
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {
@@ -37,24 +30,13 @@ class MainActivity : ComponentActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        WindowCompat.setDecorFitsSystemWindows(window, false)
-        var token: String?
-        val tokenIsValid: Boolean
-        val context = this.applicationContext
-        runBlocking {
-            token = withContext(Dispatchers.IO) {
-                DataStoreRepository.TokenManager.getToken(context)
+        Log.d(tag, "onCreate method is called")
+        installSplashScreen().apply {
+            setKeepOnScreenCondition{
+                mainViewModel.condition.value
             }
-            tokenIsValid = mainViewModel.checkToken(token).value
-            Log.d(tag, "is token valid? : $tokenIsValid")
         }
-        Log.d(tag, "token: $token")
-        val tokenIsExpired = TokenUtil.isTokenExpired(token)
-        val startDestination: String = if (tokenIsExpired || token.isNullOrBlank() || tokenIsValid) {
-            Graph.AUTHENTICATION
-        } else {
-            Graph.HOME
-        }
+        WindowCompat.setDecorFitsSystemWindows(window, false)
         setContent {
             AppTheme {
                 Box(
@@ -66,7 +48,7 @@ class MainActivity : ComponentActivity() {
                         )
                 ) {
                     RootNavigationGraph(
-                        startDestination = startDestination,
+                        startDestination = mainViewModel.startDestination.value,
                         sharedViewModel = sharedViewModel,
                         mainViewModel = mainViewModel
                     )

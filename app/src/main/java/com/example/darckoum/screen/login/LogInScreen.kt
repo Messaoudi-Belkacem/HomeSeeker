@@ -48,6 +48,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
+import com.example.darckoum.MainViewModel
 import com.example.darckoum.R
 import com.example.darckoum.data.state.LoginState
 import com.example.darckoum.navigation.Graph
@@ -59,25 +60,22 @@ import kotlinx.coroutines.launch
 @Composable
 fun LoginScreen(
     navHostController: NavHostController,
-    loginViewModel: LoginViewModel = hiltViewModel()
+    loginViewModel: LoginViewModel = hiltViewModel(),
+    mainViewModel: MainViewModel
 ) {
-
     val tag = "LoginScreen"
     val scrollState = rememberScrollState()
     val keyboardHeight = WindowInsets.ime.getBottom(LocalDensity.current)
     val scope = rememberCoroutineScope()
     val loginState by loginViewModel.loginState
     val context = LocalContext.current
-
     LaunchedEffect(key1 = keyboardHeight) {
         scope.launch {
             scrollState.animateScrollTo(keyboardHeight)
         }
     }
-
     val usernameState = remember { mutableStateOf("") }
     val passwordState = remember { mutableStateOf("") }
-
     KeyboardAware {
         Scaffold(
             containerColor = Color.Transparent,
@@ -109,6 +107,7 @@ fun LoginScreen(
                     }
                 }
                 is LoginState.Success -> {
+                    mainViewModel.setToken(loginViewModel.token.value)
                     navHostController.navigate(Graph.HOME)
                 }
                 is LoginState.Error -> {
