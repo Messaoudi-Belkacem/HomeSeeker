@@ -8,7 +8,6 @@ import androidx.compose.runtime.Composable
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
-import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navigation
 import com.example.darckoum.MainViewModel
 import com.example.darckoum.navigation.screen.BottomBarScreen
@@ -40,7 +39,6 @@ fun HomeNavGraph(
         composable(route = BottomBarScreen.Home.route) {
             HomeScreen(
                 bottomBarNavHostController = bottomBarNavHostController,
-                navHostController = navHostController,
                 mainViewModel = mainViewModel,
                 sharedViewModel = sharedViewModel
             )

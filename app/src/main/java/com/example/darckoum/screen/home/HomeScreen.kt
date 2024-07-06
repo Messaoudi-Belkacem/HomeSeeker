@@ -52,8 +52,6 @@ import androidx.paging.LoadState
 import androidx.paging.compose.collectAsLazyPagingItems
 import com.example.darckoum.MainViewModel
 import com.example.darckoum.R
-import com.example.darckoum.data.state.HomeState
-import com.example.darckoum.data.state.LoginState
 import com.example.darckoum.items.CustomItem
 import com.example.darckoum.navigation.screen.BottomBarScreen
 import com.example.darckoum.screen.SharedViewModel
@@ -61,7 +59,6 @@ import com.example.darckoum.screen.SharedViewModel
 @Composable
 fun HomeScreen(
     bottomBarNavHostController: NavHostController,
-    navHostController: NavHostController,
     homeViewModel: HomeViewModel = hiltViewModel(),
     mainViewModel: MainViewModel,
     sharedViewModel: SharedViewModel
@@ -69,7 +66,7 @@ fun HomeScreen(
 
     val tag = "HomeScreen"
     val announcementsByDiscoverLazyPagingItems = homeViewModel.announcementsFlow.collectAsLazyPagingItems()
-    val homeState = homeViewModel.homeState
+    homeViewModel.homeState
     val context = LocalContext.current
 
     LaunchedEffect(Unit) {

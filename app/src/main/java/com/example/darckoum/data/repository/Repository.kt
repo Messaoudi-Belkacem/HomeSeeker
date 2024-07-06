@@ -13,7 +13,9 @@ import androidx.paging.PagingConfig
 import androidx.paging.PagingData
 import com.example.darckoum.api.AnnouncementService
 import com.example.darckoum.api.AuthenticationService
+import com.example.darckoum.api.UserService
 import com.example.darckoum.data.model.Announcement
+import com.example.darckoum.data.model.UserResponse
 import com.example.darckoum.data.model.request.AddAnnouncementRequest
 import com.example.darckoum.data.model.request.CheckTokenRequest
 import com.example.darckoum.data.model.request.CheckTokenResponse
@@ -37,6 +39,7 @@ import javax.inject.Inject
 class Repository @Inject constructor(
     private val announcementService: AnnouncementService,
     private val authenticationService: AuthenticationService,
+    private val userService: UserService,
     private val dataStore: DataStore<Preferences>
 ) {
 
@@ -63,7 +66,12 @@ class Repository @Inject constructor(
         }
     }
 
-    suspend fun createAnnouncement(token: String, addAnnouncementRequest: AddAnnouncementRequest, selectedImageUris: List<Uri>, context: Context): Response<String> {
+    suspend fun createAnnouncement(
+        token: String,
+        addAnnouncementRequest: AddAnnouncementRequest,
+        selectedImageUris: List<Uri>,
+        context: Context
+    ): Response<String> {
         val images = mutableListOf<MultipartBody.Part>()
         for (uri in selectedImageUris) {
             val selectImageRealPath = getRealPathFromURI(uri = uri, context = context)
@@ -115,6 +123,11 @@ class Repository @Inject constructor(
             return cursor.getString(columnIndex)
         }
         return null
+    }
+
+    suspend fun getUserDetails(token: String): Response<UserResponse> {
+        val authorizationToken = "Bearer $token"
+        return userService.getUserDetails(authorizationToken, token)
     }
 
 }

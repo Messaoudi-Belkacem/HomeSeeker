@@ -2,6 +2,7 @@ package com.example.darckoum.di
 
 import com.example.darckoum.api.AnnouncementService
 import com.example.darckoum.api.AuthenticationService
+import com.example.darckoum.api.UserService
 import com.example.darckoum.util.Constants.Companion.BASE_URL
 import dagger.Module
 import dagger.Provides
@@ -36,4 +37,9 @@ object NetworkModule {
         return retrofit.create(AuthenticationService::class.java)
     }
 
+    @Provides
+    @Singleton
+    fun provideUserService(retrofit: Retrofit): UserService {
+        return retrofit.create(UserService::class.java)
+    }
 }
