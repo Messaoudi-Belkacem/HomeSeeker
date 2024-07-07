@@ -53,7 +53,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.TransformOrigin
-import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
@@ -80,243 +79,243 @@ fun ProfileScreen(
     val scope = rememberCoroutineScope()
     val showDialog = profileViewModel.showDialog.value
     val profileState by profileViewModel.profileState
-
     LaunchedEffect(Unit) {
         profileViewModel.getUserDetails()
     }
-
-    Box(
-        modifier = Modifier.fillMaxSize()
-    ) {
-        val context = LocalContext.current
-        when(profileState) {
-            is ProfileState.Error -> {
-                Toast.makeText(
-                    context,
-                    (profileState as ProfileState.Error).message,
-                    Toast.LENGTH_SHORT
-                ).show()
-                Log.d(tag, (profileState as ProfileState.Error).toString())
-            }
-            is ProfileState.Loading -> {
-                Box(
-                    modifier = Modifier
-                        .fillMaxSize(),
-                    contentAlignment = Alignment.Center,
+    val context = LocalContext.current
+    when(profileState) {
+        is ProfileState.Error -> {
+            Toast.makeText(
+                context,
+                (profileState as ProfileState.Error).message,
+                Toast.LENGTH_SHORT
+            ).show()
+            Log.d(tag, (profileState as ProfileState.Error).toString())
+            Box(
+                modifier = Modifier
+                    .fillMaxSize(),
+                contentAlignment = Alignment.Center,
+            ) {
+                Button(
+                    onClick = { profileViewModel.getUserDetails() }
                 ) {
-                    Column(
-                        horizontalAlignment = Alignment.CenterHorizontally,
-                        verticalArrangement = Arrangement.Center,
-                    ) {
-                        CircularProgressIndicator(
-                            modifier = Modifier.size(64.dp),
-                        )
-                        Spacer(modifier = Modifier.height(32.dp))
-                        Text(
-                            text = "Hang tight...",
-                            fontSize = 24.sp,
-                            fontWeight = FontWeight.Medium,
-                            color = MaterialTheme.colorScheme.onSurface
-                        )
-                    }
+                    Text(
+                        text = "Retry",
+                        fontSize = 14.sp
+                    )
                 }
             }
-            else -> {
-                Image(
-                    painter = painterResource(id = R.drawable.profile_screen_background),
-                    contentDescription = "Background image",
-                    contentScale = ContentScale.FillBounds,
-                    modifier = Modifier.fillMaxSize()
-                )
-                Scaffold(
-                    modifier = Modifier
-                        .fillMaxSize(),
-                    containerColor = Color.Transparent,
-                    topBar = {
-                        CenterAlignedTopAppBar(
-                            colors = TopAppBarDefaults.topAppBarColors(containerColor = Color.Transparent),
-                            title = {
-                                Text(
-                                    text = "Profile",
-                                    fontSize = 24.sp,
-                                    fontWeight = FontWeight.Bold,
+        }
+        is ProfileState.Loading -> {
+            Box(
+                modifier = Modifier
+                    .fillMaxSize(),
+                contentAlignment = Alignment.Center,
+            ) {
+                Column(
+                    horizontalAlignment = Alignment.CenterHorizontally,
+                    verticalArrangement = Arrangement.Center,
+                ) {
+                    CircularProgressIndicator(
+                        modifier = Modifier.size(64.dp),
+                    )
+                    Spacer(modifier = Modifier.height(32.dp))
+                    Text(
+                        text = "Hang tight...",
+                        fontSize = 24.sp,
+                        fontWeight = FontWeight.Medium,
+                        color = MaterialTheme.colorScheme.onSurface
+                    )
+                }
+            }
+        }
+        else -> {
+            Scaffold(
+                modifier = Modifier
+                    .fillMaxSize(),
+                topBar = {
+                    CenterAlignedTopAppBar(
+                        colors = TopAppBarDefaults.topAppBarColors(containerColor = Color.Transparent),
+                        title = {
+                            Text(
+                                text = "Profile",
+                                fontSize = 24.sp,
+                                fontWeight = FontWeight.Bold,
+                            )
+                        },
+                        navigationIcon = {
+                            IconButton(onClick = {
+                                Log.d(tag, "Navigate back button clicked")
+                                if(!bottomBarNavHostController.navigateUp()) {
+                                    Log.d(tag, "Failed to navigate back")
+                                }
+                            }) {
+                                Icon(
+                                    imageVector = Icons.AutoMirrored.Rounded.ArrowBack,
+                                    contentDescription = null,
                                 )
-                            },
-                            navigationIcon = {
-                                IconButton(onClick = {
-                                    Log.d(tag, "Navigate back button clicked")
-                                    if(!bottomBarNavHostController.navigateUp()) {
-                                        Log.d(tag, "Failed to navigate back")
-                                    }
-                                }) {
-                                    Icon(
-                                        imageVector = Icons.AutoMirrored.Rounded.ArrowBack,
-                                        contentDescription = null,
-                                    )
-                                }
-                            },
-                            actions = {
-                                IconButton(
-                                    onClick = { areFieldsEnabled = !areFieldsEnabled },
-                                    enabled = !areFieldsEnabled
-                                ) {
-                                    Icon(
-                                        imageVector = Icons.Rounded.Edit,
-                                        contentDescription = null,
-                                    )
-                                }
-                            },
-                            modifier = Modifier.fillMaxWidth()
+                            }
+                        },
+                        actions = {
+                            IconButton(
+                                onClick = { areFieldsEnabled = !areFieldsEnabled },
+                                enabled = !areFieldsEnabled
+                            ) {
+                                Icon(
+                                    imageVector = Icons.Rounded.Edit,
+                                    contentDescription = null,
+                                )
+                            }
+                        },
+                        modifier = Modifier.fillMaxWidth()
+                    )
+                },
+                content = { padding ->
+                    Column(
+                        modifier = Modifier
+                            .padding(padding)
+                            .fillMaxHeight(0.9f)
+                            .fillMaxWidth(),
+                        horizontalAlignment = Alignment.CenterHorizontally,
+                        verticalArrangement = Arrangement.SpaceBetween
+                    ) {
+                        Image(
+                            painter = painterResource(id = R.drawable.ic_launcher_background),
+                            contentDescription = "Profile picture",
+                            modifier = Modifier
+                                .size(128.dp)
+                                .clip(CircleShape)
                         )
-                    },
-                    content = { padding ->
                         Column(
                             modifier = Modifier
-                                .padding(padding)
-                                .fillMaxHeight(0.9f)
-                                .fillMaxWidth(),
-                            horizontalAlignment = Alignment.CenterHorizontally,
-                            verticalArrangement = Arrangement.SpaceBetween
+                                .fillMaxWidth()
+                                .padding(top = 12.dp, start = 12.dp, end = 12.dp),
+                            horizontalAlignment = Alignment.CenterHorizontally
                         ) {
-                            Image(
-                                painter = painterResource(id = R.drawable.ic_launcher_background),
-                                contentDescription = "Profile picture",
+                            SimpleOutlinedTextFieldSample(
+                                label = "Username",
                                 modifier = Modifier
-                                    .size(128.dp)
-                                    .clip(CircleShape)
+                                    .fillMaxWidth(),
+                                enabled = !areFieldsEnabled,
+                                preText = profileViewModel.userDetails.value?.username ?: "not available"
                             )
-                            Column(
+                            SimpleOutlinedTextFieldSample(
+                                label = "Phone number",
                                 modifier = Modifier
-                                    .fillMaxWidth()
-                                    .padding(top = 12.dp, start = 12.dp, end = 12.dp),
-                                horizontalAlignment = Alignment.CenterHorizontally
+                                    .fillMaxWidth(),
+                                enabled = !areFieldsEnabled,
+                                preText = profileViewModel.userDetails.value?.phone ?: "not available"
+                            )
+                            Row(
+                                verticalAlignment = Alignment.CenterVertically,
+                                horizontalArrangement = Arrangement.spacedBy(8.dp)
                             ) {
                                 SimpleOutlinedTextFieldSample(
-                                    label = "Username",
+                                    label = "First name",
                                     modifier = Modifier
-                                        .fillMaxWidth(),
+                                        .fillMaxWidth(0.5f),
                                     enabled = !areFieldsEnabled,
-                                    preText = profileViewModel.userDetails.value?.username ?: "not available"
+                                    preText = profileViewModel.userDetails.value?.firstName ?: "not available"
                                 )
                                 SimpleOutlinedTextFieldSample(
-                                    label = "Phone number",
+                                    label = "Last name",
                                     modifier = Modifier
-                                        .fillMaxWidth(),
+                                        .fillMaxWidth(1f),
                                     enabled = !areFieldsEnabled,
-                                    preText = profileViewModel.userDetails.value?.phone ?: "not available"
+                                    preText = profileViewModel.userDetails.value?.lastName ?: "not available"
                                 )
-                                Row(
-                                    verticalAlignment = Alignment.CenterVertically,
-                                    horizontalArrangement = Arrangement.spacedBy(8.dp)
+                            }
+                        }
+                        Column(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                        ) {
+                            AnimatedVisibility(
+                                visible = areFieldsEnabled,
+                                enter = slideInVertically(
+                                    // Start the slide from 40 (pixels) above where the content is supposed to go, to
+                                    // produce a parallax effect
+                                    initialOffsetY = { +40 }
+                                ) + expandVertically(
+                                    expandFrom = Alignment.Top
+                                ) + scaleIn(
+                                    // Animate scale from 0f to 1f using the top center as the pivot point.
+                                    transformOrigin = TransformOrigin(0.5f, 0f)
+                                ) + fadeIn(initialAlpha = 0.3f),
+                                exit = slideOutVertically() + shrinkVertically() + fadeOut() + scaleOut(targetScale = 1.2f)
+                                /*,
+                                enter = expandVertically { 0 } + scaleIn(),
+                                exit = shrinkVertically { 0 } + scaleOut()*/
+                            ) {
+                                Button(
+                                    onClick = {
+                                        areFieldsEnabled = !areFieldsEnabled
+                                    },
+                                    shape = RoundedCornerShape(14.dp),
+                                    colors = ButtonDefaults.buttonColors(containerColor = Color(0xFFE7BD73)),
+                                    contentPadding = PaddingValues(vertical = 20.dp),
+                                    modifier = Modifier
+                                        .fillMaxWidth(1f)
+                                        .padding(horizontal = 12.dp)
                                 ) {
-                                    SimpleOutlinedTextFieldSample(
-                                        label = "First name",
-                                        modifier = Modifier
-                                            .fillMaxWidth(0.5f),
-                                        enabled = !areFieldsEnabled,
-                                        preText = profileViewModel.userDetails.value?.firstName ?: "not available"
-                                    )
-                                    SimpleOutlinedTextFieldSample(
-                                        label = "Last name",
-                                        modifier = Modifier
-                                            .fillMaxWidth(1f),
-                                        enabled = !areFieldsEnabled,
-                                        preText = profileViewModel.userDetails.value?.lastName ?: "not available"
+                                    Text(
+                                        text = "Save",
+                                        fontSize = 22.sp,
+                                        fontWeight = FontWeight.SemiBold
                                     )
                                 }
                             }
-                            Column(
-                                modifier = Modifier
-                                    .fillMaxWidth()
-                            ) {
-                                AnimatedVisibility(
-                                    visible = areFieldsEnabled,
-                                    enter = slideInVertically(
-                                        // Start the slide from 40 (pixels) above where the content is supposed to go, to
-                                        // produce a parallax effect
-                                        initialOffsetY = { +40 }
-                                    ) + expandVertically(
-                                        expandFrom = Alignment.Top
-                                    ) + scaleIn(
-                                        // Animate scale from 0f to 1f using the top center as the pivot point.
-                                        transformOrigin = TransformOrigin(0.5f, 0f)
-                                    ) + fadeIn(initialAlpha = 0.3f),
-                                    exit = slideOutVertically() + shrinkVertically() + fadeOut() + scaleOut(targetScale = 1.2f)
-                                    /*,
+                            Spacer(modifier = Modifier.height(8.dp))
+                            AnimatedVisibility(
+                                visible = !areFieldsEnabled,
+                                enter = slideInVertically(
+                                    // Start the slide from 40 (pixels) above where the content is supposed to go, to
+                                    // produce a parallax effect
+                                    initialOffsetY = { -40 }
+                                ) + expandVertically(
+                                    expandFrom = Alignment.Top
+                                ) + scaleIn(
+                                    // Animate scale from 0f to 1f using the top center as the pivot point.
+                                    transformOrigin = TransformOrigin(0.5f, 0f)
+                                ) + fadeIn(initialAlpha = 0.3f),
+                                exit = slideOutVertically() + shrinkVertically() + fadeOut() + scaleOut(targetScale = 1.2f)
+                                /*,
                                     enter = expandVertically { 0 } + scaleIn(),
                                     exit = shrinkVertically { 0 } + scaleOut()*/
-                                ) {
-                                    Button(
-                                        onClick = {
-                                            areFieldsEnabled = !areFieldsEnabled
-                                        },
-                                        shape = RoundedCornerShape(14.dp),
-                                        colors = ButtonDefaults.buttonColors(containerColor = Color(0xFFE7BD73)),
-                                        contentPadding = PaddingValues(vertical = 20.dp),
-                                        modifier = Modifier
-                                            .fillMaxWidth(1f)
-                                            .padding(horizontal = 12.dp)
-                                    ) {
-                                        Text(
-                                            text = "Save",
-                                            fontSize = 22.sp,
-                                            fontWeight = FontWeight.SemiBold
-                                        )
-                                    }
-                                }
-                                Spacer(modifier = Modifier.height(8.dp))
-                                AnimatedVisibility(
-                                    visible = !areFieldsEnabled,
-                                    enter = slideInVertically(
-                                        // Start the slide from 40 (pixels) above where the content is supposed to go, to
-                                        // produce a parallax effect
-                                        initialOffsetY = { -40 }
-                                    ) + expandVertically(
-                                        expandFrom = Alignment.Top
-                                    ) + scaleIn(
-                                        // Animate scale from 0f to 1f using the top center as the pivot point.
-                                        transformOrigin = TransformOrigin(0.5f, 0f)
-                                    ) + fadeIn(initialAlpha = 0.3f),
-                                    exit = slideOutVertically() + shrinkVertically() + fadeOut() + scaleOut(targetScale = 1.2f)
-                                    /*,
-                                        enter = expandVertically { 0 } + scaleIn(),
-                                        exit = shrinkVertically { 0 } + scaleOut()*/
-                                ) {
-                                    Button(
-                                        onClick = {
-                                            scope.launch {
-                                                if (profileViewModel.logout()) {
-                                                    Toast.makeText(context, "Log out was successful", Toast.LENGTH_SHORT)
-                                                        .show()
-                                                    navHostController.navigate(route = Graph.AUTHENTICATION)
-                                                } else {
-                                                    Toast.makeText(context, "Log out was not successful", Toast.LENGTH_SHORT)
-                                                        .show()
-                                                }
+                            ) {
+                                Button(
+                                    onClick = {
+                                        scope.launch {
+                                            if (profileViewModel.logout()) {
+                                                Toast.makeText(context, "Log out was successful", Toast.LENGTH_SHORT)
+                                                    .show()
+                                                navHostController.navigate(route = Graph.AUTHENTICATION)
+                                            } else {
+                                                Toast.makeText(context, "Log out was not successful", Toast.LENGTH_SHORT)
+                                                    .show()
                                             }
-                                        },
-                                        shape = RoundedCornerShape(14.dp),
-                                        colors = ButtonDefaults.buttonColors(containerColor = Color.Red),
-                                        contentPadding = PaddingValues(vertical = 20.dp),
-                                        modifier = Modifier
-                                            .fillMaxWidth(1f)
-                                            .padding(horizontal = 12.dp)
-                                    ) {
-                                        Text(
-                                            text = "Log out",
-                                            fontSize = 22.sp,
-                                            fontWeight = FontWeight.SemiBold
-                                        )
-                                    }
+                                        }
+                                    },
+                                    shape = RoundedCornerShape(14.dp),
+                                    colors = ButtonDefaults.buttonColors(containerColor = Color.Red),
+                                    contentPadding = PaddingValues(vertical = 20.dp),
+                                    modifier = Modifier
+                                        .fillMaxWidth(1f)
+                                        .padding(horizontal = 12.dp)
+                                ) {
+                                    Text(
+                                        text = "Log out",
+                                        fontSize = 22.sp,
+                                        fontWeight = FontWeight.SemiBold
+                                    )
                                 }
                             }
                         }
                     }
-                )
-            }
+                }
+            )
         }
     }
-
     if (showDialog) {
         LoadingDialog("Logging out, please wait ")
     }
