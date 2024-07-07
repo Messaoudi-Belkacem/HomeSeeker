@@ -36,7 +36,8 @@ fun OutlinedTextFieldSample(
     onValueChange: (String) -> Unit,
     keyboardOptions: KeyboardOptions,
     minLines: Int = 1,
-    maxLines: Int = 1
+    maxLines: Int = 1,
+    enabled: Boolean = true
 ) {
     OutlinedTextField(
         value = text.value,
@@ -46,7 +47,8 @@ fun OutlinedTextFieldSample(
         colors = OutlinedTextFieldDefaults.colors(),
         singleLine = true,
         shape = RoundedCornerShape(14.dp),
-        keyboardOptions = keyboardOptions
+        keyboardOptions = keyboardOptions,
+        enabled = enabled,
     )
 }
 

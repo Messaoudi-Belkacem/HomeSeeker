@@ -18,7 +18,6 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -26,6 +25,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.rounded.ArrowBack
 import androidx.compose.material.icons.rounded.Edit
@@ -37,7 +37,6 @@ import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBarDefaults
@@ -53,11 +52,16 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.TransformOrigin
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.input.KeyboardCapitalization
+import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.constraintlayout.compose.ConstraintLayout
+import androidx.core.text.isDigitsOnly
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import androidx.navigation.NavHostController
@@ -65,6 +69,7 @@ import com.example.darckoum.R
 import com.example.darckoum.data.state.ProfileState
 import com.example.darckoum.navigation.Graph
 import com.example.darckoum.screen.common.LoadingDialog
+import com.example.darckoum.screen.common.OutlinedTextFieldSample
 import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -72,17 +77,22 @@ import kotlinx.coroutines.launch
 fun ProfileScreen(
     bottomBarNavHostController: NavController,
     navHostController: NavHostController,
-    profileViewModel: ProfileViewModel = hiltViewModel()
+    profileViewModel: ProfileViewModel = hiltViewModel(),
+    paddingValues: PaddingValues
 ) {
     val tag = "ProfileScreen"
     var areFieldsEnabled by remember { mutableStateOf(false) }
     val scope = rememberCoroutineScope()
     val showDialog = profileViewModel.showDialog.value
     val profileState by profileViewModel.profileState
+
+
+
     LaunchedEffect(Unit) {
         profileViewModel.getUserDetails()
     }
     val context = LocalContext.current
+
     when(profileState) {
         is ProfileState.Error -> {
             Toast.makeText(
@@ -132,7 +142,8 @@ fun ProfileScreen(
         else -> {
             Scaffold(
                 modifier = Modifier
-                    .fillMaxSize(),
+                    .fillMaxSize()
+                    .padding(bottom = paddingValues.calculateBottomPadding()),
                 topBar = {
                     CenterAlignedTopAppBar(
                         colors = TopAppBarDefaults.topAppBarColors(containerColor = Color.Transparent),
@@ -164,6 +175,7 @@ fun ProfileScreen(
                                 Icon(
                                     imageVector = Icons.Rounded.Edit,
                                     contentDescription = null,
+                                    tint = MaterialTheme.colorScheme.onSurface
                                 )
                             }
                         },
@@ -173,62 +185,96 @@ fun ProfileScreen(
                 content = { padding ->
                     Column(
                         modifier = Modifier
-                            .padding(padding)
-                            .fillMaxHeight(0.9f)
-                            .fillMaxWidth(),
+                            .padding(bottom = padding.calculateBottomPadding())
+                            .fillMaxSize(),
                         horizontalAlignment = Alignment.CenterHorizontally,
                         verticalArrangement = Arrangement.SpaceBetween
                     ) {
-                        Image(
-                            painter = painterResource(id = R.drawable.ic_launcher_background),
-                            contentDescription = "Profile picture",
-                            modifier = Modifier
-                                .size(128.dp)
-                                .clip(CircleShape)
-                        )
                         Column(
                             modifier = Modifier
-                                .fillMaxWidth()
-                                .padding(top = 12.dp, start = 12.dp, end = 12.dp),
-                            horizontalAlignment = Alignment.CenterHorizontally
+                                .fillMaxWidth(),
+                            horizontalAlignment = Alignment.CenterHorizontally,
+                            verticalArrangement = Arrangement.spacedBy(32.dp)
                         ) {
-                            SimpleOutlinedTextFieldSample(
-                                label = "Username",
+                            AvatarAndDecorationConstraintLayoutContent()
+                            Column(
                                 modifier = Modifier
-                                    .fillMaxWidth(),
-                                enabled = !areFieldsEnabled,
-                                preText = profileViewModel.userDetails.value?.username ?: "not available"
-                            )
-                            SimpleOutlinedTextFieldSample(
-                                label = "Phone number",
-                                modifier = Modifier
-                                    .fillMaxWidth(),
-                                enabled = !areFieldsEnabled,
-                                preText = profileViewModel.userDetails.value?.phone ?: "not available"
-                            )
-                            Row(
-                                verticalAlignment = Alignment.CenterVertically,
-                                horizontalArrangement = Arrangement.spacedBy(8.dp)
+                                    .fillMaxWidth()
+                                    .padding(horizontal = 16.dp),
+                                horizontalAlignment = Alignment.CenterHorizontally,
+                                verticalArrangement = Arrangement.spacedBy(16.dp)
                             ) {
-                                SimpleOutlinedTextFieldSample(
-                                    label = "First name",
+                                OutlinedTextFieldSample(
+                                    label = "Username",
                                     modifier = Modifier
-                                        .fillMaxWidth(0.5f),
-                                    enabled = !areFieldsEnabled,
-                                    preText = profileViewModel.userDetails.value?.firstName ?: "not available"
+                                        .fillMaxWidth(),
+                                    enabled = false,
+                                    text = profileViewModel.usernameTextFieldText,
+                                    onValueChange = {
+                                        profileViewModel.usernameTextFieldText.value = it
+                                    },
+                                    keyboardOptions = KeyboardOptions(
+                                        keyboardType = KeyboardType.Text,
+                                        capitalization = KeyboardCapitalization.Words
+                                    )
                                 )
-                                SimpleOutlinedTextFieldSample(
-                                    label = "Last name",
+                                Row(
+                                    verticalAlignment = Alignment.CenterVertically,
+                                    horizontalArrangement = Arrangement.spacedBy(16.dp),
+                                    modifier = Modifier.
+                                    fillMaxWidth()
+                                ) {
+                                    OutlinedTextFieldSample(
+                                        label = "First name",
+                                        modifier = Modifier
+                                            .fillMaxWidth(0.5f),
+                                        enabled = areFieldsEnabled,
+                                        text = profileViewModel.firstNameTextFieldText,
+                                        onValueChange = {
+                                            profileViewModel.firstNameTextFieldText.value = it
+                                        },
+                                        keyboardOptions = KeyboardOptions(
+                                            keyboardType = KeyboardType.Text,
+                                            capitalization = KeyboardCapitalization.Words
+                                        )
+                                    )
+                                    OutlinedTextFieldSample(
+                                        label = "Last name",
+                                        modifier = Modifier
+                                            .fillMaxWidth(1f),
+                                        enabled = areFieldsEnabled,
+                                        text = profileViewModel.lastNameTextFieldText,
+                                        onValueChange = {
+                                            profileViewModel.lastNameTextFieldText.value = it
+                                        },
+                                        keyboardOptions = KeyboardOptions(
+                                            keyboardType = KeyboardType.Text,
+                                            capitalization = KeyboardCapitalization.Words
+                                        )
+                                    )
+                                }
+                                OutlinedTextFieldSample(
+                                    text = profileViewModel.phoneTextFieldText,
+                                    label = "Phone number",
                                     modifier = Modifier
-                                        .fillMaxWidth(1f),
-                                    enabled = !areFieldsEnabled,
-                                    preText = profileViewModel.userDetails.value?.lastName ?: "not available"
+                                        .fillMaxWidth(),
+                                    enabled = areFieldsEnabled,
+                                    onValueChange = {
+                                        if (it.isDigitsOnly()) {
+                                            profileViewModel.phoneTextFieldText.value = it
+                                        }
+                                    },
+                                    keyboardOptions = KeyboardOptions(
+                                        keyboardType = KeyboardType.Phone,
+                                        capitalization = KeyboardCapitalization.Words
+                                    )
                                 )
                             }
                         }
                         Column(
                             modifier = Modifier
                                 .fillMaxWidth()
+                                .padding(16.dp)
                         ) {
                             AnimatedVisibility(
                                 visible = areFieldsEnabled,
@@ -249,14 +295,14 @@ fun ProfileScreen(
                             ) {
                                 Button(
                                     onClick = {
+                                        profileViewModel.patchUserDetails()
                                         areFieldsEnabled = !areFieldsEnabled
                                     },
                                     shape = RoundedCornerShape(14.dp),
                                     colors = ButtonDefaults.buttonColors(containerColor = Color(0xFFE7BD73)),
                                     contentPadding = PaddingValues(vertical = 20.dp),
                                     modifier = Modifier
-                                        .fillMaxWidth(1f)
-                                        .padding(horizontal = 12.dp)
+                                        .fillMaxWidth()
                                 ) {
                                     Text(
                                         text = "Save",
@@ -300,8 +346,7 @@ fun ProfileScreen(
                                     colors = ButtonDefaults.buttonColors(containerColor = Color.Red),
                                     contentPadding = PaddingValues(vertical = 20.dp),
                                     modifier = Modifier
-                                        .fillMaxWidth(1f)
-                                        .padding(horizontal = 12.dp)
+                                        .fillMaxWidth()
                                 ) {
                                     Text(
                                         text = "Log out",
@@ -322,25 +367,28 @@ fun ProfileScreen(
 }
 
 @Composable
-fun SimpleOutlinedTextFieldSample(
-    label: String,
-    modifier: Modifier,
-    enabled: Boolean,
-    preText: String
-    // onTextChanged: (String) -> Unit
-) {
-    var text by remember { mutableStateOf(preText) }
-
-    OutlinedTextField(
-        value = text,
-        onValueChange = {
-            text = it
-            // onTextChanged(it)
-        },
-        label = { Text(label) },
-        modifier = modifier,
-        maxLines = 1,
-        shape = RoundedCornerShape(14.dp),
-        readOnly = enabled
-    )
+fun AvatarAndDecorationConstraintLayoutContent() {
+    ConstraintLayout {
+        val (decoration, avatar) = createRefs()
+        Image(
+            painter = painterResource(id = R.drawable.profile_screen_decoration),
+            contentDescription = null,
+            contentScale = ContentScale.FillBounds,
+            modifier = Modifier
+                .fillMaxWidth()
+                .constrainAs(decoration) { top.linkTo(parent.top) }
+        )
+        Image(
+            painter = painterResource(id = R.drawable.profile_avatar),
+            contentDescription = "Profile picture",
+            modifier = Modifier
+                .size(128.dp)
+                .clip(CircleShape)
+                .constrainAs(avatar) {
+                    top.linkTo(decoration.bottom, margin = (-78).dp)
+                    start.linkTo(parent.start)
+                    end.linkTo(parent.end)
+                }
+        )
+    }
 }

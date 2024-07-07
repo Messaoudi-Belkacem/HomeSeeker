@@ -125,16 +125,8 @@ fun CustomItem(announcement: Announcement, bottomBarNavHostController: NavHostCo
 
 @Composable
 fun CustomSearchItem(announcement: Announcement, navController: NavController) {
+    val tag = "CustomSearchItem"
     val formattedPrice = formatPrice(announcement.price)
-    val housePicture: Int = when (announcement.id) {
-        0 -> R.drawable.house1photo
-        1 -> R.drawable.house2photo
-        2 -> R.drawable.house3photo
-        3 -> R.drawable.house4photo
-        4 -> R.drawable.house5photo
-        5 -> R.drawable.house6photo
-        else -> R.drawable.house_default_pic
-    }
     Box(
         modifier = Modifier
             .fillMaxWidth(0.96f)
@@ -154,13 +146,19 @@ fun CustomSearchItem(announcement: Announcement, navController: NavController) {
                 horizontalAlignment = Alignment.CenterHorizontally,
                 verticalArrangement = Arrangement.spacedBy(4.dp)
             ) {
-                Image(
-                    painter = painterResource(housePicture),
+                val imageUrl = IMAGE_BASE_URL + announcement.imageNames.first()
+                Log.d(tag, "image url: $imageUrl")
+                AsyncImage(
+                    model = ImageRequest.Builder(LocalContext.current)
+                        .data(imageUrl)
+                        .crossfade(true)
+                        .build(),
                     contentDescription = null,
+                    contentScale = ContentScale.Crop,
+                    error = painterResource(id = R.drawable.darckoum_logo),
                     modifier = Modifier
-                        .clip(RoundedCornerShape(12.dp))
-                        .size(width = 150.dp, height = 100.dp),
-                    contentScale = ContentScale.FillBounds
+                        .size(width = 180.dp, height = 150.dp)
+                        .clip(RoundedCornerShape(12.dp)),
                 )
                 Text(
                     text = announcement.title,

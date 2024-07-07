@@ -66,6 +66,7 @@ dependencies {
     implementation("androidx.navigation:navigation-compose:2.7.7")
     implementation("androidx.wear.compose:compose-material3:1.0.0-alpha23")
     implementation("androidx.compose.ui:ui-text-google-fonts:1.6.8")
+    implementation("androidx.constraintlayout:constraintlayout:2.1.4")
     testImplementation("junit:junit:4.13.2")
     androidTestImplementation("androidx.test.ext:junit:1.2.1")
     androidTestImplementation("androidx.test.espresso:espresso-core:3.6.1")
@@ -80,26 +81,26 @@ dependencies {
     kapt("com.google.dagger:hilt-android-compiler:2.51.1")
 
     // System UI controller
-    implementation ("com.google.accompanist:accompanist-systemuicontroller:0.18.0")
+    implementation("com.google.accompanist:accompanist-systemuicontroller:0.18.0")
 
     // Compose navigation
-    implementation ("androidx.navigation:navigation-compose:2.7.7")
+    implementation("androidx.navigation:navigation-compose:2.7.7")
 
     // Material 3
-    implementation ("androidx.compose.material3:material3:1.2.1")
+    implementation("androidx.compose.material3:material3:1.2.1")
 
     // Material Icons
-    implementation ("androidx.compose.material:material-icons-extended")
+    implementation("androidx.compose.material:material-icons-extended")
 
     // Coil
-    implementation ("io.coil-kt:coil-compose:2.6.0")
+    implementation("io.coil-kt:coil-compose:2.6.0")
 
     //JWT
-    implementation ("com.auth0:java-jwt:4.4.0")
+    implementation("com.auth0:java-jwt:4.4.0")
 
     //Retrofit
-    implementation ("com.squareup.retrofit2:retrofit:2.11.0")
-    implementation ("com.squareup.retrofit2:converter-gson:2.11.0")
+    implementation("com.squareup.retrofit2:retrofit:2.11.0")
+    implementation("com.squareup.retrofit2:converter-gson:2.11.0")
     implementation(platform("com.squareup.okhttp3:okhttp-bom:4.12.0"))
     implementation("com.squareup.okhttp3:okhttp")
     implementation("com.squareup.okhttp3:logging-interceptor")
@@ -112,7 +113,10 @@ dependencies {
     implementation("androidx.paging:paging-compose:3.3.0")
 
     // Splash API
-    implementation ("androidx.core:core-splashscreen:1.0.1")
+    implementation("androidx.core:core-splashscreen:1.0.1")
+
+    // Constraint layout
+    implementation("androidx.constraintlayout:constraintlayout-compose:1.0.1")
 }
 
 // Allow references to generated code

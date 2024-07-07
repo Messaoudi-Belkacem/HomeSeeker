@@ -53,7 +53,8 @@ fun HomeNavGraph(
         composable(route = BottomBarScreen.Profile.route) {
             ProfileScreen(
                 bottomBarNavHostController = bottomBarNavHostController,
-                navHostController = navHostController
+                navHostController = navHostController,
+                paddingValues = paddingValues
             )
         }
         navigation(

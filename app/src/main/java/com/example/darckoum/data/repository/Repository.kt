@@ -23,8 +23,10 @@ import com.example.darckoum.data.model.request.LoginRequest
 import com.example.darckoum.data.model.request.LoginResponse
 import com.example.darckoum.data.model.request.LogoutRequest
 import com.example.darckoum.data.model.request.LogoutResponse
+import com.example.darckoum.data.model.request.PatchUserDetailsRequest
 import com.example.darckoum.data.model.request.RegistrationRequest
 import com.example.darckoum.data.model.request.RegistrationResponse
+import com.example.darckoum.data.model.response.PatchUserDetailsResponse
 import com.example.darckoum.data.paging.DiscoverPagingSource
 import com.example.darckoum.util.Constants.Companion.ITEMS_PER_PAGE
 import kotlinx.coroutines.flow.Flow
@@ -128,6 +130,11 @@ class Repository @Inject constructor(
     suspend fun getUserDetails(token: String): Response<UserResponse> {
         val authorizationToken = "Bearer $token"
         return userService.getUserDetails(authorizationToken, token)
+    }
+
+    suspend fun patchUserDetails(patchUserDetailsRequest: PatchUserDetailsRequest): Response<PatchUserDetailsResponse> {
+        val authorizationToken = "Bearer ${patchUserDetailsRequest.token}"
+        return userService.patchUserDetails(authorizationToken, patchUserDetailsRequest)
     }
 
 }

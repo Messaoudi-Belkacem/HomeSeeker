@@ -3,11 +3,14 @@ package com.example.darckoum.screen.profile
 import android.util.Log
 import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.darckoum.data.model.User
 import com.example.darckoum.data.model.UserResponse
 import com.example.darckoum.data.model.request.LogoutRequest
+import com.example.darckoum.data.model.request.PatchUserDetailsRequest
+import com.example.darckoum.data.model.response.PatchUserDetailsResponse
 import com.example.darckoum.data.repository.Repository
 import com.example.darckoum.data.state.ProfileState
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -31,6 +34,11 @@ class ProfileViewModel @Inject constructor(
 
     private val _userDetails = mutableStateOf<User?>(null)
     val userDetails: State<User?> = _userDetails
+
+    val usernameTextFieldText = mutableStateOf("")
+    val firstNameTextFieldText = mutableStateOf("")
+    val lastNameTextFieldText = mutableStateOf("")
+    val phoneTextFieldText = mutableStateOf("")
 
     suspend fun logout(): Boolean {
         _showDialog.value = true
@@ -68,9 +76,8 @@ class ProfileViewModel @Inject constructor(
                 logDebug("Token: $token")
 
                 val response = repository.getUserDetails(token)
-                delay(1000)
 
-                handleResponse(response)
+                handleGetUserResponse(response)
             } catch (e: Exception) {
                 setProfileState(ProfileState.Error("An unexpected error occurred"))
                 logException(e)
@@ -78,12 +85,84 @@ class ProfileViewModel @Inject constructor(
         }
     }
 
-    private fun handleResponse(response: Response<UserResponse>) {
+    private suspend fun handleGetUserResponse(response: Response<UserResponse>) {
         if (response.isSuccessful) {
             response.body()?.let { body ->
                 _userDetails.value = body.user
+                logDebug(
+                    "Response was successful.\n" +
+                    "Response body: ${response.body().toString()}"
+                )
+                delay(1000)
+                setTextFieldValues()
                 setProfileState(ProfileState.Success)
-                logDebug("Response was successful. Message: ${response.message()}")
+            } ?: run {
+                setProfileState(ProfileState.Error("Response body is null"))
+                logDebug("Response body is null. Message: ${response.message()}")
+            }
+        } else {
+            setProfileState(ProfileState.Error("Request was not successful"))
+            logErrorResponse(response)
+        }
+    }
+
+    fun patchUserDetails() {
+        viewModelScope.launch {
+            logDebug("patchUserDetails is called")
+            try {
+                val username = usernameTextFieldText.value
+                val firstName = firstNameTextFieldText.value
+                val lastName = lastNameTextFieldText.value
+                val phone = phoneTextFieldText.value
+                if (userDetails.value != null) {
+                    if (
+                        username == _userDetails.value!!.username &&
+                        firstName == _userDetails.value!!.firstName &&
+                        lastName == _userDetails.value!!.lastName &&
+                        phone == _userDetails.value!!.phone
+                    ) {
+                        logDebug("no fields have been changed")
+                    } else {
+                        setProfileState(ProfileState.Loading)
+
+                        val token = repository.getTokenFromDatastore().toString()
+                        logDebug("Token: $token")
+
+                        val user = User(
+                            id = _userDetails.value!!.id,
+                            username = username,
+                            firstName = firstName,
+                            lastName = lastName,
+                            phone = phone,
+                            password = _userDetails.value!!.password
+                        )
+
+                        val patchUserDetailsRequest = PatchUserDetailsRequest(token, user)
+                        logDebug(patchUserDetailsRequest.toString())
+
+                        val response = repository.patchUserDetails(patchUserDetailsRequest)
+                        delay(1000)
+
+                        handlePatchUserResponse(response)
+                    }
+                } else {
+                    setProfileState(ProfileState.Error("An unexpected error occurred"))
+                    logDebug("userDetails.value is null")
+                }
+            } catch (e: Exception) {
+                setProfileState(ProfileState.Error("An unexpected error occurred"))
+                logException(e)
+            }
+        }
+    }
+
+    private fun handlePatchUserResponse(response: Response<PatchUserDetailsResponse>) {
+        if (response.isSuccessful) {
+            response.body()?.let { body ->
+                _userDetails.value = body.user
+                setTextFieldValues()
+                setProfileState(ProfileState.Success)
+                logDebug("Response was successful. Body: ${response.body()}")
             } ?: run {
                 setProfileState(ProfileState.Error("Response body is null"))
                 logDebug("Response body is null. Message: ${response.message()}")
@@ -111,4 +190,14 @@ class ProfileViewModel @Inject constructor(
         logDebug("Caught an exception")
         e.printStackTrace()
     }
+
+    private fun setTextFieldValues() {
+        if (userDetails.value != null) {
+            usernameTextFieldText.value = userDetails.value!!.username
+            firstNameTextFieldText.value = userDetails.value!!.firstName
+            lastNameTextFieldText.value = userDetails.value!!.lastName
+            phoneTextFieldText.value = userDetails.value!!.phone
+        }
+    }
 }
+
