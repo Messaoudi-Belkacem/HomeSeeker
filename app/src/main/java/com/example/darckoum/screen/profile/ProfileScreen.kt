@@ -64,19 +64,17 @@ import androidx.compose.ui.unit.sp
 import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.core.text.isDigitsOnly
 import androidx.hilt.navigation.compose.hiltViewModel
-import androidx.navigation.NavController
 import androidx.navigation.NavHostController
 import androidx.paging.LoadState
 import androidx.paging.compose.collectAsLazyPagingItems
 import com.example.darckoum.MainViewModel
 import com.example.darckoum.R
 import com.example.darckoum.data.state.ProfileState
-import com.example.darckoum.items.CustomItem
-import com.example.darckoum.items.OwnedAnnouncementItem
 import com.example.darckoum.navigation.Graph
 import com.example.darckoum.screen.SharedViewModel
 import com.example.darckoum.screen.common.LoadingDialog
 import com.example.darckoum.screen.common.OutlinedTextFieldSample
+import com.example.darckoum.screen.common.OwnedAnnouncementItem
 import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterial3Api::class)

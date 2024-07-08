@@ -52,9 +52,9 @@ import androidx.paging.LoadState
 import androidx.paging.compose.collectAsLazyPagingItems
 import com.example.darckoum.MainViewModel
 import com.example.darckoum.R
-import com.example.darckoum.items.CustomItem
 import com.example.darckoum.navigation.screen.BottomBarScreen
 import com.example.darckoum.screen.SharedViewModel
+import com.example.darckoum.screen.common.CustomItem
 
 @Composable
 fun HomeScreen(
