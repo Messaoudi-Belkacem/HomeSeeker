@@ -126,8 +126,7 @@ fun AddScreen(
             }
             is AddState.Success -> {
                 bottomBarNavHostController.navigate(BottomBarScreen.Home.route)
-                TODO("fix this")
-                /*sharedViewModel.addAnnouncementResponse(addViewModel.announcementResponse.value!!)*/
+                sharedViewModel.announcement = addViewModel.announcementResponse.value!!.announcement
             }
             is AddState.Error -> {
                 Toast.makeText(

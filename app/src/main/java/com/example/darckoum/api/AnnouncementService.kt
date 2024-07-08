@@ -3,6 +3,7 @@ package com.example.darckoum.api
 import com.example.darckoum.data.model.Announcement
 import com.example.darckoum.data.model.request.AddAnnouncementRequest
 import com.example.darckoum.data.model.request.AnnouncementResponse
+import com.example.darckoum.data.model.response.CreateAnnouncementResponse
 import okhttp3.MultipartBody
 import okhttp3.RequestBody
 import retrofit2.Response
@@ -35,5 +36,5 @@ interface AnnouncementService {
         @Header("Authorization") token: String,
         @Part("data") addAnnouncementRequest: AddAnnouncementRequest,
         @Part images: List<MultipartBody.Part>
-    ): Response<String>
+    ): Response<CreateAnnouncementResponse>
 }

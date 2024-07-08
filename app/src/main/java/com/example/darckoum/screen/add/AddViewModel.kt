@@ -10,6 +10,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.darckoum.data.model.request.AddAnnouncementRequest
 import com.example.darckoum.data.model.request.AnnouncementResponse
+import com.example.darckoum.data.model.response.CreateAnnouncementResponse
 import com.example.darckoum.data.repository.Repository
 import com.example.darckoum.data.state.AddState
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -30,8 +31,8 @@ class AddViewModel @Inject constructor(
     private val _addState = mutableStateOf<AddState>(AddState.Initial)
     val addState: State<AddState> = _addState
 
-    private val _announcementResponse = mutableStateOf<String?>(null)
-    private val announcementResponse = _announcementResponse
+    private val _announcementResponse = mutableStateOf<CreateAnnouncementResponse?>(null)
+    val announcementResponse = _announcementResponse
 
     fun createAnnouncement(
         title: String,

@@ -26,6 +26,7 @@ import com.example.darckoum.data.model.request.LogoutResponse
 import com.example.darckoum.data.model.request.PatchUserDetailsRequest
 import com.example.darckoum.data.model.request.RegistrationRequest
 import com.example.darckoum.data.model.request.RegistrationResponse
+import com.example.darckoum.data.model.response.CreateAnnouncementResponse
 import com.example.darckoum.data.model.response.PatchUserDetailsResponse
 import com.example.darckoum.data.paging.DiscoverPagingSource
 import com.example.darckoum.util.Constants.Companion.ITEMS_PER_PAGE
@@ -73,7 +74,7 @@ class Repository @Inject constructor(
         addAnnouncementRequest: AddAnnouncementRequest,
         selectedImageUris: List<Uri>,
         context: Context
-    ): Response<String> {
+    ): Response<CreateAnnouncementResponse> {
         val images = mutableListOf<MultipartBody.Part>()
         for (uri in selectedImageUris) {
             val selectImageRealPath = getRealPathFromURI(uri = uri, context = context)
