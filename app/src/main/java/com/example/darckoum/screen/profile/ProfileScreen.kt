@@ -23,6 +23,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
@@ -65,9 +66,15 @@ import androidx.core.text.isDigitsOnly
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import androidx.navigation.NavHostController
+import androidx.paging.LoadState
+import androidx.paging.compose.collectAsLazyPagingItems
+import com.example.darckoum.MainViewModel
 import com.example.darckoum.R
 import com.example.darckoum.data.state.ProfileState
+import com.example.darckoum.items.CustomItem
+import com.example.darckoum.items.OwnedAnnouncementItem
 import com.example.darckoum.navigation.Graph
+import com.example.darckoum.screen.SharedViewModel
 import com.example.darckoum.screen.common.LoadingDialog
 import com.example.darckoum.screen.common.OutlinedTextFieldSample
 import kotlinx.coroutines.launch
@@ -75,8 +82,10 @@ import kotlinx.coroutines.launch
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ProfileScreen(
-    bottomBarNavHostController: NavController,
+    bottomBarNavHostController: NavHostController,
     navHostController: NavHostController,
+    sharedViewModel: SharedViewModel,
+    mainViewModel: MainViewModel,
     profileViewModel: ProfileViewModel = hiltViewModel(),
     paddingValues: PaddingValues
 ) {
@@ -86,10 +95,11 @@ fun ProfileScreen(
     val showDialog = profileViewModel.showDialog.value
     val profileState by profileViewModel.profileState
 
-
+    val ownedAnnouncementsLazyPagingItems = profileViewModel.ownedAnnouncementsFlow.collectAsLazyPagingItems()
 
     LaunchedEffect(Unit) {
         profileViewModel.getUserDetails()
+        profileViewModel.getMyAnnouncements(mainViewModel.token.value.toString())
     }
     val context = LocalContext.current
 
@@ -194,7 +204,7 @@ fun ProfileScreen(
                             modifier = Modifier
                                 .fillMaxWidth(),
                             horizontalAlignment = Alignment.CenterHorizontally,
-                            verticalArrangement = Arrangement.spacedBy(32.dp)
+                            verticalArrangement = Arrangement.spacedBy(16.dp)
                         ) {
                             AvatarAndDecorationConstraintLayoutContent()
                             Column(
@@ -269,6 +279,65 @@ fun ProfileScreen(
                                         capitalization = KeyboardCapitalization.Words
                                     )
                                 )
+                            }
+                            Text(
+                                text = "My announcements",
+                                fontSize = 16.sp,
+                                fontWeight = FontWeight.Medium
+                            )
+                            when(ownedAnnouncementsLazyPagingItems.loadState.refresh) {
+                                is LoadState.Loading -> {
+                                    Box(
+                                        modifier = Modifier
+                                            .height(172.dp)
+                                            .fillMaxWidth(),
+                                        contentAlignment = Alignment.Center,
+                                    ) {
+                                        CircularProgressIndicator(
+                                            modifier = Modifier.size(64.dp),
+                                        )
+                                    }
+                                }
+                                is LoadState.Error -> {
+                                    Toast.makeText(
+                                        context,
+                                        (ownedAnnouncementsLazyPagingItems.loadState.refresh as LoadState.Error).error.message,
+                                        Toast.LENGTH_SHORT
+                                    ).show()
+                                    Log.d(tag, (ownedAnnouncementsLazyPagingItems.loadState.refresh as LoadState.Error).error.toString())
+                                    Box(
+                                        modifier = Modifier
+                                            .height(172.dp)
+                                            .fillMaxWidth(),
+                                        contentAlignment = Alignment.Center,
+                                    ) {
+                                        Button(onClick = { profileViewModel.getMyAnnouncements(mainViewModel.token.value.toString()) }) {
+                                            Text(text = "Retry")
+                                        }
+                                    }
+                                }
+                                else -> {
+                                    LazyRow(
+                                        modifier = Modifier
+                                            .height(172.dp)
+                                            .fillMaxWidth(),
+                                        horizontalArrangement = Arrangement.spacedBy(10.dp),
+                                        contentPadding = PaddingValues(start = 16.dp)
+                                    ) {
+                                        items(count = ownedAnnouncementsLazyPagingItems.itemCount) { index ->
+                                            val item = ownedAnnouncementsLazyPagingItems[index]
+                                            if (item != null) {
+                                                OwnedAnnouncementItem(
+                                                    announcement = item,
+                                                    bottomBarNavHostController = bottomBarNavHostController,
+                                                    sharedViewModel = sharedViewModel
+                                                )
+                                            } else {
+                                                Log.d(tag, "item number $index is null")
+                                            }
+                                        }
+                                    }
+                                }
                             }
                         }
                         Column(

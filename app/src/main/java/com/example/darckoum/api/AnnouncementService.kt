@@ -27,8 +27,11 @@ interface AnnouncementService {
     @GET("announcements/{announcementId}")
     suspend fun getAnnouncement(): Response<Announcement>
 
-    @GET("announcements/{userId}")
-    suspend fun getUserPosts(@Path("userId") userId: Long): Response<List<Announcement>>
+    @GET("announcements/user")
+    suspend fun getUserAnnouncements(
+        @Header("Authorization") token: String,
+        @Query("page") currentPage: Int
+    ): AnnouncementResponse
 
     @POST("announcements")
     @Multipart

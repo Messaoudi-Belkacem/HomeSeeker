@@ -40,7 +40,11 @@ import com.example.darckoum.screen.SharedViewModel
 import com.example.darckoum.util.Constants.Companion.IMAGE_BASE_URL
 
 @Composable
-fun CustomItem(announcement: Announcement, bottomBarNavHostController: NavHostController, sharedViewModel: SharedViewModel) {
+fun CustomItem(
+    announcement: Announcement,
+    bottomBarNavHostController: NavHostController,
+    sharedViewModel: SharedViewModel
+) {
     val formattedPrice = formatPrice(announcement.price)
     val tag = "CustomItem"
     Box(
@@ -116,6 +120,61 @@ fun CustomItem(announcement: Announcement, bottomBarNavHostController: NavHostCo
             Text(
                 text = "$formattedPrice DZD",
                 fontSize = 20.sp,
+                fontWeight = FontWeight.Bold,
+                color = MaterialTheme.colorScheme.primary
+            )
+        }
+    }
+}
+
+@Composable
+fun OwnedAnnouncementItem(
+    announcement: Announcement,
+    bottomBarNavHostController: NavHostController,
+    sharedViewModel: SharedViewModel
+) {
+    val formattedPrice = formatPrice(announcement.price)
+    val tag = "OwnedAnnouncementItem"
+    Box(
+        modifier = Modifier
+            .size(width = 136.dp, height = 172.dp)
+            .clip(RoundedCornerShape(16.dp))
+            .background(MaterialTheme.colorScheme.outlineVariant)
+            .border(width = 2.dp, color = Color(0xFF666666), shape = RoundedCornerShape(14.dp))
+            .padding(8.dp)
+            .clickable {
+                sharedViewModel.announcement = announcement
+                bottomBarNavHostController.navigate(route = Graph.DETAILS)
+            },
+        contentAlignment = Alignment.Center
+    ) {
+        Column(
+            verticalArrangement = Arrangement.spacedBy(8.dp),
+            horizontalAlignment = Alignment.CenterHorizontally
+        ) {
+            val imageUrl = IMAGE_BASE_URL + announcement.imageNames.first()
+            Log.d(tag, "image url: $imageUrl")
+            AsyncImage(
+                model = ImageRequest.Builder(LocalContext.current)
+                    .data(imageUrl)
+                    .crossfade(true)
+                    .build(),
+                contentDescription = null,
+                contentScale = ContentScale.Crop,
+                error = painterResource(id = R.drawable.darckoum_logo),
+                modifier = Modifier
+                    .size(width = 120.dp, height = 100.dp)
+                    .clip(RoundedCornerShape(8.dp)),
+            )
+            Text(
+                text = announcement.title,
+                fontSize = 14.sp,
+                fontWeight = FontWeight.Bold,
+                textAlign = TextAlign.Center
+            )
+            Text(
+                text = "$formattedPrice DZD",
+                fontSize = 16.sp,
                 fontWeight = FontWeight.Bold,
                 color = MaterialTheme.colorScheme.primary
             )

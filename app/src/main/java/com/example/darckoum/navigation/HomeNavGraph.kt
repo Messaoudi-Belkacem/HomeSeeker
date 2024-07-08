@@ -54,6 +54,8 @@ fun HomeNavGraph(
             ProfileScreen(
                 bottomBarNavHostController = bottomBarNavHostController,
                 navHostController = navHostController,
+                mainViewModel = mainViewModel,
+                sharedViewModel = sharedViewModel,
                 paddingValues = paddingValues
             )
         }

@@ -66,7 +66,6 @@ fun HomeScreen(
 
     val tag = "HomeScreen"
     val announcementsByDiscoverLazyPagingItems = homeViewModel.announcementsFlow.collectAsLazyPagingItems()
-    homeViewModel.homeState
     val context = LocalContext.current
 
     LaunchedEffect(Unit) {
@@ -170,7 +169,6 @@ fun HomeScreen(
                                         } else {
                                             Log.d(tag, "item number $index is null")
                                         }
-
                                     }
                                 }
                             }

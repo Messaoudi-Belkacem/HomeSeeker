@@ -29,6 +29,7 @@ import com.example.darckoum.data.model.request.RegistrationResponse
 import com.example.darckoum.data.model.response.CreateAnnouncementResponse
 import com.example.darckoum.data.model.response.PatchUserDetailsResponse
 import com.example.darckoum.data.paging.DiscoverPagingSource
+import com.example.darckoum.data.paging.MyAnnouncementsPagingSource
 import com.example.darckoum.util.Constants.Companion.ITEMS_PER_PAGE
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.first
@@ -97,6 +98,15 @@ class Repository @Inject constructor(
             config = PagingConfig(pageSize = ITEMS_PER_PAGE),
             pagingSourceFactory = {
                 DiscoverPagingSource(announcementService = announcementService, token = token)
+            }
+        ).flow
+    }
+
+    fun getOwnedAnnouncements(token: String): Flow<PagingData<Announcement>> {
+        return Pager(
+            config = PagingConfig(pageSize = ITEMS_PER_PAGE),
+            pagingSourceFactory = {
+                MyAnnouncementsPagingSource(announcementService = announcementService, token = token)
             }
         ).flow
     }
