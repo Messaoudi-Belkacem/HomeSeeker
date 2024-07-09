@@ -61,6 +61,38 @@ class OwnedAnnouncementViewModel @Inject constructor(
         }
     }
 
+    fun incrementAnnouncementViews(
+        announcementId: Int
+    ) {
+        viewModelScope.launch {
+            try {
+                var token = repository.getTokenFromDatastore()
+                token = "Bearer $token"
+                Log.d(tag, "token: $token")
+                val response = repository.incrementAnnouncementViews(
+                    token = token,
+                    announcementId = announcementId
+                )
+                if (response.isSuccessful) {
+                    Log.d(tag, "response was successful")
+                    Log.d(tag, "response: " + response.body().toString())
+                    Log.d(tag, "response raw: " + response.raw().toString())
+                } else {
+                    Log.d(tag, "response was not successful")
+                    Log.d(tag, "response error body (string): " + (response.errorBody()!!.string()))
+                    Log.d(tag, "response error body (to string): " + (response.errorBody().toString()))
+                    Log.d(tag, "response code: " + (response.code().toString()))
+                }
+            } catch (e: ConnectException) {
+                Log.d(tag, "Failed to connect to the server. Please check your internet connection.")
+                e.printStackTrace()
+            } catch (e: Exception) {
+                Log.d(tag, "An unexpected error occurred.")
+                e.printStackTrace()
+            }
+        }
+    }
+
     fun setOwnedAnnouncementState(ownedAnnouncementState: OwnedAnnouncementState) {
         _ownedAnnouncementState.value = ownedAnnouncementState
     }

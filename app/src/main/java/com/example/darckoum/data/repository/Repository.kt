@@ -28,6 +28,7 @@ import com.example.darckoum.data.model.request.RegistrationRequest
 import com.example.darckoum.data.model.request.RegistrationResponse
 import com.example.darckoum.data.model.response.CreateAnnouncementResponse
 import com.example.darckoum.data.model.response.DeleteAnnouncementResponse
+import com.example.darckoum.data.model.response.IncrementAnnouncementViewsResponse
 import com.example.darckoum.data.model.response.PatchUserDetailsResponse
 import com.example.darckoum.data.paging.DiscoverPagingSource
 import com.example.darckoum.data.paging.MyAnnouncementsPagingSource
@@ -70,8 +71,6 @@ class Repository @Inject constructor(
             preferences.remove(this.TOKEN)
         }
     }
-
-
 
     fun getAnnouncements(token: String): Flow<PagingData<Announcement>> {
         return Pager(
@@ -116,6 +115,10 @@ class Repository @Inject constructor(
 
     suspend fun deleteAnnouncement(token: String, announcementId: Int): Response<DeleteAnnouncementResponse> {
         return announcementService.deleteAnnouncement(token = token, announcementId = announcementId)
+    }
+
+    suspend fun incrementAnnouncementViews(token: String, announcementId: Int): Response<IncrementAnnouncementViewsResponse> {
+        return announcementService.incrementAnnouncementViews(token = token, announcementId = announcementId)
     }
 
     suspend fun registerUser(registrationRequest: RegistrationRequest): Response<RegistrationResponse> {

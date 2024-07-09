@@ -22,6 +22,7 @@ import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -65,6 +66,9 @@ fun AnnouncementScreen(
         ).show()
         bottomBarNavHostController.navigate(Graph.HOME)
     } else {
+        LaunchedEffect(Unit) {
+            announcementViewModel.incrementAnnouncementViews(announcementResponse.id)
+        }
         Column(
             modifier = Modifier
                 .fillMaxSize()

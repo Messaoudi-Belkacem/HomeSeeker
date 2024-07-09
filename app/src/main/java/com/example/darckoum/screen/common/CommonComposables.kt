@@ -19,8 +19,11 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.rounded.RemoveRedEye
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
@@ -40,6 +43,7 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Dialog
@@ -150,8 +154,6 @@ fun LoadingDialog(
     }
 }
 
-
-
 @Composable
 fun CustomItem(
     announcement: Announcement,
@@ -179,18 +181,21 @@ fun CustomItem(
         ) {
             val imageUrl = IMAGE_BASE_URL + announcement.imageNames.first()
             Log.d(tag, "image url: $imageUrl")
-            AsyncImage(
-                model = ImageRequest.Builder(LocalContext.current)
-                    .data(imageUrl)
-                    .crossfade(true)
-                    .build(),
-                contentDescription = null,
-                contentScale = ContentScale.Crop,
-                error = painterResource(id = R.drawable.darckoum_logo),
-                modifier = Modifier
-                    .size(width = 180.dp, height = 150.dp)
-                    .clip(RoundedCornerShape(12.dp)),
-            )
+            Box {
+                AsyncImage(
+                    model = ImageRequest.Builder(LocalContext.current)
+                        .data(imageUrl)
+                        .crossfade(true)
+                        .build(),
+                    contentDescription = null,
+                    contentScale = ContentScale.Crop,
+                    error = painterResource(id = R.drawable.darckoum_logo),
+                    modifier = Modifier
+                        .size(width = 180.dp, height = 150.dp)
+                        .clip(RoundedCornerShape(12.dp)),
+                )
+                Popularity(numberOfViews = announcement.views)
+            }
             Text(
                 text = announcement.title,
                 fontSize = 18.sp,
@@ -269,18 +274,21 @@ fun OwnedAnnouncementItem(
         ) {
             val imageUrl = IMAGE_BASE_URL + announcement.imageNames.first()
             Log.d(tag, "image url: $imageUrl")
-            AsyncImage(
-                model = ImageRequest.Builder(LocalContext.current)
-                    .data(imageUrl)
-                    .crossfade(true)
-                    .build(),
-                contentDescription = null,
-                contentScale = ContentScale.Crop,
-                error = painterResource(id = R.drawable.darckoum_logo),
-                modifier = Modifier
-                    .size(width = 120.dp, height = 100.dp)
-                    .clip(RoundedCornerShape(8.dp)),
-            )
+            Box {
+                AsyncImage(
+                    model = ImageRequest.Builder(LocalContext.current)
+                        .data(imageUrl)
+                        .crossfade(true)
+                        .build(),
+                    contentDescription = null,
+                    contentScale = ContentScale.Crop,
+                    error = painterResource(id = R.drawable.darckoum_logo),
+                    modifier = Modifier
+                        .size(width = 120.dp, height = 100.dp)
+                        .clip(RoundedCornerShape(8.dp)),
+                )
+                Popularity(numberOfViews = announcement.views)
+            }
             Text(
                 text = announcement.title,
                 fontSize = 12.sp,
@@ -296,6 +304,59 @@ fun OwnedAnnouncementItem(
                 softWrap = false
             )
         }
+    }
+}
+
+@Composable
+fun Popularity(numberOfViews: Int) {
+    Row(
+        modifier = Modifier
+            .size(width = 40.dp, height = 20.dp)
+            .clip(RoundedCornerShape(4.dp))
+            .background(MaterialTheme.colorScheme.primary),
+        verticalAlignment = Alignment.CenterVertically,
+        horizontalArrangement = Arrangement.spacedBy(2.dp, Alignment.CenterHorizontally)
+    ) {
+        Icon(
+            imageVector = Icons.Rounded.RemoveRedEye,
+            contentDescription = null,
+            tint = MaterialTheme.colorScheme.onPrimary,
+            modifier = Modifier
+                .width(16.dp)
+        )
+        Text(
+            text = numberOfViews.toString(),
+            fontSize = 10.sp,
+            fontWeight = FontWeight.Medium,
+            color = MaterialTheme.colorScheme.onPrimary
+        )
+    }
+}
+
+@Preview
+@Composable
+fun PopularityPreview() {
+    val  numberOfViews = 3
+    Row(
+        modifier = Modifier
+            .size(width = 40.dp, height = 20.dp)
+            .clip(RoundedCornerShape(4.dp))
+            .background(MaterialTheme.colorScheme.primary),
+        verticalAlignment = Alignment.CenterVertically,
+        horizontalArrangement = Arrangement.spacedBy(2.dp, Alignment.CenterHorizontally)
+    ) {
+        Icon(
+            imageVector = Icons.Rounded.RemoveRedEye,
+            contentDescription = null,
+            tint = MaterialTheme.colorScheme.onPrimary,
+            modifier = Modifier
+                .width(16.dp)
+        )
+        Text(
+            text = numberOfViews.toString(),
+            fontSize = MaterialTheme.typography.titleSmall.fontSize,
+            fontWeight = FontWeight.Medium,
+        )
     }
 }
 
