@@ -15,6 +15,7 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
@@ -165,11 +166,11 @@ fun CustomItem(
             .clip(RoundedCornerShape(14.dp))
             .background(MaterialTheme.colorScheme.outlineVariant)
             .border(width = 2.dp, color = Color(0xFF666666), shape = RoundedCornerShape(14.dp))
-            .padding(8.dp)
             .clickable {
                 sharedViewModel.announcement = announcement
                 bottomBarNavHostController.navigate(route = Graph.DETAILS)
-            },
+            }
+            .padding(8.dp),
         contentAlignment = Alignment.Center
     ) {
         Column(
@@ -249,20 +250,22 @@ fun OwnedAnnouncementItem(
     val tag = "OwnedAnnouncementItem"
     Box(
         modifier = Modifier
-            .size(width = 136.dp, height = 172.dp)
+            .size(width = 136.dp, height = 192.dp)
             .clip(RoundedCornerShape(16.dp))
             .background(MaterialTheme.colorScheme.outlineVariant)
-            .border(width = 2.dp, color = Color(0xFF666666), shape = RoundedCornerShape(14.dp))
-            .padding(8.dp)
+            .border(width = 1.dp, color = Color(0xFF666666), shape = RoundedCornerShape(16.dp))
             .clickable {
                 sharedViewModel.ownedAnnouncement = announcement
                 bottomBarNavHostController.navigate(route = Graph.MY_DETAILS)
-            },
+            }
+            .padding(8.dp),
         contentAlignment = Alignment.Center
     ) {
         Column(
             verticalArrangement = Arrangement.spacedBy(8.dp),
-            horizontalAlignment = Alignment.CenterHorizontally
+            horizontalAlignment = Alignment.CenterHorizontally,
+            modifier = Modifier
+                .fillMaxSize()
         ) {
             val imageUrl = IMAGE_BASE_URL + announcement.imageNames.first()
             Log.d(tag, "image url: $imageUrl")
@@ -280,15 +283,17 @@ fun OwnedAnnouncementItem(
             )
             Text(
                 text = announcement.title,
-                fontSize = 14.sp,
+                fontSize = 12.sp,
                 fontWeight = FontWeight.Bold,
-                textAlign = TextAlign.Center
+                textAlign = TextAlign.Center,
+                softWrap = false
             )
             Text(
                 text = "$formattedPrice DZD",
-                fontSize = 16.sp,
+                fontSize = 14.sp,
                 fontWeight = FontWeight.Bold,
-                color = MaterialTheme.colorScheme.primary
+                color = MaterialTheme.colorScheme.primary,
+                softWrap = false
             )
         }
     }

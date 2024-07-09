@@ -305,7 +305,7 @@ fun ProfileScreen(
                                     Log.d(tag, (ownedAnnouncementsLazyPagingItems.loadState.refresh as LoadState.Error).error.toString())
                                     Box(
                                         modifier = Modifier
-                                            .height(172.dp)
+                                            .height(180.dp)
                                             .fillMaxWidth(),
                                         contentAlignment = Alignment.Center,
                                     ) {
@@ -317,7 +317,7 @@ fun ProfileScreen(
                                 else -> {
                                     LazyRow(
                                         modifier = Modifier
-                                            .height(172.dp)
+                                            .height(180.dp)
                                             .fillMaxWidth(),
                                         horizontalArrangement = Arrangement.spacedBy(10.dp),
                                         contentPadding = PaddingValues(start = 16.dp)
