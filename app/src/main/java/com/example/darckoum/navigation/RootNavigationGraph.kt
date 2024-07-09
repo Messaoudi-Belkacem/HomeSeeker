@@ -83,4 +83,5 @@ object Graph {
     const val AUTHENTICATION = "authentication_graph"
     const val HOME = "home_graph"
     const val DETAILS = "details_graph"
+    const val MY_DETAILS = "my_details_graph"
 }

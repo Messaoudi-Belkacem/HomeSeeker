@@ -15,6 +15,7 @@ import com.example.darckoum.navigation.screen.LeafScreen
 import com.example.darckoum.screen.SharedViewModel
 import com.example.darckoum.screen.add.AddScreen
 import com.example.darckoum.screen.announcement.AnnouncementScreen
+import com.example.darckoum.screen.announcement.owned.OwnedAnnouncementScreen
 import com.example.darckoum.screen.home.HomeScreen
 import com.example.darckoum.screen.profile.ProfileScreen
 
@@ -65,6 +66,17 @@ fun HomeNavGraph(
         ) {
             composable(route = LeafScreen.Announcement.route) {
                 AnnouncementScreen(
+                    bottomBarNavHostController = bottomBarNavHostController,
+                    sharedViewModel = sharedViewModel
+                )
+            }
+        }
+        navigation(
+            route = Graph.MY_DETAILS,
+            startDestination = LeafScreen.OwnedAnnouncement.route
+        ) {
+            composable(route = LeafScreen.OwnedAnnouncement.route) {
+                OwnedAnnouncementScreen(
                     bottomBarNavHostController = bottomBarNavHostController,
                     sharedViewModel = sharedViewModel
                 )

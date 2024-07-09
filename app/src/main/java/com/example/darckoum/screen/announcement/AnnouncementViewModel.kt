@@ -9,7 +9,7 @@ import com.example.darckoum.data.model.enum_classes.PropertyType
 import com.example.darckoum.data.model.enum_classes.State
 import com.example.darckoum.data.model.request.AnnouncementResponse
 import com.example.darckoum.data.repository.Repository
-import com.example.darckoum.items.formatPrice
+import com.example.darckoum.screen.common.formatPrice
 import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
 

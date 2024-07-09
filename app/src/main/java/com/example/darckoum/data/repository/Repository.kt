@@ -27,6 +27,7 @@ import com.example.darckoum.data.model.request.PatchUserDetailsRequest
 import com.example.darckoum.data.model.request.RegistrationRequest
 import com.example.darckoum.data.model.request.RegistrationResponse
 import com.example.darckoum.data.model.response.CreateAnnouncementResponse
+import com.example.darckoum.data.model.response.DeleteAnnouncementResponse
 import com.example.darckoum.data.model.response.PatchUserDetailsResponse
 import com.example.darckoum.data.paging.DiscoverPagingSource
 import com.example.darckoum.data.paging.MyAnnouncementsPagingSource
@@ -70,6 +71,26 @@ class Repository @Inject constructor(
         }
     }
 
+
+
+    fun getAnnouncements(token: String): Flow<PagingData<Announcement>> {
+        return Pager(
+            config = PagingConfig(pageSize = ITEMS_PER_PAGE),
+            pagingSourceFactory = {
+                DiscoverPagingSource(announcementService = announcementService, token = token)
+            }
+        ).flow
+    }
+
+    fun getOwnedAnnouncements(token: String): Flow<PagingData<Announcement>> {
+        return Pager(
+            config = PagingConfig(pageSize = ITEMS_PER_PAGE),
+            pagingSourceFactory = {
+                MyAnnouncementsPagingSource(announcementService = announcementService, token = token)
+            }
+        ).flow
+    }
+
     suspend fun createAnnouncement(
         token: String,
         addAnnouncementRequest: AddAnnouncementRequest,
@@ -93,22 +114,8 @@ class Repository @Inject constructor(
         return announcementService.createAnnouncement(token, addAnnouncementRequest, images)
     }
 
-    fun getAnnouncements(token: String): Flow<PagingData<Announcement>> {
-        return Pager(
-            config = PagingConfig(pageSize = ITEMS_PER_PAGE),
-            pagingSourceFactory = {
-                DiscoverPagingSource(announcementService = announcementService, token = token)
-            }
-        ).flow
-    }
-
-    fun getOwnedAnnouncements(token: String): Flow<PagingData<Announcement>> {
-        return Pager(
-            config = PagingConfig(pageSize = ITEMS_PER_PAGE),
-            pagingSourceFactory = {
-                MyAnnouncementsPagingSource(announcementService = announcementService, token = token)
-            }
-        ).flow
+    suspend fun deleteAnnouncement(token: String, announcementId: Int): Response<DeleteAnnouncementResponse> {
+        return announcementService.deleteAnnouncement(token = token, announcementId = announcementId)
     }
 
     suspend fun registerUser(registrationRequest: RegistrationRequest): Response<RegistrationResponse> {

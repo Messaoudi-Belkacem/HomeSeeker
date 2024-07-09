@@ -22,6 +22,9 @@ import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -37,6 +40,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import coil.compose.AsyncImage
 import coil.request.ImageRequest
+import com.example.darckoum.MainViewModel
 import com.example.darckoum.R
 import com.example.darckoum.navigation.Graph
 import com.example.darckoum.screen.SharedViewModel
@@ -48,6 +52,7 @@ fun AnnouncementScreen(
     announcementViewModel: AnnouncementViewModel = hiltViewModel(),
     sharedViewModel: SharedViewModel
 ) {
+
     val tag = "AnnouncementScreen.kt"
     val context = LocalContext.current
     val announcementResponse = sharedViewModel.announcement

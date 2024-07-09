@@ -56,7 +56,7 @@ class ProfileViewModel @Inject constructor(
                 val tokenToBeSent = "Bearer $token"
                 Log.d(tag, "Added (Bearer) to the token")
                 Log.d(tag, "Get announcements called with token: $tokenToBeSent")
-                repository.getAnnouncements(token = tokenToBeSent)
+                repository.getOwnedAnnouncements(token = tokenToBeSent)
                     .cachedIn(viewModelScope)
                     .catch { e ->
                         Log.d(tag, "An unexpected error occurred.", e)

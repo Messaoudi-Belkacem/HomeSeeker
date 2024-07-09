@@ -255,8 +255,8 @@ fun OwnedAnnouncementItem(
             .border(width = 2.dp, color = Color(0xFF666666), shape = RoundedCornerShape(14.dp))
             .padding(8.dp)
             .clickable {
-                sharedViewModel.announcement = announcement
-                bottomBarNavHostController.navigate(route = Graph.DETAILS)
+                sharedViewModel.ownedAnnouncement = announcement
+                bottomBarNavHostController.navigate(route = Graph.MY_DETAILS)
             },
         contentAlignment = Alignment.Center
     ) {

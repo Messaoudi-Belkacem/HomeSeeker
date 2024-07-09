@@ -7,4 +7,7 @@ import androidx.lifecycle.ViewModel
 import com.example.darckoum.data.model.Announcement
 import com.example.darckoum.data.model.request.AnnouncementResponse
 
-class SharedViewModel : ViewModel() { var announcement by mutableStateOf<Announcement?>(null) }
+class SharedViewModel : ViewModel() {
+    var announcement by mutableStateOf<Announcement?>(null)
+    var ownedAnnouncement by mutableStateOf<Announcement?>(null)
+}
