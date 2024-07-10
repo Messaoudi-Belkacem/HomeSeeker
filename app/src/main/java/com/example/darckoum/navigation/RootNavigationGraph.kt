@@ -66,14 +66,6 @@ fun RootNavigationGraph(
                     mainViewModel = mainViewModel
                 )
             }
-            /*navigation(
-                route = Graph.DETAILS,
-                startDestination = LeafScreen.Announcement.route
-            ) {
-                composable(route = LeafScreen.Announcement.route) {
-                    AnnouncementScreen(navHostController = navHostController, sharedViewModel = sharedViewModel)
-                }
-            }*/
         }
     }
 }
@@ -84,4 +76,5 @@ object Graph {
     const val HOME = "home_graph"
     const val DETAILS = "details_graph"
     const val MY_DETAILS = "my_details_graph"
+    const val SEARCH = "search_graph"
 }

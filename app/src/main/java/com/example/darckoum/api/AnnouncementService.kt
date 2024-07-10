@@ -20,12 +20,21 @@ interface AnnouncementService {
     @GET("announcements")
     suspend fun getAnnouncements(
         @Header("Authorization") token: String,
-        @Query("page") currentPage: Int
+        @Query("page") currentPage: Int,
+        @Query("sortBy") sortBy: String = "title",
+        @Query("sortOrder") sortOrder: String = "asc",
     ): AnnouncementResponse
 
     @GET("announcements/user")
     suspend fun getUserAnnouncements(
         @Header("Authorization") token: String,
+        @Query("page") currentPage: Int
+    ): AnnouncementResponse
+
+    @GET("announcements/search")
+    suspend fun searchAnnouncements(
+        @Header("Authorization") token: String,
+        @Query("query") query: String,
         @Query("page") currentPage: Int
     ): AnnouncementResponse
 

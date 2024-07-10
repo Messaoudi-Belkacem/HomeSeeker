@@ -15,6 +15,7 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
@@ -23,16 +24,25 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.rounded.Close
 import androidx.compose.material.icons.rounded.RemoveRedEye
+import androidx.compose.material.icons.rounded.Search
 import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.OutlinedTextFieldDefaults
+import androidx.compose.material3.SearchBar
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.MutableState
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateListOf
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -458,4 +468,63 @@ fun formatPrice(price: Double): String {
         }
     }
     return formattedPrice.reversed()
+}
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+fun SearchBarSample(
+    bottomBarNavHostController: NavHostController,
+    sharedViewModel: SharedViewModel
+) {
+
+    var text by remember { mutableStateOf("") }
+    var active by remember { mutableStateOf(false) }
+    SearchBar(
+        modifier = Modifier
+            .padding(if (active) 0.dp else 16.dp)
+            .fillMaxWidth(),
+        query = text,
+        onQueryChange = {
+            text = it
+        },
+        onSearch = {
+            active = false
+            text = ""
+            bottomBarNavHostController.navigate(Graph.SEARCH)
+        },
+        active = active,
+        onActiveChange = {
+            active = it
+        },
+        placeholder = {
+            Text(
+                text = "Search",
+                fontSize = 20.sp,
+                fontWeight = FontWeight.Medium
+            )
+        },
+        leadingIcon = {
+            Icon(
+                imageVector = Icons.Rounded.Search,
+                contentDescription = "Search icon",
+            )
+        },
+        trailingIcon = {
+            if(active) {
+                Icon(
+                    modifier = Modifier.clickable {
+                        if(text.isNotEmpty()) {
+                            text = ""
+                        } else {
+                            active = false
+                        }
+                    },
+                    imageVector = Icons.Rounded.Close,
+                    contentDescription = "Close Icon",
+                )
+            }
+        },
+        shape = RoundedCornerShape(14.dp),
+        windowInsets = WindowInsets(left = 14.dp,top = 20.dp, bottom = 20.dp)
+    ) {}
 }

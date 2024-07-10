@@ -12,6 +12,7 @@ import androidx.navigation.navigation
 import com.example.darckoum.MainViewModel
 import com.example.darckoum.navigation.screen.BottomBarScreen
 import com.example.darckoum.navigation.screen.LeafScreen
+import com.example.darckoum.screen.search.SearchScreen
 import com.example.darckoum.screen.SharedViewModel
 import com.example.darckoum.screen.add.AddScreen
 import com.example.darckoum.screen.announcement.AnnouncementScreen
@@ -77,6 +78,18 @@ fun HomeNavGraph(
         ) {
             composable(route = LeafScreen.OwnedAnnouncement.route) {
                 OwnedAnnouncementScreen(
+                    bottomBarNavHostController = bottomBarNavHostController,
+                    sharedViewModel = sharedViewModel
+                )
+            }
+        }
+
+        navigation(
+            route = Graph.SEARCH,
+            startDestination = LeafScreen.Search.route
+        ) {
+            composable(route = LeafScreen.Search.route) {
+                SearchScreen(
                     bottomBarNavHostController = bottomBarNavHostController,
                     sharedViewModel = sharedViewModel
                 )

@@ -21,8 +21,8 @@ class MyAnnouncementsPagingSource(
             if (response.content.isNotEmpty()) {
                 LoadResult.Page(
                     data = response.content,
-                    prevKey = if (currentPage == 1) null else currentPage - 1,
-                    nextKey = if (endOfPaginationReached == true) null else currentPage + 1
+                    prevKey = if (currentPage == 0) null else currentPage - 1,
+                    nextKey = if (endOfPaginationReached) null else currentPage + 1
                 )
             } else {
                 LoadResult.Page(

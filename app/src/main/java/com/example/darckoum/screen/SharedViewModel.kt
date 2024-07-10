@@ -10,4 +10,5 @@ import com.example.darckoum.data.model.request.AnnouncementResponse
 class SharedViewModel : ViewModel() {
     var announcement by mutableStateOf<Announcement?>(null)
     var ownedAnnouncement by mutableStateOf<Announcement?>(null)
+    var searchQuery by mutableStateOf<String?>(null)
 }

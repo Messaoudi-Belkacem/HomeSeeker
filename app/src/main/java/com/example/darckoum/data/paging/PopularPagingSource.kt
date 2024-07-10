@@ -3,11 +3,10 @@ package com.example.darckoum.data.paging
 import android.util.Log
 import androidx.paging.PagingSource
 import androidx.paging.PagingState
-import com.example.darckoum.MainViewModel
 import com.example.darckoum.api.AnnouncementService
 import com.example.darckoum.data.model.Announcement
 
-class DiscoverPagingSource(
+class PopularPagingSource(
     private val announcementService: AnnouncementService,
     private val token: String
 ) : PagingSource<Int, Announcement>() {
@@ -15,7 +14,12 @@ class DiscoverPagingSource(
     override suspend fun load(params: LoadParams<Int>): LoadResult<Int, Announcement> {
         val currentPage = params.key ?: 0
         return try {
-            val response = announcementService.getAnnouncements(token = token, currentPage = currentPage)
+            val response = announcementService.getAnnouncements(
+                token = token,
+                currentPage = currentPage,
+                sortBy = "views",
+                sortOrder = "desc"
+            )
             Log.d(tag, "response: ${response.content}")
             val endOfPaginationReached = response.content.isEmpty()
             if (response.content.isNotEmpty()) {
