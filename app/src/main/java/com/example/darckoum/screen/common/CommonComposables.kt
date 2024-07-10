@@ -371,7 +371,11 @@ fun PopularityPreview() {
 }
 
 @Composable
-fun CustomSearchItem(announcement: Announcement, navController: NavController) {
+fun CustomSearchItem(
+    announcement: Announcement,
+    bottomBarNavHostController: NavHostController,
+    sharedViewModel: SharedViewModel,
+) {
     val tag = "CustomSearchItem"
     val formattedPrice = formatPrice(announcement.price)
     Box(
@@ -381,7 +385,7 @@ fun CustomSearchItem(announcement: Announcement, navController: NavController) {
             .background(Color(0x994F4F4F))
             .padding(12.dp)
             .clickable {
-                navController.navigate(route = BottomBarScreen.Announcement.route)
+                bottomBarNavHostController.navigate(route = BottomBarScreen.Announcement.route)
             }
     ) {
         Row(
@@ -489,6 +493,7 @@ fun SearchBarSample(
         },
         onSearch = {
             active = false
+            sharedViewModel.searchQuery = text
             text = ""
             bottomBarNavHostController.navigate(Graph.SEARCH)
         },
