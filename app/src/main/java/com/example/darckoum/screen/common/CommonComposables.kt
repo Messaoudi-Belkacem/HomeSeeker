@@ -15,17 +15,20 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.systemBars
+import androidx.compose.foundation.layout.union
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.rounded.ArrowBack
-import androidx.compose.material.icons.rounded.ArrowBack
 import androidx.compose.material.icons.rounded.Close
 import androidx.compose.material.icons.rounded.RemoveRedEye
 import androidx.compose.material3.CircularProgressIndicator
@@ -46,9 +49,12 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.focus.FocusDirection
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.LocalFocusManager
+import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
@@ -75,8 +81,6 @@ fun OutlinedTextFieldSample(
     text: MutableState<String>,
     onValueChange: (String) -> Unit,
     keyboardOptions: KeyboardOptions,
-    minLines: Int = 1,
-    maxLines: Int = 1,
     enabled: Boolean = true
 ) {
     OutlinedTextField(
@@ -414,12 +418,12 @@ fun SearchResultItem(
             }
             Column(
                 horizontalAlignment = Alignment.Start,
-                verticalArrangement = Arrangement.spacedBy(8.dp),
                 modifier = Modifier
                     .padding(4.dp)
             ) {
                 Row(
-                    horizontalArrangement = Arrangement.spacedBy(4.dp)
+                    horizontalArrangement = Arrangement.spacedBy(4.dp),
+                    verticalAlignment = Alignment.CenterVertically
                 ) {
                     Icon(
                         painter = painterResource(id = R.drawable.ic_location),
@@ -431,8 +435,10 @@ fun SearchResultItem(
                         fontWeight = FontWeight.Medium
                     )
                 }
+                Spacer(modifier = Modifier.height(8.dp))
                 Row(
-                    horizontalArrangement = Arrangement.spacedBy(4.dp)
+                    horizontalArrangement = Arrangement.spacedBy(4.dp),
+                    verticalAlignment = Alignment.CenterVertically
                 ) {
                     Icon(
                         painter = painterResource(id = R.drawable.ic_type),
@@ -444,10 +450,12 @@ fun SearchResultItem(
                         fontWeight = FontWeight.Medium
                     )
                 }
+                Spacer(modifier = Modifier.height(16.dp))
                 Text(
                     text = "$formattedPrice DZD",
                     fontSize = 20.sp,
-                    fontWeight = FontWeight.SemiBold
+                    fontWeight = FontWeight.Bold,
+                    color = MaterialTheme.colorScheme.primary
                 )
             }
         }
@@ -477,6 +485,7 @@ fun SearchBarSampleForHomeScreen(
 ) {
     var text by remember { mutableStateOf("") }
     var active by remember { mutableStateOf(false) }
+    val localSoftwareKeyboardController = LocalSoftwareKeyboardController.current
     SearchBar(
         modifier = Modifier
             .padding(if (active) 0.dp else 16.dp)
@@ -486,9 +495,10 @@ fun SearchBarSampleForHomeScreen(
             text = it
         },
         onSearch = {
-            active = false
+            localSoftwareKeyboardController?.hide()
             sharedViewModel.searchQuery = text
             text = ""
+            active = false
             bottomBarNavHostController.navigate(Graph.SEARCH)
         },
         active = active,
@@ -506,6 +516,7 @@ fun SearchBarSampleForHomeScreen(
             if(active) {
                 Icon(
                     modifier = Modifier.clickable {
+                        localSoftwareKeyboardController?.hide()
                         active = false
                     },
                     imageVector = Icons.AutoMirrored.Rounded.ArrowBack,
@@ -533,11 +544,10 @@ fun SearchBarSampleForHomeScreen(
                 }
             }
         },
-        shape = RoundedCornerShape(14.dp),
-        windowInsets = WindowInsets(left = 14.dp,top = 20.dp, bottom = 20.dp)
+        shape = RoundedCornerShape(16.dp),
+        windowInsets = WindowInsets.systemBars.union(WindowInsets(left = 16.dp, right = 16.dp)),
     ) {}
 }
-
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun SearchBarSampleForSearchScreen(
@@ -547,6 +557,8 @@ fun SearchBarSampleForSearchScreen(
 ) {
     var text by remember { mutableStateOf("${sharedViewModel.searchQuery}") }
     var active by remember { mutableStateOf(false) }
+    val localSoftwareKeyboardController = LocalSoftwareKeyboardController.current
+    val focusManager = LocalFocusManager.current
     SearchBar(
         modifier = Modifier
             .padding(if (active) 0.dp else 16.dp)
@@ -558,7 +570,7 @@ fun SearchBarSampleForSearchScreen(
         onSearch = {
             active = false
             sharedViewModel.searchQuery = text
-            text = ""
+            localSoftwareKeyboardController?.hide()
             searchViewModel.getAnnouncementsByQuery(query = text)
         },
         active = active,
@@ -575,6 +587,7 @@ fun SearchBarSampleForSearchScreen(
         leadingIcon = {
             Icon(
                 modifier = Modifier.clickable {
+                    localSoftwareKeyboardController?.hide()
                     bottomBarNavHostController.navigateUp()
                 },
                 imageVector = Icons.AutoMirrored.Rounded.ArrowBack,
@@ -600,13 +613,15 @@ fun SearchBarSampleForSearchScreen(
                             text = ""
                         }
                         active = true
+                        localSoftwareKeyboardController?.show()
+                        focusManager.moveFocus(FocusDirection.Next)
                     },
                     imageVector = Icons.Rounded.Close,
                     contentDescription = "Close Icon",
                 )
             }
         },
-        shape = RoundedCornerShape(14.dp),
-        windowInsets = WindowInsets(left = 14.dp,top = 20.dp, bottom = 20.dp)
+        shape = RoundedCornerShape(16.dp),
+        windowInsets = WindowInsets.systemBars.union(WindowInsets(left = 16.dp, right = 16.dp)),
     ) {}
 }

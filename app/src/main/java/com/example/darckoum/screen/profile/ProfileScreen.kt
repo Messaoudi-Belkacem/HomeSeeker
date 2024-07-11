@@ -216,7 +216,6 @@ fun ProfileScreen(
                                     label = "Username",
                                     modifier = Modifier
                                         .fillMaxWidth(),
-                                    enabled = false,
                                     text = profileViewModel.usernameTextFieldText,
                                     onValueChange = {
                                         profileViewModel.usernameTextFieldText.value = it
@@ -224,7 +223,8 @@ fun ProfileScreen(
                                     keyboardOptions = KeyboardOptions(
                                         keyboardType = KeyboardType.Text,
                                         capitalization = KeyboardCapitalization.Words
-                                    )
+                                    ),
+                                    enabled = false
                                 )
                                 Row(
                                     verticalAlignment = Alignment.CenterVertically,
@@ -236,7 +236,6 @@ fun ProfileScreen(
                                         label = "First name",
                                         modifier = Modifier
                                             .fillMaxWidth(0.5f),
-                                        enabled = areFieldsEnabled,
                                         text = profileViewModel.firstNameTextFieldText,
                                         onValueChange = {
                                             profileViewModel.firstNameTextFieldText.value = it
@@ -244,13 +243,13 @@ fun ProfileScreen(
                                         keyboardOptions = KeyboardOptions(
                                             keyboardType = KeyboardType.Text,
                                             capitalization = KeyboardCapitalization.Words
-                                        )
+                                        ),
+                                        enabled = areFieldsEnabled
                                     )
                                     OutlinedTextFieldSample(
                                         label = "Last name",
                                         modifier = Modifier
                                             .fillMaxWidth(1f),
-                                        enabled = areFieldsEnabled,
                                         text = profileViewModel.lastNameTextFieldText,
                                         onValueChange = {
                                             profileViewModel.lastNameTextFieldText.value = it
@@ -258,15 +257,15 @@ fun ProfileScreen(
                                         keyboardOptions = KeyboardOptions(
                                             keyboardType = KeyboardType.Text,
                                             capitalization = KeyboardCapitalization.Words
-                                        )
+                                        ),
+                                        enabled = areFieldsEnabled
                                     )
                                 }
                                 OutlinedTextFieldSample(
-                                    text = profileViewModel.phoneTextFieldText,
                                     label = "Phone number",
                                     modifier = Modifier
                                         .fillMaxWidth(),
-                                    enabled = areFieldsEnabled,
+                                    text = profileViewModel.phoneTextFieldText,
                                     onValueChange = {
                                         if (it.isDigitsOnly()) {
                                             profileViewModel.phoneTextFieldText.value = it
@@ -275,7 +274,8 @@ fun ProfileScreen(
                                     keyboardOptions = KeyboardOptions(
                                         keyboardType = KeyboardType.Phone,
                                         capitalization = KeyboardCapitalization.Words
-                                    )
+                                    ),
+                                    enabled = areFieldsEnabled
                                 )
                             }
                             Text(

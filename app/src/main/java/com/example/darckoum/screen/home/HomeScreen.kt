@@ -44,16 +44,13 @@ fun HomeScreen(
     mainViewModel: MainViewModel,
     sharedViewModel: SharedViewModel
 ) {
-
     val tag = "HomeScreen"
     val announcementsByDiscoverLazyPagingItems = homeViewModel.announcementsByDiscoverFlow.collectAsLazyPagingItems()
     val announcementsByPopularLazyPagingItems = homeViewModel.announcementsByPopularFlow.collectAsLazyPagingItems()
     val context = LocalContext.current
-
     LaunchedEffect(Unit) {
         homeViewModel.getAnnouncements(mainViewModel.token.value.toString())
     }
-
     Scaffold(
         modifier = Modifier.fillMaxSize(),
         topBar = {
@@ -110,7 +107,7 @@ fun HomeScreen(
                             .fillMaxSize()
                             .padding(paddingValues)
                             .verticalScroll(rememberScrollState()),
-                        verticalArrangement = Arrangement.spacedBy(16.dp),
+                        verticalArrangement = Arrangement.spacedBy(32.dp),
                         horizontalAlignment = Alignment.CenterHorizontally
                     ) {
                         Column(
@@ -137,7 +134,6 @@ fun HomeScreen(
                                         modifier = Modifier
                                     )
                                 }
-
                             } else {
                                 LazyRow(
                                     horizontalArrangement = Arrangement.spacedBy(12.dp),

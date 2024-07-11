@@ -172,9 +172,11 @@ fun AddAnnouncementUI(
 
     val scope = rememberCoroutineScope()
 
+    val newPaddingValues = PaddingValues(bottom = paddingValues.calculateBottomPadding())
+
     Column(
         modifier = modifier
-            .padding(paddingValues),
+            .padding(newPaddingValues),
     ) {
         var selectedImageUris by remember {
             mutableStateOf<List<Uri>>(emptyList())
@@ -376,9 +378,7 @@ fun AddAnnouncementUI(
                 keyboardOptions = KeyboardOptions(
                     keyboardType = KeyboardType.Text,
                     capitalization = KeyboardCapitalization.Sentences
-                ),
-                minLines = 6,
-                maxLines = 10
+                )
             )
             Button(
                 onClick = {
