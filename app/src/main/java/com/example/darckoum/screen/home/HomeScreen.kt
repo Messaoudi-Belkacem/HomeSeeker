@@ -35,7 +35,7 @@ import androidx.paging.compose.collectAsLazyPagingItems
 import com.example.darckoum.MainViewModel
 import com.example.darckoum.screen.SharedViewModel
 import com.example.darckoum.screen.common.CustomItem
-import com.example.darckoum.screen.common.SearchBarSample
+import com.example.darckoum.screen.common.SearchBarSampleForHomeScreen
 
 @Composable
 fun HomeScreen(
@@ -57,7 +57,7 @@ fun HomeScreen(
     Scaffold(
         modifier = Modifier.fillMaxSize(),
         topBar = {
-                SearchBarSample(
+                SearchBarSampleForHomeScreen(
                     bottomBarNavHostController = bottomBarNavHostController,
                     sharedViewModel = sharedViewModel
                 )
@@ -182,7 +182,6 @@ fun HomeScreen(
                                         modifier = Modifier
                                     )
                                 }
-
                             } else {
                                 LazyRow(
                                     horizontalArrangement = Arrangement.spacedBy(12.dp),

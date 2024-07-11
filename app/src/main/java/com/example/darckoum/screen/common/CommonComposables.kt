@@ -24,9 +24,10 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.rounded.ArrowBack
+import androidx.compose.material.icons.rounded.ArrowBack
 import androidx.compose.material.icons.rounded.Close
 import androidx.compose.material.icons.rounded.RemoveRedEye
-import androidx.compose.material.icons.rounded.Search
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
@@ -52,7 +53,6 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Dialog
@@ -65,6 +65,7 @@ import com.example.darckoum.data.model.Announcement
 import com.example.darckoum.navigation.Graph
 import com.example.darckoum.navigation.screen.BottomBarScreen
 import com.example.darckoum.screen.SharedViewModel
+import com.example.darckoum.screen.search.SearchViewModel
 import com.example.darckoum.util.Constants.Companion.IMAGE_BASE_URL
 
 @Composable
@@ -470,11 +471,10 @@ fun formatPrice(price: Double): String {
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun SearchBarSample(
+fun SearchBarSampleForHomeScreen(
     bottomBarNavHostController: NavHostController,
-    sharedViewModel: SharedViewModel
+    sharedViewModel: SharedViewModel,
 ) {
-
     var text by remember { mutableStateOf("") }
     var active by remember { mutableStateOf(false) }
     SearchBar(
@@ -503,20 +503,103 @@ fun SearchBarSample(
             )
         },
         leadingIcon = {
+            if(active) {
+                Icon(
+                    modifier = Modifier.clickable {
+                        active = false
+                    },
+                    imageVector = Icons.AutoMirrored.Rounded.ArrowBack,
+                    contentDescription = "ArrowBack Icon",
+                    tint = MaterialTheme.colorScheme.primary
+                )
+            } else {
+                Icon(
+                    painter = painterResource(id = R.drawable.ic_search),
+                    contentDescription = "Close Icon",
+                    tint = MaterialTheme.colorScheme.primary
+                )
+            }
+        },
+        trailingIcon = {
+            if(active) {
+                if(text.isNotEmpty()) {
+                    Icon(
+                        modifier = Modifier.clickable {
+                            text = ""
+                        },
+                        imageVector = Icons.Rounded.Close,
+                        contentDescription = "Close Icon",
+                    )
+                }
+            }
+        },
+        shape = RoundedCornerShape(14.dp),
+        windowInsets = WindowInsets(left = 14.dp,top = 20.dp, bottom = 20.dp)
+    ) {}
+}
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+fun SearchBarSampleForSearchScreen(
+    sharedViewModel: SharedViewModel,
+    searchViewModel: SearchViewModel,
+    bottomBarNavHostController: NavHostController
+) {
+    var text by remember { mutableStateOf("${sharedViewModel.searchQuery}") }
+    var active by remember { mutableStateOf(false) }
+    SearchBar(
+        modifier = Modifier
+            .padding(if (active) 0.dp else 16.dp)
+            .fillMaxWidth(),
+        query = text,
+        onQueryChange = {
+            text = it
+        },
+        onSearch = {
+            active = false
+            sharedViewModel.searchQuery = text
+            text = ""
+            searchViewModel.getAnnouncementsByQuery(query = text)
+        },
+        active = active,
+        onActiveChange = {
+            active = it
+        },
+        placeholder = {
+            Text(
+                text = "Search",
+                fontSize = 20.sp,
+                fontWeight = FontWeight.Medium
+            )
+        },
+        leadingIcon = {
             Icon(
-                imageVector = Icons.Rounded.Search,
-                contentDescription = "Search icon",
+                modifier = Modifier.clickable {
+                    bottomBarNavHostController.navigateUp()
+                },
+                imageVector = Icons.AutoMirrored.Rounded.ArrowBack,
+                contentDescription = "Close Icon",
+                tint = MaterialTheme.colorScheme.primary
             )
         },
         trailingIcon = {
             if(active) {
+                if(text.isNotEmpty()) {
+                    Icon(
+                        modifier = Modifier.clickable {
+                            text = ""
+                        },
+                        imageVector = Icons.Rounded.Close,
+                        contentDescription = "Close Icon",
+                    )
+                }
+            } else {
                 Icon(
                     modifier = Modifier.clickable {
                         if(text.isNotEmpty()) {
                             text = ""
-                        } else {
-                            active = false
                         }
+                        active = true
                     },
                     imageVector = Icons.Rounded.Close,
                     contentDescription = "Close Icon",

@@ -2,7 +2,7 @@ package com.example.darckoum.screen.search
 
 import android.util.Log
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.lazy.LazyColumn
@@ -17,6 +17,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import androidx.paging.compose.collectAsLazyPagingItems
 import com.example.darckoum.screen.SharedViewModel
+import com.example.darckoum.screen.common.SearchBarSampleForSearchScreen
 import com.example.darckoum.screen.common.SearchResultItem
 
 
@@ -29,14 +30,18 @@ fun SearchScreen(
     val tag = "SearchScreen"
     val announcementsLazyPagingItems = searchViewModel.announcementsFlow.collectAsLazyPagingItems()
     val context = LocalContext.current
-
     LaunchedEffect(Unit) {
         searchViewModel.getAnnouncementsByQuery(sharedViewModel.searchQuery.toString())
     }
-    Box(
+    Column(
         modifier = Modifier
             .fillMaxSize()
     ) {
+        SearchBarSampleForSearchScreen(
+            sharedViewModel = sharedViewModel,
+            searchViewModel = searchViewModel,
+            bottomBarNavHostController = bottomBarNavHostController
+        )
         if (announcementsLazyPagingItems.itemCount != 0) {
             LazyColumn(
                 modifier = Modifier
@@ -62,7 +67,6 @@ fun SearchScreen(
             Text(
                 text = "There's nothing to show",
                 modifier = Modifier
-                    .align(Alignment.Center)
             )
         }
     }
