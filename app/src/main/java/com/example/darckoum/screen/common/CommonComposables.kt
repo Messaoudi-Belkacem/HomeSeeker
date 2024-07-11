@@ -211,7 +211,7 @@ fun CustomItem(
                 Row(
                     modifier = Modifier
                         .padding(top = 6.dp, end = 6.dp)
-                        .size(width = 40.dp, height = 22.dp)
+                        .size(width = 50.dp, height = 22.dp)
                         .clip(RoundedCornerShape(4.dp))
                         .background(MaterialTheme.colorScheme.primary)
                         .align(Alignment.TopEnd),
@@ -223,7 +223,7 @@ fun CustomItem(
                         contentDescription = null,
                         tint = MaterialTheme.colorScheme.onPrimary,
                         modifier = Modifier
-                            .width(18.dp)
+                            .width(16.dp)
                     )
                     Text(
                         text = announcement.views.toString(),
@@ -237,7 +237,8 @@ fun CustomItem(
                 text = announcement.title,
                 fontSize = 18.sp,
                 fontWeight = FontWeight.Bold,
-                textAlign = TextAlign.Center
+                textAlign = TextAlign.Center,
+                softWrap = false
             )
             Column(
                 verticalArrangement = Arrangement.spacedBy(4.dp),
@@ -252,7 +253,7 @@ fun CustomItem(
                         contentDescription = null,
                     )
                     Text(
-                        text = announcement.location,
+                        text = announcement.state,
                         fontSize = 16.sp,
                         fontWeight = FontWeight.Medium
                     )

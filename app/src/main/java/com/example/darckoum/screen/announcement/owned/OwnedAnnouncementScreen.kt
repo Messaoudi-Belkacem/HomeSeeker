@@ -2,6 +2,7 @@ package com.example.darckoum.screen.announcement.owned
 
 import android.util.Log
 import android.widget.Toast
+import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -14,8 +15,10 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.rememberPagerState
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.rounded.MeetingRoom
@@ -31,6 +34,7 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
@@ -135,6 +139,39 @@ fun OwnedAnnouncementScreen(
                                 modifier = Modifier
                                     .fillMaxWidth()
                             )
+                        }
+                        Box(
+                            modifier = Modifier
+                                .fillMaxSize()
+                                .background(
+                                    Brush.verticalGradient(
+                                        colors = listOf(
+                                            Color.Transparent,
+                                            MaterialTheme.colorScheme.surface
+                                        ),
+                                        startY = 500f
+                                    )
+                                )
+                        )
+                        // Indicator
+                        Row(
+                            modifier = Modifier
+                                .align(Alignment.BottomCenter)
+                                .padding(16.dp),
+                            horizontalArrangement = Arrangement.spacedBy(4.dp)
+                        ) {
+                            repeat(announcementResponse.imageNames.size) { index ->
+                                val isSelected = pagerState.currentPage == index
+                                Box(
+                                    modifier = Modifier
+                                        .height(8.dp)
+                                        .width(if (isSelected) 16.dp else 8.dp)
+                                        .background(
+                                            color = if (isSelected) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.onPrimary,
+                                            shape = CircleShape
+                                        )
+                                )
+                            }
                         }
                     }
                     Column(
@@ -306,7 +343,7 @@ fun OwnedAnnouncementScreen(
                                     modifier = Modifier,
                                     fontSize = 14.sp,
                                     fontWeight = FontWeight.Light,
-                                    color = MaterialTheme.colorScheme.outlineVariant,
+                                    color = Color.Gray,
                                     softWrap = true
                                 )
                             }

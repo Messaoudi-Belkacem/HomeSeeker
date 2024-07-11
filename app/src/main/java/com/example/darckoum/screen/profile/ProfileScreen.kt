@@ -364,16 +364,16 @@ fun ProfileScreen(
                                         profileViewModel.patchUserDetails()
                                         areFieldsEnabled = !areFieldsEnabled
                                     },
-                                    shape = RoundedCornerShape(14.dp),
                                     colors = ButtonDefaults.buttonColors(containerColor = Color(0xFFE7BD73)),
-                                    contentPadding = PaddingValues(vertical = 20.dp),
+                                    shape = RoundedCornerShape(16.dp),
                                     modifier = Modifier
-                                        .fillMaxWidth()
+                                        .fillMaxWidth(1f)
+                                        .height(48.dp)
                                 ) {
                                     Text(
                                         text = "Save",
-                                        fontSize = 22.sp,
-                                        fontWeight = FontWeight.SemiBold
+                                        fontSize = 20.sp,
+                                        fontWeight = FontWeight.Bold
                                     )
                                 }
                             }
@@ -408,11 +408,11 @@ fun ProfileScreen(
                                             }
                                         }
                                     },
-                                    shape = RoundedCornerShape(14.dp),
                                     colors = ButtonDefaults.buttonColors(containerColor = Color.Red),
-                                    contentPadding = PaddingValues(vertical = 20.dp),
+                                    shape = RoundedCornerShape(16.dp),
                                     modifier = Modifier
-                                        .fillMaxWidth()
+                                        .fillMaxWidth(1f)
+                                        .height(48.dp)
                                 ) {
                                     Text(
                                         text = "Log out",

@@ -53,6 +53,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.blur
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
@@ -220,6 +221,21 @@ fun AddAnnouncementUI(
                     contentScale = ContentScale.Crop
                 )
             }
+            Box(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .background(
+                        Brush.verticalGradient(
+                            colors = listOf(
+                                Color.Transparent,
+                                MaterialTheme.colorScheme.surface
+                            ),
+                            startY = 500f
+                        )
+                    )
+            )
+            // Indicator
+
             Row(
                 modifier = Modifier
                     .padding(horizontal = 18.dp, vertical = 14.dp)
@@ -249,24 +265,25 @@ fun AddAnnouncementUI(
                     androidx.compose.material.Icon(
                         painter = painterResource(id = R.drawable.ic_minus),
                         contentDescription = null,
-                        tint = MaterialTheme.colorScheme.onSurface
+                        tint = MaterialTheme.colorScheme.primary
                     )
                 }
                 // Image Indicator
                 Row(
-                    Modifier
-                        .wrapContentHeight()
-                        .padding(bottom = 8.dp),
-                    horizontalArrangement = Arrangement.Center
+                    modifier = Modifier
+                        .padding(16.dp),
+                    horizontalArrangement = Arrangement.spacedBy(4.dp)
                 ) {
-                    repeat(pagerState.pageCount) { iteration ->
-                        val width = if (pagerState.currentPage == iteration) 18.dp else 8.dp
+                    repeat(selectedImageUris.size) { index ->
+                        val isSelected = pagerState.currentPage == index
                         Box(
                             modifier = Modifier
-                                .padding(5.dp)
-                                .clip(CircleShape)
                                 .height(8.dp)
-                                .width(width)
+                                .width(if (isSelected) 16.dp else 8.dp)
+                                .background(
+                                    color = if (isSelected) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.onPrimary,
+                                    shape = CircleShape
+                                )
                         )
                     }
                 }
@@ -285,7 +302,7 @@ fun AddAnnouncementUI(
                     androidx.compose.material.Icon(
                         painter = painterResource(id = R.drawable.ic_add),
                         contentDescription = null,
-                        tint = MaterialTheme.colorScheme.onSurface
+                        tint = MaterialTheme.colorScheme.primary
                     )
                 }
             }
@@ -419,17 +436,16 @@ fun AddAnnouncementUI(
                         }
                     }
                 },
-                shape = RoundedCornerShape(14.dp),
                 colors = ButtonDefaults.buttonColors(containerColor = Color(0xFFE7BD73)),
-                contentPadding = PaddingValues(vertical = 20.dp),
+                shape = RoundedCornerShape(16.dp),
                 modifier = Modifier
                     .fillMaxWidth(1f)
-                    .padding(top = 32.dp)
+                    .height(48.dp)
             ) {
                 Text(
                     text = "Announce",
-                    fontSize = 22.sp,
-                    fontWeight = FontWeight.SemiBold
+                    fontSize = 20.sp,
+                    fontWeight = FontWeight.Bold
                 )
             }
         }

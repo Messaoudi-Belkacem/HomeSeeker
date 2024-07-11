@@ -10,7 +10,7 @@ class PopularPagingSource(
     private val announcementService: AnnouncementService,
     private val token: String
 ) : PagingSource<Int, Announcement>() {
-    val tag = "DiscoverPagingSource"
+    val tag = "PopularPagingSource"
     override suspend fun load(params: LoadParams<Int>): LoadResult<Int, Announcement> {
         val currentPage = params.key ?: 0
         return try {

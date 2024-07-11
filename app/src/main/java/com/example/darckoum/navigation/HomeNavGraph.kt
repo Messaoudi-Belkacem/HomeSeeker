@@ -42,7 +42,8 @@ fun HomeNavGraph(
             HomeScreen(
                 bottomBarNavHostController = bottomBarNavHostController,
                 mainViewModel = mainViewModel,
-                sharedViewModel = sharedViewModel
+                sharedViewModel = sharedViewModel,
+                paddingValues = paddingValues
             )
         }
         composable(route = BottomBarScreen.Add.route) {

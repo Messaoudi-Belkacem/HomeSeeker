@@ -7,14 +7,13 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyRow
-import androidx.compose.foundation.rememberScrollState
-import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Button
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.MaterialTheme
@@ -42,14 +41,16 @@ fun HomeScreen(
     bottomBarNavHostController: NavHostController,
     homeViewModel: HomeViewModel = hiltViewModel(),
     mainViewModel: MainViewModel,
-    sharedViewModel: SharedViewModel
+    sharedViewModel: SharedViewModel,
+    paddingValues: PaddingValues
 ) {
     val tag = "HomeScreen"
     val announcementsByDiscoverLazyPagingItems = homeViewModel.announcementsByDiscoverFlow.collectAsLazyPagingItems()
     val announcementsByPopularLazyPagingItems = homeViewModel.announcementsByPopularFlow.collectAsLazyPagingItems()
     val context = LocalContext.current
     LaunchedEffect(Unit) {
-        homeViewModel.getAnnouncements(mainViewModel.token.value.toString())
+        homeViewModel.getDiscoverAnnouncements(mainViewModel.token.value.toString())
+        homeViewModel.getPopularAnnouncements(mainViewModel.token.value.toString())
     }
     Scaffold(
         modifier = Modifier.fillMaxSize(),
@@ -59,69 +60,72 @@ fun HomeScreen(
                     sharedViewModel = sharedViewModel
                 )
         },
-        content = { paddingValues ->
-            when (announcementsByDiscoverLazyPagingItems.loadState.refresh) {
-                is LoadState.Loading -> {
-                    Box(
-                        modifier = Modifier
-                            .fillMaxSize(),
-                        contentAlignment = Alignment.Center,
-                    ) {
-                        Column(
-                            horizontalAlignment = Alignment.CenterHorizontally,
-                            verticalArrangement = Arrangement.Center,
-                        ) {
-                            CircularProgressIndicator(
-                                modifier = Modifier.size(64.dp),
-                            )
-                            Spacer(modifier = Modifier.height(32.dp))
-                            Text(
-                                text = "Hang tight...",
-                                fontSize = 24.sp,
-                                fontWeight = FontWeight.Medium,
-                                color = MaterialTheme.colorScheme.onSurface
-                            )
+        content = { otherRaddingValues ->
+            Column (
+                modifier = Modifier
+                    .fillMaxSize()
+                    .padding(
+                        bottom = paddingValues.calculateBottomPadding(),
+                        top = otherRaddingValues.calculateTopPadding()
+                    ),
+                verticalArrangement = Arrangement.spacedBy(16.dp),
+                horizontalAlignment = Alignment.CenterHorizontally
+            ) {
+                Column(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .fillMaxHeight(0.5f),
+                    verticalArrangement = Arrangement.spacedBy(8.dp),
+                    horizontalAlignment = Alignment.CenterHorizontally
+                ) {
+                    Text(
+                        text = "Discover",
+                        fontSize = 20.sp,
+                        fontWeight = FontWeight.SemiBold,
+                        modifier = Modifier.padding(start = 16.dp)
+                    )
+                    when (announcementsByDiscoverLazyPagingItems.loadState.refresh) {
+                        is LoadState.Loading -> {
+                            Box(
+                                modifier = Modifier
+                                    .fillMaxSize(),
+                                contentAlignment = Alignment.Center,
+                            ) {
+                                Column(
+                                    horizontalAlignment = Alignment.CenterHorizontally,
+                                    verticalArrangement = Arrangement.Center,
+                                ) {
+                                    CircularProgressIndicator(
+                                        modifier = Modifier.size(64.dp),
+                                    )
+                                    Spacer(modifier = Modifier.height(32.dp))
+                                    Text(
+                                        text = "Hang tight...",
+                                        fontSize = 24.sp,
+                                        fontWeight = FontWeight.Medium,
+                                        color = MaterialTheme.colorScheme.onSurface
+                                    )
+                                }
+                            }
                         }
-                    }
-                }
-                is LoadState.Error -> {
-                    Toast.makeText(
-                        context,
-                        (announcementsByDiscoverLazyPagingItems.loadState.refresh as LoadState.Error).error.message,
-                        Toast.LENGTH_SHORT
-                    ).show()
-                    Log.d(tag, (announcementsByDiscoverLazyPagingItems.loadState.refresh as LoadState.Error).error.toString())
-                    Box(
-                        modifier = Modifier
-                            .fillMaxSize(),
-                        contentAlignment = Alignment.Center,
-                    ) {
-                        Button(onClick = { homeViewModel.getAnnouncements(mainViewModel.token.value.toString()) }) {
-                            Text(text = "Retry")
+                        is LoadState.Error -> {
+                            Toast.makeText(
+                                context,
+                                (announcementsByDiscoverLazyPagingItems.loadState.refresh as LoadState.Error).error.message,
+                                Toast.LENGTH_SHORT
+                            ).show()
+                            Log.d(tag, (announcementsByDiscoverLazyPagingItems.loadState.refresh as LoadState.Error).error.toString())
+                            Box(
+                                modifier = Modifier
+                                    .fillMaxSize(),
+                                contentAlignment = Alignment.Center,
+                            ) {
+                                Button(onClick = { homeViewModel.getDiscoverAnnouncements(mainViewModel.token.value.toString()) }) {
+                                    Text(text = "Retry")
+                                }
+                            }
                         }
-                    }
-                }
-                else -> {
-                    Column(
-                        modifier = Modifier
-                            .fillMaxSize()
-                            .padding(paddingValues)
-                            .verticalScroll(rememberScrollState()),
-                        verticalArrangement = Arrangement.spacedBy(32.dp),
-                        horizontalAlignment = Alignment.CenterHorizontally
-                    ) {
-                        Column(
-                            modifier = Modifier
-                                .fillMaxWidth(),
-                            verticalArrangement = Arrangement.spacedBy(16.dp),
-                            horizontalAlignment = Alignment.CenterHorizontally
-                        ) {
-                            Text(
-                                text = "Discover",
-                                fontSize = 20.sp,
-                                fontWeight = FontWeight.SemiBold,
-                                modifier = Modifier.padding(start = 16.dp)
-                            )
+                        else -> {
                             if(announcementsByDiscoverLazyPagingItems.itemCount == 0) {
                                 Box(
                                     modifier = Modifier
@@ -154,18 +158,63 @@ fun HomeScreen(
                                 }
                             }
                         }
-                        Column(
-                            modifier = Modifier
-                                .fillMaxWidth(),
-                            verticalArrangement = Arrangement.spacedBy(16.dp),
-                            horizontalAlignment = Alignment.CenterHorizontally
-                        ) {
-                            Text(
-                                text = "Popular",
-                                fontSize = 20.sp,
-                                fontWeight = FontWeight.SemiBold,
-                                modifier = Modifier.padding(start = 16.dp)
-                            )
+                    }
+                }
+                Column(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .fillMaxHeight(1f),
+                    verticalArrangement = Arrangement.spacedBy(8.dp),
+                    horizontalAlignment = Alignment.CenterHorizontally
+                ) {
+                    Text(
+                        text = "Popular",
+                        fontSize = 20.sp,
+                        fontWeight = FontWeight.SemiBold,
+                        modifier = Modifier.padding(start = 16.dp)
+                    )
+                    when (announcementsByPopularLazyPagingItems.loadState.refresh) {
+                        is LoadState.Loading -> {
+                            Box(
+                                modifier = Modifier
+                                    .fillMaxSize(),
+                                contentAlignment = Alignment.Center,
+                            ) {
+                                Column(
+                                    horizontalAlignment = Alignment.CenterHorizontally,
+                                    verticalArrangement = Arrangement.Center,
+                                ) {
+                                    CircularProgressIndicator(
+                                        modifier = Modifier.size(64.dp),
+                                    )
+                                    Spacer(modifier = Modifier.height(32.dp))
+                                    Text(
+                                        text = "Hang tight...",
+                                        fontSize = 24.sp,
+                                        fontWeight = FontWeight.Medium,
+                                        color = MaterialTheme.colorScheme.onSurface
+                                    )
+                                }
+                            }
+                        }
+                        is LoadState.Error -> {
+                            Toast.makeText(
+                                context,
+                                (announcementsByDiscoverLazyPagingItems.loadState.refresh as LoadState.Error).error.message,
+                                Toast.LENGTH_SHORT
+                            ).show()
+                            Log.d(tag, (announcementsByDiscoverLazyPagingItems.loadState.refresh as LoadState.Error).error.toString())
+                            Box(
+                                modifier = Modifier
+                                    .fillMaxSize(),
+                                contentAlignment = Alignment.Center,
+                            ) {
+                                Button(onClick = { homeViewModel.getPopularAnnouncements(mainViewModel.token.value.toString()) }) {
+                                    Text(text = "Retry")
+                                }
+                            }
+                        }
+                        else -> {
                             if(announcementsByDiscoverLazyPagingItems.itemCount == 0) {
                                 Box(
                                     modifier = Modifier

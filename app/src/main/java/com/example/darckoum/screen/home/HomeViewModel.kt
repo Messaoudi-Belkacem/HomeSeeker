@@ -33,13 +33,10 @@ class HomeViewModel @Inject constructor(
     private val _homeState = mutableStateOf<HomeState>(HomeState.Initial)
     val homeState: State<HomeState> = _homeState
 
-    fun getAnnouncements(token: String) {
+    fun getDiscoverAnnouncements(token: String) {
         viewModelScope.launch {
             try {
-                _homeState.value = HomeState.Loading
                 val tokenToBeSent = "Bearer $token"
-                var discoverRequestIsSuccessful = false
-                var popularRequestIsSuccessful = false
                 Log.d(tag, "Added (Bearer) to the token")
                 Log.d(tag, "Get announcements called with token: $tokenToBeSent")
                 repository.getAnnouncementsByDiscover(token = tokenToBeSent)
@@ -51,8 +48,23 @@ class HomeViewModel @Inject constructor(
                     .collect {
                         _announcementsByDiscoverFlow.value = it
                         Log.d(tag, "response was successful for getting announcements by discover")
-                        discoverRequestIsSuccessful = true
                     }
+            } catch (e: ConnectException) {
+                Log.d(tag, "Failed to connect to the server. Please check your internet connection.")
+                _homeState.value = HomeState.Error("Failed to connect to the server. Please check your internet connection.")
+            } catch (e: Exception) {
+                Log.d(tag, "An unexpected error occurred.", e)
+                _homeState.value = HomeState.Error("An unexpected error occurred.")
+            }
+        }
+    }
+
+    fun getPopularAnnouncements(token: String) {
+        viewModelScope.launch {
+            try {
+                val tokenToBeSent = "Bearer $token"
+                Log.d(tag, "Added (Bearer) to the token")
+                Log.d(tag, "Get announcements called with token: $tokenToBeSent")
                 repository.getAnnouncementsByPopular(token = tokenToBeSent)
                     .cachedIn(viewModelScope)
                     .catch { e ->
@@ -62,14 +74,7 @@ class HomeViewModel @Inject constructor(
                     .collect {
                         _announcementsByPopularFlow.value = it
                         Log.d(tag, "response was successful for getting announcements by popular")
-                        popularRequestIsSuccessful = true
                     }
-                if (popularRequestIsSuccessful && discoverRequestIsSuccessful) {
-                    Log.d(tag, "Both requests are successful")
-                    _homeState.value = HomeState.Success
-                } else {
-                    Log.d(tag, "One request was NOT successful")
-                }
             } catch (e: ConnectException) {
                 Log.d(tag, "Failed to connect to the server. Please check your internet connection.")
                 _homeState.value = HomeState.Error("Failed to connect to the server. Please check your internet connection.")
