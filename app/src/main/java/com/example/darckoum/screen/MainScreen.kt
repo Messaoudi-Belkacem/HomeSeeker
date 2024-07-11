@@ -63,23 +63,29 @@ fun BottomBar(bottomBarNavHostController: NavHostController) {
     )
     val navBackStackEntry by bottomBarNavHostController.currentBackStackEntryAsState()
     val currentDestination = navBackStackEntry?.destination
-    Row(
-        modifier = Modifier
-            .fillMaxWidth()
-            .height(70.dp)
-            .padding(top = 8.dp)
-            .background(MaterialTheme.colorScheme.surface/*Color.Transparent*/),
-        horizontalArrangement = Arrangement.SpaceEvenly,
-        verticalAlignment = Alignment.CenterVertically
-    ) {
-        screens.forEach { screen ->
-            AddItem(
-                screen = screen,
-                currentDestination = currentDestination,
-                bottomBarNavHostController = bottomBarNavHostController
-            )
+
+    val bottomBarDestination = screens.any { it.route == currentDestination?.route }
+
+    if (bottomBarDestination) {
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
+                .height(70.dp)
+                .padding(top = 8.dp)
+                .background(MaterialTheme.colorScheme.surface/*Color.Transparent*/),
+            horizontalArrangement = Arrangement.SpaceEvenly,
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            screens.forEach { screen ->
+                AddItem(
+                    screen = screen,
+                    currentDestination = currentDestination,
+                    bottomBarNavHostController = bottomBarNavHostController
+                )
+            }
         }
     }
+
 }
 
 @Composable
