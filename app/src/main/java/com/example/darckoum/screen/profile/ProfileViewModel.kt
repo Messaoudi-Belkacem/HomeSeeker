@@ -3,7 +3,6 @@ package com.example.darckoum.screen.profile
 import android.util.Log
 import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.paging.PagingData
@@ -15,7 +14,6 @@ import com.example.darckoum.data.model.request.LogoutRequest
 import com.example.darckoum.data.model.request.PatchUserDetailsRequest
 import com.example.darckoum.data.model.response.PatchUserDetailsResponse
 import com.example.darckoum.data.repository.Repository
-import com.example.darckoum.data.state.HomeState
 import com.example.darckoum.data.state.ProfileState
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.delay

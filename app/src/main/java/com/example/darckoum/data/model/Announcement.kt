@@ -16,5 +16,6 @@ data class Announcement(
     val owner: String,
     val user: String,
     val imageNames: List<String>,
-    val views : Int
+    val views : Int,
+    val authorPhone: String
 )

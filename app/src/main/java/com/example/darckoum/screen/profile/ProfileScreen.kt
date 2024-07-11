@@ -272,8 +272,7 @@ fun ProfileScreen(
                                         }
                                     },
                                     keyboardOptions = KeyboardOptions(
-                                        keyboardType = KeyboardType.Phone,
-                                        capitalization = KeyboardCapitalization.Words
+                                        keyboardType = KeyboardType.Phone
                                     ),
                                     enabled = areFieldsEnabled
                                 )

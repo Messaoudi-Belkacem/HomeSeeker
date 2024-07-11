@@ -4,28 +4,32 @@ import android.content.Intent
 import android.net.Uri
 import android.util.Log
 import android.widget.Toast
+import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.rounded.MeetingRoom
+import androidx.compose.material.icons.rounded.SpaceDashboard
 import androidx.compose.material3.Button
-import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Icon
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
@@ -98,170 +102,194 @@ fun AnnouncementScreen(
             }
             Column(
                 modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(12.dp),
-                horizontalAlignment = Alignment.CenterHorizontally,
-                verticalArrangement = Arrangement.SpaceEvenly
+                    .padding(24.dp)
+                    .fillMaxSize(),
+                verticalArrangement = Arrangement.SpaceBetween
             ) {
-                Text(
-                    text = announcementResponse.title,
-                    color = Color(0x99FFF5F3),
-                    modifier = Modifier
-                        .fillMaxWidth(1f),
-                    textAlign = TextAlign.Center,
-                    fontSize = 24.sp,
-                    fontWeight = FontWeight.SemiBold
-                )
-                Row(
-                    modifier = Modifier
-                        .padding(10.dp),
-                    verticalAlignment = Alignment.CenterVertically,
-                    horizontalArrangement = Arrangement.spacedBy(35.dp)
-                ) {
-                    Row(
-                        modifier = Modifier,
-                        verticalAlignment = Alignment.CenterVertically,
-                        horizontalArrangement = Arrangement.spacedBy(8.dp)
-                    ) {
-                        Icon(
-                            painter = painterResource(id = R.drawable.room_icon),
-                            contentDescription = null,
-                            modifier = Modifier
-                                .size(32.dp),
-                            tint = Color(0x99FFF5F3)
-                        )
-                        Text(
-                            text = announcementResponse.numberOfRooms.toString(),
-                            color = Color(0x99FFF5F3),
-                            modifier = Modifier,
-                            fontSize = 20.sp,
-                            fontWeight = FontWeight.SemiBold
-                        )
-                    }
-                    Row(
-                        modifier = Modifier,
-                        verticalAlignment = Alignment.CenterVertically,
-                        horizontalArrangement = Arrangement.spacedBy(4.dp)
-                    ) {
-                        Icon(
-                            painter = painterResource(id = R.drawable.area_icon),
-                            contentDescription = null,
-                            modifier = Modifier.size(width = 32.dp, height = 24.dp),
-                            tint = Color(0x99FFF5F3)
-                        )
-                        Text(
-                            text = announcementResponse.area.toString() + "m²",
-                            color = Color(0x99FFF5F3),
-                            modifier = Modifier,
-                            fontSize = 20.sp,
-                            fontWeight = FontWeight.SemiBold
-                        )
-                    }
-                }
-                Row(
-                    modifier = Modifier
-                        .fillMaxWidth(1f)
-                ) {
-                    Text(
-                        text = "Type",
-                        color = Color(0x99FFF5F3),
-                        modifier = Modifier
-                            .fillMaxWidth(0.5f)
-                    )
-                    Text(
-                        text = announcementResponse.propertyType,
-                        color = Color(0x99FFF5F3),
-                        modifier = Modifier
-                            .fillMaxWidth(1f)
-                    )
-                }
-                Row(
-                    modifier = Modifier
-                        .fillMaxWidth(1f)
-                ) {
-                    Text(
-                        text = "Price",
-                        color = Color(0x99FFF5F3),
-                        modifier = Modifier
-                            .fillMaxWidth(0.5f)
-                    )
-                    Text(
-                        text = announcementViewModel.getFormattedPrice(announcementResponse.price) + " DZD",
-                        modifier = Modifier
-                            .fillMaxWidth(1f),
-                        fontSize = 16.sp
-                    )
-                }
-                Row(
-                    modifier = Modifier
-                        .fillMaxWidth(1f)
-                ) {
-                    Text(
-                        text = "State",
-                        color = Color(0x99FFF5F3),
-                        modifier = Modifier
-                            .fillMaxWidth(0.5f)
-                    )
-                    Text(
-                        text = announcementResponse.state,
-                        color = Color(0x99FFF5F3),
-                        modifier = Modifier
-                            .fillMaxWidth(1f)
-                    )
-                }
-                Row(
-                    modifier = Modifier
-                        .fillMaxWidth(1f)
-                ) {
-                    Text(
-                        text = "Location",
-                        color = Color(0x99FFF5F3),
-                        modifier = Modifier
-                            .fillMaxWidth(0.5f)
-                    )
-                    Text(
-                        text = announcementResponse.location,
-                        color = Color(0x99FFF5F3),
-                        modifier = Modifier
-                            .fillMaxWidth(1f)
-                    )
-                }
                 Column(
                     modifier = Modifier
-                        .fillMaxWidth(1f)
+                        .fillMaxWidth(),
+                    horizontalAlignment = Alignment.CenterHorizontally,
+                    verticalArrangement = Arrangement.spacedBy(12.dp)
                 ) {
                     Text(
-                        text = "Description",
-                        color = Color(0x99FFF5F3),
-                        modifier = Modifier,
-                        fontSize = 16.sp,
-                        fontWeight = FontWeight.Medium
-                    )
-                    Text(
-                        text = announcementResponse.description,
-                        color = Color(0x99FFF5F3),
+                        text = announcementResponse.title,
                         modifier = Modifier
+                            .padding(16.dp)
+                            .fillMaxWidth(1f),
+                        textAlign = TextAlign.Center,
+                        fontSize = 24.sp,
+                        fontWeight = FontWeight.Bold
+                    )
+                    Row(
+                        modifier = Modifier
+                            .padding(10.dp),
+                        verticalAlignment = Alignment.CenterVertically,
+                        horizontalArrangement = Arrangement.spacedBy(35.dp)
+                    ) {
+                        Row(
+                            modifier = Modifier
+                                .border(
+                                    1.dp,
+                                    MaterialTheme.colorScheme.onSurface,
+                                    RoundedCornerShape(16.dp)
+                                )
+                                .padding(6.dp),
+                            verticalAlignment = Alignment.CenterVertically,
+                            horizontalArrangement = Arrangement.spacedBy(8.dp)
+                        ) {
+                            Icon(
+                                imageVector = Icons.Rounded.MeetingRoom,
+                                contentDescription = null,
+                                modifier = Modifier
+                                    .size(32.dp),
+                            )
+                            Text(
+                                text = announcementResponse.numberOfRooms.toString(),
+                                modifier = Modifier,
+                                fontSize = 18.sp,
+                                fontWeight = FontWeight.Normal
+                            )
+                        }
+                        Row(
+                            modifier = Modifier
+                                .border(
+                                    1.dp,
+                                    MaterialTheme.colorScheme.onSurface,
+                                    RoundedCornerShape(16.dp)
+                                )
+                                .padding(6.dp),
+                            verticalAlignment = Alignment.CenterVertically,
+                            horizontalArrangement = Arrangement.spacedBy(4.dp)
+                        ) {
+                            Icon(
+                                imageVector = Icons.Rounded.SpaceDashboard,
+                                contentDescription = null,
+                                modifier = Modifier
+                                    .size(32.dp),
+                            )
+                            Text(
+                                text = announcementResponse.area.toString() + "m²",
+                                modifier = Modifier,
+                                fontSize = 18.sp,
+                                fontWeight = FontWeight.Normal
+                            )
+                        }
+                    }
+                    Row(
+                        modifier = Modifier
+                            .fillMaxWidth(1f)
+                    ) {
+                        Text(
+                            text = "Type",
+                            modifier = Modifier
+                                .fillMaxWidth(0.5f),
+                            fontSize = 16.sp,
+                            fontWeight = FontWeight.Medium
+                        )
+                        Text(
+                            text = announcementResponse.propertyType,
+                            modifier = Modifier
+                                .fillMaxWidth(1f),
+                            fontSize = 16.sp,
+                            fontWeight = FontWeight.Medium
+                        )
+                    }
+                    Row(
+                        modifier = Modifier
+                            .fillMaxWidth(1f)
+                    ) {
+                        Text(
+                            text = "Price",
+                            modifier = Modifier
+                                .fillMaxWidth(0.5f),
+                            fontSize = 16.sp,
+                            fontWeight = FontWeight.Medium
+                        )
+                        Text(
+                            text = announcementViewModel.getFormattedPrice(announcementResponse.price) + " DZD",
+                            modifier = Modifier
+                                .fillMaxWidth(1f),
+                            fontSize = 16.sp,
+                            fontWeight = FontWeight.Medium
+                        )
+                    }
+                    Row(
+                        modifier = Modifier
+                            .fillMaxWidth(1f)
+                    ) {
+                        Text(
+                            text = "State",
+                            modifier = Modifier
+                                .fillMaxWidth(0.5f),
+                            fontSize = 16.sp,
+                            fontWeight = FontWeight.Medium
+                        )
+                        Text(
+                            text = announcementResponse.state,
+                            modifier = Modifier
+                                .fillMaxWidth(1f),
+                            fontSize = 16.sp,
+                            fontWeight = FontWeight.Medium
+                        )
+                    }
+                    Row(
+                        modifier = Modifier
+                            .fillMaxWidth(1f)
+                    ) {
+                        Text(
+                            text = "Location",
+                            modifier = Modifier
+                                .fillMaxWidth(0.5f),
+                            fontSize = 16.sp,
+                            fontWeight = FontWeight.Medium
+                        )
+                        Text(
+                            text = announcementResponse.location,
+                            modifier = Modifier
+                                .fillMaxWidth(1f),
+                            fontSize = 16.sp,
+                            fontWeight = FontWeight.Medium
+                        )
+                    }
+                    Column(
+                        modifier = Modifier
+                            .fillMaxWidth(1f)
+                    ) {
+                        Text(
+                            text = "Description",
+                            modifier = Modifier,
+                            fontSize = 16.sp,
+                            fontWeight = FontWeight.Medium
+                        )
+                        Text(
+                            text = announcementResponse.description,
+                            modifier = Modifier,
+                            fontSize = 14.sp,
+                            fontWeight = FontWeight.Light,
+                            color = MaterialTheme.colorScheme.outlineVariant,
+                            softWrap = true
+                        )
+                    }
+                }
+                Button(
+                    onClick = {
+                        val intent = Intent(Intent.ACTION_DIAL)
+                        val authorNumber = announcementResponse.authorPhone
+                        intent.setData(Uri.parse("tel:$authorNumber"))
+                        startActivity(context, intent, null)
+                    },
+                    shape = RoundedCornerShape(16.dp),
+                    modifier = Modifier
+                        .fillMaxWidth(1f)
+                        .height(48.dp)
+                ) {
+                    Text(
+                        text = "Contact",
+                        fontSize = 20.sp,
+                        fontWeight = FontWeight.Bold
                     )
                 }
-            }
-            Button(
-                onClick = {
-                    val intent = Intent(Intent.ACTION_DIAL)
-                    intent.setData(Uri.parse("tel:0664813680"))
-                    startActivity(context, intent, null)
-                },
-                shape = RoundedCornerShape(14.dp),
-                colors = ButtonDefaults.buttonColors(containerColor = Color(0xFFE7BD73)),
-                contentPadding = PaddingValues(vertical = 20.dp),
-                modifier = Modifier
-                    .fillMaxWidth(1f)
-                    .padding(8.dp)
-            ) {
-                Text(
-                    text = "Contact the seller",
-                    fontSize = 22.sp,
-                    fontWeight = FontWeight.SemiBold
-                )
             }
         }
     }
