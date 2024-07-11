@@ -17,7 +17,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import androidx.paging.compose.collectAsLazyPagingItems
 import com.example.darckoum.screen.SharedViewModel
-import com.example.darckoum.screen.common.CustomSearchItem
+import com.example.darckoum.screen.common.SearchResultItem
 
 
 @Composable
@@ -41,14 +41,14 @@ fun SearchScreen(
             LazyColumn(
                 modifier = Modifier
                     .fillMaxSize(),
-                contentPadding = PaddingValues(8.dp),
+                contentPadding = PaddingValues(24.dp),
                 horizontalAlignment = Alignment.CenterHorizontally,
-                verticalArrangement = Arrangement.spacedBy(8.dp)
+                verticalArrangement = Arrangement.spacedBy(16.dp)
             ) {
                 items(count = announcementsLazyPagingItems.itemCount) { index ->
                     val item = announcementsLazyPagingItems[index]
                     if (item != null) {
-                        CustomSearchItem(
+                        SearchResultItem(
                             announcement = item,
                             bottomBarNavHostController = bottomBarNavHostController,
                             sharedViewModel = sharedViewModel

@@ -39,7 +39,6 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
@@ -58,7 +57,6 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Dialog
 import androidx.compose.ui.window.DialogProperties
-import androidx.navigation.NavController
 import androidx.navigation.NavHostController
 import coil.compose.AsyncImage
 import coil.request.ImageRequest
@@ -204,7 +202,31 @@ fun CustomItem(
                         .size(width = 180.dp, height = 150.dp)
                         .clip(RoundedCornerShape(12.dp)),
                 )
-                Popularity(numberOfViews = announcement.views)
+                // Popularity chip
+                Row(
+                    modifier = Modifier
+                        .padding(top = 6.dp, end = 6.dp)
+                        .size(width = 40.dp, height = 22.dp)
+                        .clip(RoundedCornerShape(4.dp))
+                        .background(MaterialTheme.colorScheme.primary)
+                        .align(Alignment.TopEnd),
+                    verticalAlignment = Alignment.CenterVertically,
+                    horizontalArrangement = Arrangement.spacedBy(2.dp, Alignment.CenterHorizontally)
+                ) {
+                    Icon(
+                        imageVector = Icons.Rounded.RemoveRedEye,
+                        contentDescription = null,
+                        tint = MaterialTheme.colorScheme.onPrimary,
+                        modifier = Modifier
+                            .width(18.dp)
+                    )
+                    Text(
+                        text = announcement.views.toString(),
+                        fontSize = 12.sp,
+                        fontWeight = FontWeight.Medium,
+                        color = MaterialTheme.colorScheme.onPrimary
+                    )
+                }
             }
             Text(
                 text = announcement.title,
@@ -297,7 +319,31 @@ fun OwnedAnnouncementItem(
                         .size(width = 120.dp, height = 100.dp)
                         .clip(RoundedCornerShape(8.dp)),
                 )
-                Popularity(numberOfViews = announcement.views)
+                // Popularity chip
+                Row(
+                    modifier = Modifier
+                        .padding(top = 6.dp, end = 6.dp)
+                        .size(width = 40.dp, height = 22.dp)
+                        .clip(RoundedCornerShape(4.dp))
+                        .background(MaterialTheme.colorScheme.primary)
+                        .align(Alignment.TopEnd),
+                    verticalAlignment = Alignment.CenterVertically,
+                    horizontalArrangement = Arrangement.spacedBy(2.dp, Alignment.CenterHorizontally)
+                ) {
+                    Icon(
+                        imageVector = Icons.Rounded.RemoveRedEye,
+                        contentDescription = null,
+                        tint = MaterialTheme.colorScheme.onPrimary,
+                        modifier = Modifier
+                            .width(18.dp)
+                    )
+                    Text(
+                        text = announcement.views.toString(),
+                        fontSize = 12.sp,
+                        fontWeight = FontWeight.Medium,
+                        color = MaterialTheme.colorScheme.onPrimary
+                    )
+                }
             }
             Text(
                 text = announcement.title,
@@ -318,84 +364,32 @@ fun OwnedAnnouncementItem(
 }
 
 @Composable
-fun Popularity(numberOfViews: Int) {
-    Row(
-        modifier = Modifier
-            .size(width = 40.dp, height = 20.dp)
-            .clip(RoundedCornerShape(4.dp))
-            .background(MaterialTheme.colorScheme.primary),
-        verticalAlignment = Alignment.CenterVertically,
-        horizontalArrangement = Arrangement.spacedBy(2.dp, Alignment.CenterHorizontally)
-    ) {
-        Icon(
-            imageVector = Icons.Rounded.RemoveRedEye,
-            contentDescription = null,
-            tint = MaterialTheme.colorScheme.onPrimary,
-            modifier = Modifier
-                .width(16.dp)
-        )
-        Text(
-            text = numberOfViews.toString(),
-            fontSize = 10.sp,
-            fontWeight = FontWeight.Medium,
-            color = MaterialTheme.colorScheme.onPrimary
-        )
-    }
-}
-
-@Preview
-@Composable
-fun PopularityPreview() {
-    val  numberOfViews = 3
-    Row(
-        modifier = Modifier
-            .size(width = 40.dp, height = 20.dp)
-            .clip(RoundedCornerShape(4.dp))
-            .background(MaterialTheme.colorScheme.primary),
-        verticalAlignment = Alignment.CenterVertically,
-        horizontalArrangement = Arrangement.spacedBy(2.dp, Alignment.CenterHorizontally)
-    ) {
-        Icon(
-            imageVector = Icons.Rounded.RemoveRedEye,
-            contentDescription = null,
-            tint = MaterialTheme.colorScheme.onPrimary,
-            modifier = Modifier
-                .width(16.dp)
-        )
-        Text(
-            text = numberOfViews.toString(),
-            fontSize = MaterialTheme.typography.titleSmall.fontSize,
-            fontWeight = FontWeight.Medium,
-        )
-    }
-}
-
-@Composable
-fun CustomSearchItem(
+fun SearchResultItem(
     announcement: Announcement,
     bottomBarNavHostController: NavHostController,
     sharedViewModel: SharedViewModel,
 ) {
-    val tag = "CustomSearchItem"
+    val tag = "SearchResultItem"
     val formattedPrice = formatPrice(announcement.price)
     Box(
         modifier = Modifier
-            .fillMaxWidth(0.96f)
-            .clip(RoundedCornerShape(14.dp))
+            .fillMaxWidth()
+            .clip(RoundedCornerShape(16.dp))
             .background(Color(0x994F4F4F))
-            .padding(12.dp)
             .clickable {
+                sharedViewModel.announcement = announcement
                 bottomBarNavHostController.navigate(route = BottomBarScreen.Announcement.route)
             }
+            .padding(12.dp)
     ) {
         Row(
-            horizontalArrangement = Arrangement.spacedBy(4.dp)
+            horizontalArrangement = Arrangement.spacedBy(8.dp)
         ) {
             Column(
                 modifier = Modifier
                     .fillMaxWidth(0.5f),
                 horizontalAlignment = Alignment.CenterHorizontally,
-                verticalArrangement = Arrangement.spacedBy(4.dp)
+                verticalArrangement = Arrangement.spacedBy(8.dp)
             ) {
                 val imageUrl = IMAGE_BASE_URL + announcement.imageNames.first()
                 Log.d(tag, "image url: $imageUrl")
@@ -409,7 +403,7 @@ fun CustomSearchItem(
                     error = painterResource(id = R.drawable.darckoum_logo),
                     modifier = Modifier
                         .size(width = 180.dp, height = 150.dp)
-                        .clip(RoundedCornerShape(12.dp)),
+                        .clip(RoundedCornerShape(8.dp)),
                 )
                 Text(
                     text = announcement.title,
@@ -424,7 +418,7 @@ fun CustomSearchItem(
                     .padding(4.dp)
             ) {
                 Row(
-                    horizontalArrangement = Arrangement.spacedBy(5.dp)
+                    horizontalArrangement = Arrangement.spacedBy(4.dp)
                 ) {
                     Icon(
                         painter = painterResource(id = R.drawable.ic_location),
@@ -437,7 +431,7 @@ fun CustomSearchItem(
                     )
                 }
                 Row(
-                    horizontalArrangement = Arrangement.spacedBy(5.dp)
+                    horizontalArrangement = Arrangement.spacedBy(4.dp)
                 ) {
                     Icon(
                         painter = painterResource(id = R.drawable.ic_type),
